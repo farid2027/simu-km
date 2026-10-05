@@ -74,7 +74,7 @@
         <h1>Simu-KM</h1>
         <p style="text-align:center; color: #64748b; font-weight: 500; margin-top: 0;">Trainer Kit Kelistrikan Sepeda Motor Digital</p>
         <div class="login-box">
-            <input type="email" id="email-input" placeholder="Masukkan Email (Siswa / Guru)">
+            <input type="email" id="email-input" placeholder="Gunakan email SMK/Belajar.id">
             <input type="password" id="password-input" placeholder="Masukkan Password">
             <button id="btn-login">Masuk</button>
             <p style="font-size: 13px; margin: 15px 0 5px 0; color: #64748b;">Belum punya akun?</p>
@@ -182,7 +182,7 @@
         <!-- MENU KHUSUS GURU -->
         <div id="teacher-container" class="hidden">
             <div style="background: #fffbeb; padding: 20px; border-radius: 16px; border: 1px solid #fde68a; margin-bottom: 20px;">
-                <h3 style="margin-top: 0; color: #b45309; font-size: 1.1rem;">🛠️ Panel Kontrol Khusus Guru</h3>
+                <h3 style="margin-top: 0; color: #b45309; font-size: 1.1rem;">🛠️️ Panel Kontrol Khusus Guru</h3>
                 <div class="menu-grid" style="margin-top: 10px;">
                     <div class="menu-card" style="background: #fef3c7; border-color: #fde68a;" onclick="alert('Membuka Rekap Nilai Seluruh Siswa...')">📊 Rekap Nilai Siswa</div>
                     <div class="menu-card" style="background: #fef3c7; border-color: #fde68a;" onclick="alert('Membuka Pengaturan Jobsheet...')">📝 Buat & Kelola Jobsheet</div>
@@ -298,7 +298,6 @@
                 studentHistorySection.classList.add('hidden');
                 teacherMonitoringSection.classList.remove('hidden');
                 
-                // Guru memantau data submission secara real-time dari Firestore
                 listenTeacherMonitoring();
             } else {
                 greetingText.innerText = `Halo, ${savedData.name}! ✨`;
@@ -309,7 +308,6 @@
                 studentHistorySection.classList.remove('hidden');
                 teacherMonitoringSection.classList.add('hidden');
                 
-                // Siswa memuat riwayat pribadinya dari Firestore secara real-time
                 listenStudentHistory(user.email);
             }
         } else {
@@ -337,7 +335,6 @@
         }
     });
 
-    // 1. Fungsi Siswa: Kirim Tugas Real-Time ke Firestore
     document.getElementById('btn-submit-task').addEventListener('click', async () => {
         const user = auth.currentUser;
         if (user) {
@@ -359,7 +356,6 @@
         }
     });
 
-    // 2. Mendengarkan Riwayat Siswa secara Real-Time
     function listenStudentHistory(email) {
         const q = query(collection(db, "submissions"), where("email", "==", email));
         onSnapshot(q, (snapshot) => {
@@ -382,7 +378,6 @@
         });
     }
 
-    // 3. Mendengarkan Monitoring Guru secara Real-Time
     function listenTeacherMonitoring() {
         onSnapshot(collection(db, "submissions"), (snapshot) => {
             teacherTableBody.innerHTML = '';
@@ -410,7 +405,16 @@
             .catch((error) => alert("Gagal Masuk: " + error.message));
     });
 
+    // VALIDASI PEMBATASAN DOMAIN EMAIL SEKOLAH / BELAJAR.ID
     document.getElementById('btn-register').addEventListener('click', () => {
+        const email = emailInput.value.trim().toLowerCase();
+        
+        // Memeriksa apakah email mengandung domain belajar.id atau sch.id
+        if (!email.endsWith('@smk.belajar.id') && !email.endsWith('@guru.smk.belajar.id') && !email.endsWith('@sch.id')) {
+            alert("Pendaftaran Ditolak!\n\nWebsite Simu-KM hanya khusus untuk akun resmi sekolah/belajar.id (Contoh: @smk.belajar.id, @guru.smk.belajar.id, atau @sch.id).");
+            return; // Menghentikan proses pendaftaran
+        }
+
         createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
             .then(() => alert("Akun berhasil dibuat!"))
             .catch((error) => alert("Gagal Mendaftar: " + error.message));
