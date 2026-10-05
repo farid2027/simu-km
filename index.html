@@ -23,7 +23,9 @@
         .menu-card:hover { border-color: #3498db; background: #e0f7fa; }
         .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; margin-bottom: 20px; }
         .logout-btn { background-color: #e74c3c; width: auto; padding: 5px 15px; }
-        .badge-role { background: #e67e22; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+        
+        /* Panel Profil */
+        .profile-section { background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
@@ -52,25 +54,43 @@
             <button id="btn-logout" class="logout-btn">Keluar</button>
         </div>
         
-        <p>Silakan pilih menu pembelajaran hari ini:</p>
+        <!-- Bagian Edit Profil & Sapaan -->
+        <div class="profile-section">
+            <div>
+                <h3 id="greeting-text" style="margin: 0 0 5px 0; color: #2980b9;">Halo, Pengguna!</h3>
+                <span id="role-badge" style="background: #27ae60; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">Peran</span>
+            </div>
+            <div>
+                <input type="text" id="name-input" placeholder="Nama Panggilan" style="margin: 0; padding: 6px; width: 140px; display: inline-block;">
+                <button id="btn-save-name" style="width: auto; padding: 6px 10px; margin-top: 0; background-color: #27ae60;">Simpan Nama</button>
+            </div>
+        </div>
         
-        <!-- MENU KHUSUS GURU (Hanya tampil jika email mengandung kata 'guru') -->
-        <div id="teacher-menu" class="hidden" style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffeeba;">
-            <h4 style="margin: 0 0 10px 0; color: #856404;">🛠️ Panel Kontrol Guru</h4>
-            <button onclick="alert('Fitur Buat/Kelola Jobsheet Siswa')" style="background-color: #d35400;">Kelola Jobsheet & Nilai Siswa</button>
+        <!-- MENU KHUSUS GURU -->
+        <div id="teacher-container" class="hidden">
+            <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border: 1px solid #ffeeba; margin-bottom: 20px;">
+                <h3 style="margin-top: 0; color: #856404;">🛠️ Panel Kontrol Khusus Guru</h3>
+                <p>Menu ini hanya dapat diakses oleh akun pengajar/guru.</p>
+                <div class="menu-grid">
+                    <div class="menu-card" style="background: #ffeeba;" onclick="alert('Membuka Rekap Nilai Siswa...')">📊 Rekap Nilai Siswa</div>
+                    <div class="menu-card" style="background: #ffeeba;" onclick="alert('Membuka Pengaturan Jobsheet...')">📝 Buat & Kelola Jobsheet</div>
+                </div>
+            </div>
         </div>
 
+        <!-- MENU UTAMA SISWA & UMUM -->
+        <p>Silakan pilih menu pembelajaran:</p>
         <div class="menu-grid">
-            <div class="menu-card" onclick="alert('Fitur Materi akan segera hadir!')">📖 Materi & Modul Ajar</div>
-            <div class="menu-card" onclick="alert('Fitur Video Tutorial akan segera hadir!')">🎥 Video Tutorial</div>
-            <div class="menu-card" onclick="alert('Fitur Latihan & Jobsheet akan segera hadir!')">📝 Latihan Soal & Jobsheet</div>
-            <div class="menu-card" onclick="alert('Membuka Ruang Simulator...')">⚙️ Simulator Praktik Bebas</div>
-            <div class="menu-card" style="grid-column: span 2; background-color: #ffeaa7;" onclick="alert('Halo! Saya AI Asisten Simu-KM. Ada yang bisa dibantu?')">🤖 Tanya AI (Asisten Pintar)</div>
+            <div class="menu-card" onclick="alert('Membuka Materi & Modul Ajar...')">📖 Materi & Modul Ajar</div>
+            <div class="menu-card" onclick="alert('Membuka Video Tutorial...')">🎥 Video Tutorial</div>
+            <div class="menu-card" onclick="alert('Membuka Latihan Soal & Jobsheet...')">📝 Latihan Soal & Jobsheet</div>
+            <div class="menu-card" onclick="alert('Membuka Simulator Praktik Bebas...')">⚙️ Simulator Praktik Bebas</div>
+            <div class="menu-card" style="grid-column: span 2; background-color: #ffeaa7;" onclick="alert('Halo! Saya AI Asisten Simu-KM.')">🤖 Tanya AI (Asisten Pintar)</div>
         </div>
     </div>
 </div>
 
-<!-- KODE FIREBASE -->
+<!-- KODE FIREBASE & LOGIKA APLIKASI -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
@@ -94,24 +114,50 @@
     const mainScreen = document.getElementById('main-screen');
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
-    const teacherMenu = document.getElementById('teacher-menu');
+    const teacherContainer = document.getElementById('teacher-container');
     const userEmailDisplay = document.getElementById('user-email-display');
+    const greetingText = document.getElementById('greeting-text');
+    const roleBadge = document.getElementById('role-badge');
+    const nameInput = document.getElementById('name-input');
 
+    // Cek status login
     onAuthStateChanged(auth, (user) => {
         if (user) {
             loginScreen.classList.add('hidden');
             mainScreen.classList.remove('hidden');
-            userEmailDisplay.innerText = "Login sebagai: " + user.email;
+            userEmailDisplay.innerText = "Email: " + user.email;
+
+            // Ambil nama tersimpan di browser (LocalStorage) berdasarkan email user
+            const savedName = localStorage.getItem('name_' + user.email) || user.email.split('@')[0];
+            nameInput.value = savedName;
 
             // Cek apakah email mengandung kata 'guru'
             if (user.email.toLowerCase().includes('guru')) {
-                teacherMenu.classList.remove('hidden');
+                greetingText.innerText = `Halo, ${savedName} (Guru), Selamat Datang!`;
+                roleBadge.innerText = "Status: Guru / Pengajar";
+                roleBadge.style.backgroundColor = "#e67e22";
+                teacherContainer.classList.remove('hidden');
             } else {
-                teacherMenu.classList.add('hidden');
+                greetingText.innerText = `Halo, ${savedName}, Selamat Datang!`;
+                roleBadge.innerText = "Status: Siswa";
+                roleBadge.style.backgroundColor = "#27ae60";
+                teacherContainer.classList.add('hidden');
             }
         } else {
             loginScreen.classList.remove('hidden');
             mainScreen.classList.add('hidden');
+        }
+    });
+
+    // Tombol Simpan Nama Profil
+    document.getElementById('btn-save-name').addEventListener('click', () => {
+        const user = auth.currentUser;
+        if (user && nameInput.value.trim() !== "") {
+            localStorage.setItem('name_' + user.email, nameInput.value.trim());
+            // Update teks sapaan secara langsung
+            const isGuru = user.email.toLowerCase().includes('guru');
+            greetingText.innerText = `Halo, ${nameInput.value.trim()}${isGuru ? ' (Guru)' : ''}, Selamat Datang!`;
+            alert("Nama profil berhasil diperbarui!");
         }
     });
 
