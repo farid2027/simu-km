@@ -16,16 +16,17 @@
         button { background-color: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 5px; font-weight: bold; }
         button.register-btn { background-color: #2ecc71; }
         button:hover { opacity: 0.9; }
+        .forgot-link { display: block; margin-top: 10px; font-size: 13px; color: #e67e22; text-decoration: none; cursor: pointer; }
+        .forgot-link:hover { text-decoration: underline; }
 
-        /* Gaya Menu Utama */
+        /* Gaya Menu Utama & Jam */
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .menu-card { background: #ecf0f1; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
         .menu-card:hover { border-color: #3498db; background: #e0f7fa; }
         .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; margin-bottom: 20px; }
         .logout-btn { background-color: #e74c3c; width: auto; padding: 5px 15px; }
         
-        /* Panel Profil & Jam */
-        .top-info-bar { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; font-weight: bold; color: #34495e; border: 1px solid #e9ecef; }
+        .top-info-bar { display: flex; justify-content: space-between; align-items: center; background: #eef2f3; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; font-weight: bold; color: #2c3e50; border: 1px solid #dcdde1; }
         .profile-section { background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
@@ -42,12 +43,13 @@
             <button id="btn-login">Login</button>
             <p style="font-size: 12px; margin: 10px 0;">Belum punya akun?</p>
             <button id="btn-register" class="register-btn">Daftar Baru</button>
+            <a class="forgot-link" id="btn-forgot">Lupa Sandi? Hubungi Admin</a>
         </div>
     </div>
 
     <!-- LAYAR MENU UTAMA -->
     <div id="main-screen" class="hidden">
-        <!-- Baris Informasi Jam Real-Time WIB -->
+        <!-- BARIS JAM & TANGGAL REAL-TIME WIB -->
         <div class="top-info-bar">
             <div id="realtime-date">Memuat tanggal...</div>
             <div id="realtime-clock" style="color: #2980b9;">00:00:00 WIB</div>
@@ -126,20 +128,33 @@
     const roleBadge = document.getElementById('role-badge');
     const nameInput = document.getElementById('name-input');
 
-    // Fungsi Jam & Tanggal Real-Time WIB
+    // Fungsi Jam Real-Time WIB
     function updateClock() {
-        const optionsTime = { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-        const optionsDate = { timeZone: 'Asia/Jakarta', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        
         const now = new Date();
-        const timeString = new Intl.DateTimeFormat('id-ID', optionsTime).format(now);
-        const dateString = new Intl.DateTimeFormat('id-ID', optionsDate).format(now);
-
-        document.getElementById('realtime-clock').innerText = timeString + " WIB";
-        document.getElementById('realtime-date').innerText = dateString;
+        const timeOptions = { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const dateOptions = { timeZone: 'Asia/Jakarta', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        
+        try {
+            const timeString = new Intl.DateTimeFormat('id-ID', timeOptions).format(now);
+            const dateString = new Intl.DateTimeFormat('id-ID', dateOptions).format(now);
+            document.getElementById('realtime-clock').innerText = timeString + " WIB";
+            document.getElementById('realtime-date').innerText = dateString;
+        } catch (e) {
+            console.log("Gagal memuat jam");
+        }
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    // Fitur Lupa Sandi (Menghubungi Admin)
+    document.getElementById('btn-forgot').addEventListener('click', () => {
+        const pesan = "Halo Admin (Rifqi), saya lupa kata sandi akun Simu-KM saya. Mohon bantuannya untuk reset password.\n\nEmail saya: " + (emailInput.value || "[Belum diisi]");
+        const waUrl = "https://wa.me/6289635894135?text=" + encodeURIComponent(pesan);
+        
+        if(confirm("Lupa sandi? Anda akan diarahkan untuk menghubungi Admin Rifqi.\n\nEmail Admin: rifqi.miftah.2405346@students.um.ac.id\nWhatsApp Admin: 089635894135\n\nKlik OK untuk lanjut chat via WhatsApp.")) {
+            window.open(waUrl, '_blank');
+        }
+    });
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
