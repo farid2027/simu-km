@@ -23,6 +23,7 @@
         .menu-card:hover { border-color: #3498db; background: #e0f7fa; }
         .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; margin-bottom: 20px; }
         .logout-btn { background-color: #e74c3c; width: auto; padding: 5px 15px; }
+        .badge-role { background: #e67e22; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -33,7 +34,7 @@
         <h1>Masuk ke Simu-KM</h1>
         <p style="text-align:center;">Trainer Kit Kelistrikan Sepeda Motor Digital</p>
         <div class="login-box">
-            <input type="email" id="email-input" placeholder="Masukkan Email Siswa/Guru">
+            <input type="email" id="email-input" placeholder="Masukkan Email (Siswa / Guru)">
             <input type="password" id="password-input" placeholder="Masukkan Password">
             <button id="btn-login">Login</button>
             <p style="font-size: 12px; margin: 10px 0;">Belum punya akun?</p>
@@ -41,14 +42,24 @@
         </div>
     </div>
 
-    <!-- LAYAR MENU UTAMA (Sembunyi sebelum login) -->
+    <!-- LAYAR MENU UTAMA -->
     <div id="main-screen" class="hidden">
         <div class="header-bar">
-            <h2>Dashboard Simu-KM</h2>
+            <div>
+                <h2 id="welcome-title" style="margin: 0;">Dashboard Simu-KM</h2>
+                <small id="user-email-display" style="color: gray;"></small>
+            </div>
             <button id="btn-logout" class="logout-btn">Keluar</button>
         </div>
-        <p>Selamat datang! Silakan pilih menu pembelajaran hari ini:</p>
         
+        <p>Silakan pilih menu pembelajaran hari ini:</p>
+        
+        <!-- MENU KHUSUS GURU (Hanya tampil jika email mengandung kata 'guru') -->
+        <div id="teacher-menu" class="hidden" style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffeeba;">
+            <h4 style="margin: 0 0 10px 0; color: #856404;">🛠️ Panel Kontrol Guru</h4>
+            <button onclick="alert('Fitur Buat/Kelola Jobsheet Siswa')" style="background-color: #d35400;">Kelola Jobsheet & Nilai Siswa</button>
+        </div>
+
         <div class="menu-grid">
             <div class="menu-card" onclick="alert('Fitur Materi akan segera hadir!')">📖 Materi & Modul Ajar</div>
             <div class="menu-card" onclick="alert('Fitur Video Tutorial akan segera hadir!')">🎥 Video Tutorial</div>
@@ -59,14 +70,12 @@
     </div>
 </div>
 
-<!-- KODE FIREBASE DARI ANDA -->
+<!-- KODE FIREBASE -->
 <script type="module">
-    // Mengimpor library Firebase yang dibutuhkan (App, Auth, Analytics)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
-    // Konfigurasi Kunci Firebase Anda
     const firebaseConfig = {
         apiKey: "AIzaSyDI9Rd4m4IxKJsELGS9e7KztVS2hXftAA0",
         authDomain: "simu-km.firebaseapp.com",
@@ -77,43 +86,47 @@
         measurementId: "G-5FKCSG9Y2D"
     };
 
-    // Inisialisasi Aplikasi
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
 
-    // MENGATUR TAMPILAN LAYAR (UI)
     const loginScreen = document.getElementById('login-screen');
     const mainScreen = document.getElementById('main-screen');
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
+    const teacherMenu = document.getElementById('teacher-menu');
+    const userEmailDisplay = document.getElementById('user-email-display');
 
-    // CEK STATUS LOGIN: Jika login tampilkan menu, jika belum tampilkan form
     onAuthStateChanged(auth, (user) => {
         if (user) {
             loginScreen.classList.add('hidden');
             mainScreen.classList.remove('hidden');
+            userEmailDisplay.innerText = "Login sebagai: " + user.email;
+
+            // Cek apakah email mengandung kata 'guru'
+            if (user.email.toLowerCase().includes('guru')) {
+                teacherMenu.classList.remove('hidden');
+            } else {
+                teacherMenu.classList.add('hidden');
+            }
         } else {
             loginScreen.classList.remove('hidden');
             mainScreen.classList.add('hidden');
         }
     });
 
-    // FUNGSI TOMBOL LOGIN
     document.getElementById('btn-login').addEventListener('click', () => {
         signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
             .then(() => alert("Berhasil Login!"))
             .catch((error) => alert("Gagal Login: " + error.message));
     });
 
-    // FUNGSI TOMBOL DAFTAR
     document.getElementById('btn-register').addEventListener('click', () => {
         createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-            .then(() => alert("Akun berhasil dibuat! Silakan gunakan di aplikasi."))
+            .then(() => alert("Akun berhasil dibuat!"))
             .catch((error) => alert("Gagal Mendaftar: " + error.message));
     });
 
-    // FUNGSI TOMBOL LOGOUT
     document.getElementById('btn-logout').addEventListener('click', () => {
         signOut(auth).catch((error) => alert(error.message));
     });
