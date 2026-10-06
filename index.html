@@ -187,7 +187,7 @@
             <h2>🎥 Video Tutorial Praktik</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                    <div style="height: 120px; background: #cbd5e1; border-radius: 8px; display:flex; align-items:center; justify-content:center; margin-bottom: 10px;">▶️ Video 1</div>
+                    <div style="height: 120px; background: #cbd5e1; border-radius: 8px; display:flex; align-items:center; justify-content:center; margin-bottom: 10px;">▶️️ Video 1</div>
                     <h4 style="margin: 0;">Cara Menggunakan Avometer</h4>
                 </div>
                 <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
@@ -377,7 +377,7 @@
         document.getElementById('teacher-monitoring-section').classList.toggle('hidden');
     });
 
-    // FITUR TANYA AI (Menggunakan API Key berawalan AQ.)
+    // FITUR TANYA AI (Terhubung ke Gemini dengan API Key AQ.)
     const GEMINI_API_KEY = "AQ.Ab8RN6Kt8uDMMoZvmKPR3WXyvAt4h4I0xVC7vunzF8FI4q1U7w";
     
     document.getElementById('btn-ai-send').addEventListener('click', async () => {
@@ -410,6 +410,7 @@
             const data = await response.json();
             document.getElementById(loadingId).remove();
             
+            // Mengambil balasan AI dengan aman tanpa validasi format kunci yang mengecoh
             const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, AI sedang sibuk atau respons tidak dikenali. Coba tanyakan lagi ya!";
             chatLog.innerHTML += `<div class="chat-msg ai-msg">${aiReply.replace(/\n/g, '<br>')}</div>`;
             chatLog.scrollTop = chatLog.scrollHeight;
