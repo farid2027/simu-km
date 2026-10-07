@@ -187,7 +187,7 @@
             <h2>🎥 Video Tutorial Praktik</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                    <div style="height: 120px; background: #cbd5e1; border-radius: 8px; display:flex; align-items:center; justify-content:center; margin-bottom: 10px;">▶ Video 1</div>
+                    <div style="height: 120px; background: #cbd5e1; border-radius: 8px; display:flex; align-items:center; justify-content:center; margin-bottom: 10px;">▶️ Video 1</div>
                     <h4 style="margin: 0;">Cara Menggunakan Avometer</h4>
                 </div>
                 <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
@@ -377,7 +377,7 @@
         document.getElementById('teacher-monitoring-section').classList.toggle('hidden');
     });
 
-    // FITUR TANYA AI (Terhubung ke Gemini dengan API Key AQ.)
+    // FITUR TANYA AI (Terhubung ke Gemini dengan penanganan pesan eror asli)
     const GEMINI_API_KEY = "AQ.Ab8RN6Kt8uDMMoZvmKPR3WXyvAt4h4I0xVC7vunzF8FI4q1U7w";
     
     document.getElementById('btn-ai-send').addEventListener('click', async () => {
@@ -410,13 +410,21 @@
             const data = await response.json();
             document.getElementById(loadingId).remove();
             
-            const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, AI sedang sibuk atau respons tidak dikenali. Coba tanyakan lagi ya!";
+            // CEK JIKA ADA ERROR DARI GOOGLE
+            if (data.error) {
+                chatLog.innerHTML += `<div class="chat-msg ai-msg" style="color: #dc2626; font-weight: 600;">Pesan dari Google: ${data.error.message}</div>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            }
+            
+            // JIKA SUKSES
+            const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Respons diterima, tapi format teks kosong.";
             chatLog.innerHTML += `<div class="chat-msg ai-msg">${aiReply.replace(/\n/g, '<br>')}</div>`;
             chatLog.scrollTop = chatLog.scrollHeight;
 
         } catch (error) {
             document.getElementById(loadingId).remove();
-            chatLog.innerHTML += `<div class="chat-msg ai-msg" style="color: red;">Gagal terhubung ke server AI. Periksa koneksi internetmu!</div>`;
+            chatLog.innerHTML += `<div class="chat-msg ai-msg" style="color: red;">Gagal jaringan: ${error.message}</div>`;
         }
     });
 
