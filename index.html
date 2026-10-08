@@ -224,7 +224,7 @@
         <!-- 6. HALAMAN TANYA AI -->
         <div id="view-ai" class="content-view hidden">
             <button class="back-btn" onclick="openMenu('view-dashboard')">⬅ Kembali ke Dashboard</button>
-            <h2 style="color: #ca8a04;">🤖 Tanya AI - Asisten Simu-KM</h2>
+            <h2>🤖 Tanya AI - Asisten Simu-KM</h2>
             <p style="font-size: 13px; color: #64748b; margin-top: -10px;">Tanyakan apa saja tentang materi kelistrikan sepeda motor!</p>
             
             <div class="chat-container">
@@ -378,7 +378,7 @@
     });
 
     // ==========================================
-    // INTEGRASI GROQ API 
+    // INTEGRASI GROQ API (MODEL AKTIF)
     // ==========================================
     const GROQ_API_KEY = "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"; 
     
@@ -404,7 +404,7 @@
                     'Authorization': `Bearer ${GROQ_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: "llama3-8b-8192",
+                    model: "llama-3.1-8b-instant", // Menggunakan model aktif terbaru
                     messages: [
                         {
                             role: "system",
