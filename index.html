@@ -236,7 +236,7 @@
                     <button id="btn-ai-send" style="width: auto; margin:0; padding: 0 20px; border-radius: 8px; background: #ca8a04;">Kirim</button>
                 </div>
             </div>
-            <p style="font-size: 11px; color: gray; text-align: right; margin-top: 5px;">Powered by Google Gemini API</p>
+            <p style="font-size: 11px; color: gray; text-align: right; margin-top: 5px;">Powered by Groq API</p>
         </div>
 
     </div>
@@ -377,8 +377,10 @@
         document.getElementById('teacher-monitoring-section').classList.toggle('hidden');
     });
 
-    // FITUR TANYA AI MENGGUNAKAN KUNCI AQ. DI HEADER x-goog-api-key
-    const GEMINI_API_KEY = "AQ.Ab8RN6KC9j1AGSuZnjuOVk4ROgHUOLGabcqsBwgOiDOAQmG96w";
+    // ==========================================
+    // INTEGRASI GROQ API 
+    // ==========================================
+    const GROQ_API_KEY = "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"; 
     
     document.getElementById('btn-ai-send').addEventListener('click', async () => {
         const inputField = document.getElementById('ai-input');
@@ -395,19 +397,24 @@
         chatLog.scrollTop = chatLog.scrollHeight;
 
         try {
-            // URL TANPA ?key= DAN KUNCI DIMASUKKAN KE HEADER AGAR KUNCI AQ. DITERIMA GOOGLE
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
+            const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
-                    'x-goog-api-key': GEMINI_API_KEY
+                    'Authorization': `Bearer ${GROQ_API_KEY}`
                 },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: "Kamu adalah instruktur ahli kelistrikan sepeda motor SMK yang ramah. Tugasmu HANYA menjawab pertanyaan seputar kelistrikan sepeda motor. Jika siswa bertanya di luar topik tersebut (seperti panel surya, tata surya, memasak, dll), tolaklah dengan halus, tegaskan bahwa kamu adalah asisten khusus kelistrikan motor, dan arahkan mereka kembali ke materi motor. Jawablah secara singkat, jelas, dan menggunakan bahasa Indonesia yang santai. Pertanyaan siswa: " + text
-                        }]
-                    }]
+                    model: "llama3-8b-8192",
+                    messages: [
+                        {
+                            role: "system",
+                            content: "Kamu adalah instruktur ahli kelistrikan sepeda motor SMK yang ramah. Tugasmu HANYA menjawab pertanyaan seputar kelistrikan sepeda motor. Jika siswa bertanya di luar topik tersebut (seperti panel surya, memasak, dll), tolaklah dengan halus, tegaskan bahwa kamu adalah asisten khusus kelistrikan motor, dan arahkan mereka kembali ke materi motor. Jawablah secara singkat, jelas, dan menggunakan bahasa Indonesia yang santai."
+                        },
+                        {
+                            role: "user",
+                            content: text
+                        }
+                    ]
                 })
             });
 
@@ -415,12 +422,12 @@
             document.getElementById(loadingId).remove();
             
             if (data.error) {
-                chatLog.innerHTML += `<div class="chat-msg ai-msg" style="color: #dc2626; font-weight: 600;">Pesan dari Google: ${data.error.message}</div>`;
+                chatLog.innerHTML += `<div class="chat-msg ai-msg" style="color: #dc2626; font-weight: 600;">Pesan Error: ${data.error.message}</div>`;
                 chatLog.scrollTop = chatLog.scrollHeight;
                 return;
             }
             
-            const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Respons diterima, tapi format teks kosong.";
+            const aiReply = data.choices?.[0]?.message?.content || "Respons diterima, tapi format teks kosong.";
             chatLog.innerHTML += `<div class="chat-msg ai-msg">${aiReply.replace(/\n/g, '<br>')}</div>`;
             chatLog.scrollTop = chatLog.scrollHeight;
 
