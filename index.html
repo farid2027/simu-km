@@ -378,7 +378,7 @@
     });
 
     // ==========================================
-    // INTEGRASI GROQ API (STABIL & AKTIF)
+    // INTEGRASI GROQ API (MODEL: openai/gpt-oss-120b)
     // ==========================================
     const GROQ_API_KEY = "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"; 
     
@@ -404,7 +404,7 @@
                     'Authorization': `Bearer ${GROQ_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: "llama-3.3-70b-versatile", // Menggunakan model produksi stabil terbaru
+                    model: "openai/gpt-oss-120b",
                     messages: [
                         {
                             role: "system",
