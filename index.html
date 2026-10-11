@@ -404,27 +404,49 @@
         return email.endsWith('@smk.belajar.id') || email.endsWith('@guru.smk.belajar.id');
     }
 
+    function applyUIRole(email, pNama, pFoto, pTtl, pWa) {
+        currentUserEmail = email.toLowerCase().trim();
+        isGuru = currentUserEmail.includes('@guru.smk.belajar.id');
+
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app-layout').classList.remove('hidden');
+
+        document.getElementById('sb-name').textContent = pNama;
+        document.getElementById('sb-email').textContent = email;
+        document.getElementById('greet-name').textContent = `HALO, ${pNama.toUpperCase()}! 👋`;
+
+        document.getElementById('prof-nama').value = pNama;
+        document.getElementById('prof-foto').value = pFoto !== 'https://via.placeholder.com/80' ? pFoto : '';
+        document.getElementById('profile-img-preview').src = pFoto;
+        document.getElementById('prof-ttl').value = pTtl;
+        document.getElementById('prof-wa').value = pWa;
+        document.getElementById('prof-email').value = email;
+
+        if (isGuru) {
+            document.getElementById('sb-role').textContent = 'Guru';
+            document.getElementById('sb-role').className = 'badge badge-guru';
+            document.getElementById('greet-desc').textContent = "Anda masuk sebagai Guru. Gunakan panel di sebelah kiri untuk mengelola kelas.";
+            document.getElementById('student-history-card').classList.add('hidden'); 
+            document.querySelectorAll('.nav-guru').forEach(el => el.classList.remove('hidden'));
+            loadGuruRekap();
+        } else {
+            document.getElementById('sb-role').textContent = 'Siswa';
+            document.getElementById('sb-role').className = 'badge badge-siswa';
+            document.getElementById('greet-desc').textContent = "Pantau riwayat pengerjaan dan nilai kamu di sini.";
+            document.getElementById('student-history-card').classList.remove('hidden'); 
+            document.querySelectorAll('.nav-guru').forEach(el => el.classList.add('hidden'));
+            loadStudentHistory();
+        }
+        loadJobsheets();
+    }
+
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            currentUserEmail = user.email.toLowerCase().trim();
-            
-            // Cek langsung dari database Firestore apakah user ini terdaftar sebagai guru
+            const email = user.email;
             const userRef = doc(db, "users", user.uid);
             const docSnap = await getDoc(userRef);
             
-            if (currentUserEmail.includes('guru.smk.belajar.id')) {
-                isGuru = true;
-            } else if (docSnap.exists() && docSnap.data().role === 'guru') {
-                isGuru = true;
-            } else {
-                isGuru = false;
-            }
-            
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-layout').classList.remove('hidden');
-            
-            let pNama = user.email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '';
-            
+            let pNama = email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '';
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 pNama = data.nama || pNama;
@@ -432,56 +454,38 @@
                 pTtl = data.ttl || pTtl;
                 pWa = data.wa || pWa;
             }
-            
-            document.getElementById('sb-name').textContent = pNama;
-            document.getElementById('sb-email').textContent = user.email;
-            document.getElementById('greet-name').textContent = `HALO, ${pNama.toUpperCase()}! 👋`;
-            
-            document.getElementById('prof-nama').value = pNama;
-            document.getElementById('prof-foto').value = docSnap.exists() && docSnap.data().foto ? docSnap.data().foto : '';
-            document.getElementById('profile-img-preview').src = pFoto;
-            document.getElementById('prof-ttl').value = pTtl;
-            document.getElementById('prof-wa').value = pWa;
-            document.getElementById('prof-email').value = user.email;
-
-            if (isGuru) {
-                document.getElementById('sb-role').textContent = 'Guru';
-                document.getElementById('sb-role').className = 'badge badge-guru';
-                document.getElementById('greet-desc').textContent = "Anda masuk sebagai Guru. Gunakan panel di sebelah kiri untuk mengelola kelas.";
-                document.getElementById('student-history-card').classList.add('hidden'); 
-                document.querySelectorAll('.nav-guru').forEach(el => el.classList.remove('hidden'));
-                loadGuruRekap();
-            } else {
-                document.getElementById('sb-role').textContent = 'Siswa';
-                document.getElementById('sb-role').className = 'badge badge-siswa';
-                document.getElementById('greet-desc').textContent = "Pantau riwayat pengerjaan dan nilai kamu di sini.";
-                document.getElementById('student-history-card').classList.remove('hidden'); 
-                document.querySelectorAll('.nav-guru').forEach(el => el.classList.add('hidden'));
-                loadStudentHistory();
-            }
-            loadJobsheets(); 
+            applyUIRole(email, pNama, pFoto, pTtl, pWa);
         } else {
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('app-layout').classList.add('hidden');
         }
     });
 
-    document.getElementById('btn-login').addEventListener('click', () => {
+    document.getElementById('btn-login').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
+        const pass = document.getElementById('password-input').value.trim();
         if(!checkValidDomain(email)) { showToast("Gagal: Harus menggunakan email @smk.belajar.id atau @guru.smk.belajar.id"); return; }
         
-        signInWithEmailAndPassword(auth, email, document.getElementById('password-input').value)
-            .then(() => showToast("Login Berhasil!"))
-            .catch(e => {
-                if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
-                    showToast("Akun tidak dapat ditemukan, silahkan daftar akun atau masukan kembali sandi yang benar!");
-                } else {
-                    showToast("Gagal Login: " + e.message);
-                }
-            });
+        try {
+            const res = await signInWithEmailAndPassword(auth, email, pass);
+            showToast("Login Berhasil!");
+            const userRef = doc(db, "users", res.user.uid);
+            const docSnap = await getDoc(userRef);
+            let pNama = email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '';
+            if (docSnap.exists()) {
+                const d = docSnap.data();
+                pNama = d.nama || pNama; pFoto = d.foto || pFoto; pTtl = d.ttl || pTtl; pWa = d.wa || pWa;
+            }
+            applyUIRole(email, pNama, pFoto, pTtl, pWa);
+        } catch(e) {
+            if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
+                showToast("Akun tidak ditemukan atau sandi salah!");
+            } else {
+                showToast("Gagal Login: " + e.message);
+            }
+        }
     });
 
-    // Pendaftaran Akun Baru dengan Penyimpanan Role Otomatis ke Firestore
     document.getElementById('btn-register').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
         const password = document.getElementById('password-input').value.trim();
@@ -489,9 +493,8 @@
         
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
-            const roleUser = email.includes('guru.smk.belajar.id') ? 'guru' : 'siswa';
+            const roleUser = email.includes('@guru.smk.belajar.id') ? 'guru' : 'siswa';
             
-            // Simpan role ke database firestore agar tidak salah baca
             await setDoc(doc(db, "users", userCred.user.uid), {
                 email: email,
                 role: roleUser,
@@ -500,6 +503,7 @@
             }, { merge: true });
 
             showToast("Pendaftaran Berhasil!");
+            applyUIRole(email, email.split('@')[0], 'https://via.placeholder.com/80', '', '');
         } catch(e) {
             showToast("Gagal Daftar: " + e.message);
         }
@@ -905,7 +909,7 @@
                 if (pNodes.has(w.from) && !pNodes.has(w.to)) { pNodes.add(w.to); changed = true; }
                 if (pNodes.has(w.to) && !pNodes.has(w.from)) { pNodes.add(w.from); changed = true; }
                 if (gNodes.has(w.from) && !gNodes.has(w.to)) { gNodes.add(w.to); changed = true; }
-                if (gNodes.has(w.to) && !gNodes.has(w.from)) { gNodes.add(gNodes.from); changed = true; } // Safety fix
+                if (gNodes.has(w.to) && !gNodes.has(w.from)) { gNodes.add(w.from); changed = true; }
             });
 
             document.querySelectorAll('.canvas-comp').forEach(el => {
