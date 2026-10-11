@@ -28,11 +28,11 @@
         .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5, #0f172a); padding:20px; }
         .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .app-layout { display: flex; min-height: 100vh; }
-        .sidebar { width: var(--sidebar-width); background: #0f172a; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; }
+        .sidebar { width: var(--sidebar-width); background: #0f172a; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 100; }
         .sidebar-menu { padding: 10px; flex: 1; overflow-y: auto; }
         .nav-item { padding: 12px 16px; margin-bottom: 4px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
         .nav-item:hover, .nav-item.active { background: var(--primary); }
-        .main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
+        .main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
         .topbar { background: white; padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position:sticky; top:0; z-index:50;}
         .content-area { padding: 24px; max-width: 1100px; width: 100%; margin: 0 auto; }
         
@@ -45,7 +45,7 @@
 
         /* Kuis UI */
         .quiz-option { display: block; padding: 12px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-weight: 500; transition: 0.2s; }
-        .quiz-option:hover { border-color: var(--primary); background: var(--primary-light); }
+        .quiz-option:hover { border-color: var(--primary); background: #f5f3ff; }
         .quiz-option input { margin-right: 10px; }
         
         /* Simulator Wiring Engine */
@@ -61,7 +61,7 @@
         .avo-display { background: #84cc16; color: #064e3b; font-family: monospace; font-size: 16px; font-weight: bold; padding: 4px; border-radius: 4px; margin-top: 5px; }
         .draggable-item { padding: 10px; background: white; border: 1px solid var(--border); margin-bottom: 8px; border-radius: 6px; cursor: grab; font-size: 13px; font-weight: 600; }
         
-        /* Toast & Chat - Di Tengah (Center) */
+        /* Toast & Chat */
         #toast-container { 
             position: fixed; 
             top: 25px; 
@@ -119,7 +119,7 @@
             <button class="btn btn-primary btn-full" id="btn-login" style="margin-bottom:10px;">Masuk Aplikasi</button>
             <button class="btn btn-success btn-full" id="btn-register">Daftar Akun Baru</button>
             
-            <a href="#" id="btn-forgot" style="display:block; text-align:center; margin-top:16px; font-size:12px; font-weight:600; color:var(--warning);">Lupa Sandi? Hubungi Admin</a>
+            <a href="#" id="btn-forgot" style="display:block; text-align:center; margin-top:16px; font-size:12px; font-weight:600; color:var(--warning); text-decoration:none;">Lupa Sandi? Hubungi Admin</a>
         </div>
     </div>
 
@@ -145,8 +145,8 @@
                 <div class="nav-item" data-target="view-simulator">⚙️ Simulator Praktik</div>
                 <div class="nav-item" data-target="view-ai">🤖 AI Asisten</div>
 
-                <!-- Menu Khusus Guru -->
-                <div class="nav-guru hidden">
+                <!-- Menu Khusus Guru (Hanya di Sidebar) -->
+                <div id="sidebar-guru-section" class="hidden">
                     <div style="padding: 10px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-top: 10px;">Panel Guru</div>
                     <div class="nav-item" data-target="view-guru-rekap">📊 Rekap Nilai Siswa</div>
                     <div class="nav-item" data-target="view-guru-kuis">📝 Kelola Soal Kuis</div>
@@ -279,7 +279,7 @@
                     <div class="simulator-layout">
                         <div id="sim-canvas" ondrop="window.dropComp(event)" ondragover="event.preventDefault()">
                             <svg id="wire-layer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:5;"></svg>
-                            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#475569; font-weight:700;" id="empty-canvas-text">Drag komponen ke area ini</div>
+                            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#475569; font-weight:700; pointer-events:none;" id="empty-canvas-text">Drag komponen ke area ini</div>
                         </div>
 
                         <div class="card" style="padding:16px; height: 550px; overflow-y: auto;">
@@ -317,10 +317,10 @@
                 </div>
 
                 <!-- ===================================== -->
-                <!-- PANEL GURU -->
+                <!-- PANEL GURU (Konten) -->
                 <!-- ===================================== -->
 
-                <div id="view-guru-rekap" class="view-section hidden nav-guru">
+                <div id="view-guru-rekap" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📊 Rekap Nilai Seluruh Siswa</h2>
                     <div class="card">
                         <table>
@@ -332,7 +332,7 @@
                     </div>
                 </div>
 
-                <div id="view-guru-jobsheet" class="view-section hidden nav-guru">
+                <div id="view-guru-jobsheet" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📁 Kelola Jobsheet PDF</h2>
                     <div class="card" style="margin-bottom:20px; background:#f8fafc;">
                         <h4 style="margin-bottom:12px;">Upload Jobsheet Baru</h4>
@@ -349,7 +349,7 @@
                     </div>
                 </div>
 
-                <div id="view-guru-kuis" class="view-section hidden nav-guru">
+                <div id="view-guru-kuis" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📝 Kelola Soal Kuis</h2>
                     <div class="card">
                         <h4 style="margin-bottom:12px;">Tambah Soal Baru</h4>
@@ -412,29 +412,53 @@
         setTimeout(() => t.remove(), 4000);
     }
 
+    function escapeHtml(text) {
+        if (!text) return '';
+        const d = document.createElement('div');
+        d.textContent = text;
+        return d.innerHTML;
+    }
+
     setInterval(() => {
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
         document.getElementById('clock').textContent = now.toLocaleDateString('id-ID', options) + " WIB";
     }, 1000);
 
+    // Navigasi Menu
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             item.classList.add('active');
             document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
-            document.getElementById(item.dataset.target).classList.remove('hidden');
+            const targetView = document.getElementById(item.dataset.target);
+            if (targetView) targetView.classList.remove('hidden');
             document.getElementById('topbar-title').textContent = item.textContent.replace(/[^\w\s]/gi, '').trim();
         });
     });
 
+    // ==========================================
+    // 2. LOGIKA ROLE (GURU vs SISWA)
+    // ==========================================
+    // Jika mengandung @guru berarti guru, jika hanya smk.belajar.id berarti siswa
     function checkValidDomain(email) {
-        return email.endsWith('@smk.belajar.id') || email.endsWith('@guru.smk.belajar.id');
+        if (!email || !email.includes('@')) return false;
+        const e = email.toLowerCase().trim();
+        return e.endsWith('@smk.belajar.id') || e.endsWith('@guru.smk.belajar.id') || (e.includes('@guru') && e.endsWith('.belajar.id'));
     }
 
-    function applyUIRole(email, pNama, pFoto, pTtl, pWa) {
+    function detectRole(email) {
+        const e = (email || '').toLowerCase().trim();
+        if (e.includes('@guru')) {
+            return 'guru';
+        }
+        return 'siswa';
+    }
+
+    function applyUIRole(email, pNama, pFoto, pTtl, pWa, roleFromDb = '') {
         currentUserEmail = email.toLowerCase().trim();
-        isGuru = currentUserEmail.includes('@guru.smk.belajar.id');
+        // @guru berarti guru, selain itu adalah siswa
+        isGuru = (roleFromDb === 'guru') || detectRole(currentUserEmail) === 'guru';
 
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('app-layout').classList.remove('hidden');
@@ -444,25 +468,27 @@
         document.getElementById('greet-name').textContent = `HALO, ${pNama.toUpperCase()}! 👋`;
 
         document.getElementById('prof-nama').value = pNama;
-        document.getElementById('prof-foto').value = pFoto !== 'https://via.placeholder.com/80' ? pFoto : '';
-        document.getElementById('profile-img-preview').src = pFoto;
-        document.getElementById('prof-ttl').value = pTtl;
-        document.getElementById('prof-wa').value = pWa;
+        document.getElementById('prof-foto').value = (pFoto && pFoto !== 'https://via.placeholder.com/80') ? pFoto : '';
+        document.getElementById('profile-img-preview').src = pFoto || 'https://via.placeholder.com/80';
+        document.getElementById('prof-ttl').value = pTtl || '';
+        document.getElementById('prof-wa').value = pWa || '';
         document.getElementById('prof-email').value = email;
+
+        const guruSidebar = document.getElementById('sidebar-guru-section');
 
         if (isGuru) {
             document.getElementById('sb-role').textContent = 'Guru';
             document.getElementById('sb-role').className = 'badge badge-guru';
             document.getElementById('greet-desc').textContent = "Anda masuk sebagai Guru. Gunakan panel di sebelah kiri untuk mengelola kelas.";
             document.getElementById('student-history-card').classList.add('hidden'); 
-            document.querySelectorAll('.nav-guru').forEach(el => el.classList.remove('hidden'));
+            if (guruSidebar) guruSidebar.classList.remove('hidden');
             loadGuruRekap();
         } else {
             document.getElementById('sb-role').textContent = 'Siswa';
             document.getElementById('sb-role').className = 'badge badge-siswa';
             document.getElementById('greet-desc').textContent = "Pantau riwayat pengerjaan dan nilai kamu di sini.";
             document.getElementById('student-history-card').classList.remove('hidden'); 
-            document.querySelectorAll('.nav-guru').forEach(el => el.classList.add('hidden'));
+            if (guruSidebar) guruSidebar.classList.add('hidden');
             loadStudentHistory();
         }
         loadJobsheets();
@@ -470,19 +496,32 @@
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            const email = user.email;
+            const email = (user.email || '').toLowerCase().trim();
             const userRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(userRef);
+            let pNama = email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '', roleFromDb = '';
             
-            let pNama = email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '';
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                pNama = data.nama || pNama;
-                pFoto = data.foto || pFoto;
-                pTtl = data.ttl || pTtl;
-                pWa = data.wa || pWa;
+            try {
+                const docSnap = await getDoc(userRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    pNama = data.nama || pNama;
+                    pFoto = data.foto || pFoto;
+                    pTtl = data.ttl || pTtl;
+                    pWa = data.wa || pWa;
+                    roleFromDb = data.role || '';
+                } else {
+                    roleFromDb = detectRole(email);
+                    await setDoc(userRef, {
+                        email: email,
+                        role: roleRole,
+                        nama: pNama,
+                        foto: pFoto
+                    }, { merge: true });
+                }
+            } catch(e) {
+                console.error("Gagal mengambil data user:", e);
             }
-            applyUIRole(email, pNama, pFoto, pTtl, pWa);
+            applyUIRole(email, pNama, pFoto, pTtl, pWa, roleFromDb);
         } else {
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('app-layout').classList.add('hidden');
@@ -492,19 +531,14 @@
     document.getElementById('btn-login').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
         const pass = document.getElementById('password-input').value.trim();
-        if(!checkValidDomain(email)) { showToast("Gagal: Harus menggunakan email @smk.belajar.id atau @guru.smk.belajar.id"); return; }
+        if(!checkValidDomain(email)) { 
+            showToast("Gagal: Gunakan email @smk.belajar.id atau @guru.smk.belajar.id"); 
+            return; 
+        }
         
         try {
-            const res = await signInWithEmailAndPassword(auth, email, pass);
+            await signInWithEmailAndPassword(auth, email, pass);
             showToast("Login Berhasil!");
-            const userRef = doc(db, "users", res.user.uid);
-            const docSnap = await getDoc(userRef);
-            let pNama = email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '';
-            if (docSnap.exists()) {
-                const d = docSnap.data();
-                pNama = d.nama || pNama; pFoto = d.foto || pFoto; pTtl = d.ttl || pTtl; pWa = d.wa || pWa;
-            }
-            applyUIRole(email, pNama, pFoto, pTtl, pWa);
         } catch(e) {
             if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
                 showToast("Akun tidak ditemukan atau sandi salah!");
@@ -517,21 +551,23 @@
     document.getElementById('btn-register').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
         const password = document.getElementById('password-input').value.trim();
-        if(!checkValidDomain(email)) { showToast("Gagal: Pendaftaran dibatasi hanya untuk domain sekolah."); return; }
+        if(!checkValidDomain(email)) { 
+            showToast("Gagal: Pendaftaran dibatasi hanya untuk domain sekolah (@smk.belajar.id atau @guru.smk.belajar.id)."); 
+            return; 
+        }
         
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
-            const roleUser = email.includes('@guru.smk.belajar.id') ? 'guru' : 'siswa';
+            const roleUser = detectRole(email);
             
             await setDoc(doc(db, "users", userCred.user.uid), {
-                email: email,
+                email: email.toLowerCase(),
                 role: roleUser,
                 nama: email.split('@')[0],
                 foto: 'https://via.placeholder.com/80'
             }, { merge: true });
 
-            showToast("Pendaftaran Berhasil!");
-            applyUIRole(email, email.split('@')[0], 'https://via.placeholder.com/80', '', '');
+            showToast("Pendaftaran Berhasil sebagai " + (roleUser === 'guru' ? 'Guru' : 'Siswa') + "!");
         } catch(e) {
             showToast("Gagal Daftar: " + e.message);
         }
@@ -544,7 +580,7 @@
 
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-    // UPDATE PREVIEW GAMBAR SAAT LINK DITEMPEL
+    // UPDATE PREVIEW GAMBAR
     document.getElementById('prof-foto').addEventListener('input', (e) => {
         const val = e.target.value.trim();
         if(val.includes('google.com/imgres')) {
@@ -576,7 +612,9 @@
         }
     });
 
-    // HISTORY SISWA
+    // ==========================================
+    // 3. RIWAYAT SISWA & UPDATE STATUS KUIS
+    // ==========================================
     let kuis1Selesai = false;
 
     function formatTanggalLengkap(seconds) {
@@ -595,32 +633,55 @@
             if(snap.empty && tbody) {
                 tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada riwayat aktivitas.</td></tr>`;
             } else if (tbody) {
-                snap.forEach(doc => {
-                    const d = doc.data();
+                snap.forEach(docSnap => {
+                    const d = docSnap.data();
                     const dateStr = formatTanggalLengkap(d.waktu?.seconds);
-                    tbody.innerHTML += `<tr><td>${d.kegiatan}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
-                    if (d.kuisId === 1 && parseInt(d.nilai) >= 0) kuis1Selesai = true; 
+                    tbody.innerHTML += `<tr><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
+                    if ((d.kuisId === 1 || d.kuisId === "1") && parseInt(d.nilai) >= 0) {
+                        kuis1Selesai = true; 
+                    }
                 });
             }
             updateQuizLockUI();
-        });
+        }, (err) => console.error(err));
     }
 
     function updateQuizLockUI() {
+        const btn1 = document.getElementById('btn-kuis-1');
+        const stat1 = document.getElementById('status-kuis-1');
         const btn2 = document.getElementById('btn-kuis-2');
         const stat2 = document.getElementById('status-kuis-2');
+
         if (kuis1Selesai) {
-            btn2.disabled = false;
-            stat2.textContent = "Terbuka";
-            stat2.style.color = "var(--success)";
+            if (stat1) {
+                stat1.textContent = "✅ Selesai Dikerjakan";
+                stat1.style.color = "var(--success)";
+            }
+            if (btn1) btn1.textContent = "Kerjakan Ulang Kuis 1";
+
+            if (btn2) btn2.disabled = false;
+            if (stat2) {
+                stat2.textContent = "🔓 Terbuka untuk Dikerjakan";
+                stat2.style.color = "var(--success)";
+            }
         } else {
-            btn2.disabled = true;
-            stat2.textContent = "🔒 Terkunci (Selesaikan Kuis 1 dahulu)";
-            stat2.style.color = "var(--danger)";
+            if (stat1) {
+                stat1.textContent = "Belum dikerjakan";
+                stat1.style.color = "var(--text-muted)";
+            }
+            if (btn1) btn1.textContent = "Mulai Kuis 1";
+
+            if (btn2) btn2.disabled = true;
+            if (stat2) {
+                stat2.textContent = "🔒 Terkunci (Selesaikan Kuis 1 dahulu)";
+                stat2.style.color = "var(--danger)";
+            }
         }
     }
 
-    // KUIS
+    // ==========================================
+    // 4. KUIS ENGINE
+    // ==========================================
     let currentQuizId = 1;
     let currentQuestions = [];
     let currentQIndex = 0;
@@ -643,9 +704,13 @@
         document.getElementById('active-quiz-title').textContent = `Mengerjakan Kuis ${quizId}`;
         
         currentQuestions = [];
-        const qRef = query(collection(db, "quiz_questions"), where("kuisId", "==", quizId.toString()));
-        const snap = await getDocs(qRef);
-        snap.forEach(doc => currentQuestions.push(doc.data()));
+        try {
+            const qRef = query(collection(db, "quiz_questions"), where("kuisId", "==", String(quizId)));
+            const snap = await getDocs(qRef);
+            snap.forEach(docSnap => currentQuestions.push(docSnap.data()));
+        } catch(e) {
+            console.error("Gagal memuat soal Firestore, memakai fallback:", e);
+        }
 
         if (currentQuestions.length === 0) currentQuestions = quizId === 1 ? fallbackQ1 : fallbackQ2;
 
@@ -653,12 +718,12 @@
         score = 0;
         document.getElementById('total-q').textContent = currentQuestions.length;
         renderQuestion();
-    }
+    };
 
     window.cancelQuiz = function() {
         document.getElementById('quiz-list-container').classList.remove('hidden');
         document.getElementById('quiz-execution-area').classList.add('hidden');
-    }
+    };
 
     function renderQuestion() {
         selectedAnswer = "";
@@ -673,7 +738,7 @@
         ['a', 'b', 'c', 'd'].forEach(opt => {
             const div = document.createElement('label');
             div.className = 'quiz-option';
-            div.innerHTML = `<input type="radio" name="q_opt" value="${opt.toUpperCase()}"> <b>${opt.toUpperCase()}</b>. ${qData[opt]}`;
+            div.innerHTML = `<input type="radio" name="q_opt" value="${opt.toUpperCase()}"> <b>${opt.toUpperCase()}</b>. ${escapeHtml(qData[opt])}`;
             div.onclick = () => {
                 selectedAnswer = opt.toUpperCase();
                 document.getElementById('btn-next-q').disabled = false;
@@ -689,7 +754,8 @@
     }
 
     window.nextQuestion = async function() {
-        if (selectedAnswer === currentQuestions[currentQIndex].ans) score++;
+        const correctAns = String(currentQuestions[currentQIndex].ans || '').toUpperCase();
+        if (selectedAnswer === correctAns) score++;
         
         if (currentQIndex < currentQuestions.length - 1) {
             currentQIndex++;
@@ -711,21 +777,29 @@
             showToast(`Kuis Selesai! Nilai Kamu: ${finalScore}`);
             cancelQuiz();
         }
-    }
+    };
 
-    // PANEL GURU
+    // ==========================================
+    // 5. PANEL GURU (REKAP & SOAL)
+    // ==========================================
     function loadGuruRekap() {
-        onSnapshot(query(collection(db, "history"), orderBy("waktu", "desc")), (snap) => {
+        const handleSnap = (snap) => {
             const tbody = document.getElementById('guru-rekap-table');
             if(!tbody) return;
             tbody.innerHTML = '';
-            if(snap.empty) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada data.</td></tr>`; return; }
-            snap.forEach(doc => {
-                const d = doc.data();
+            if(snap.empty) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada data nilai siswa.</td></tr>`; return; }
+            snap.forEach(docSnap => {
+                const d = docSnap.data();
                 const dateStr = formatTanggalLengkap(d.waktu?.seconds);
-                const identity = d.nama && d.nama !== d.email ? `${d.nama}<br><small style="color:gray">${d.email}</small>` : d.email;
-                tbody.innerHTML += `<tr><td>${identity}</td><td>${d.kegiatan}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td></tr>`;
+                const identity = d.nama && d.nama !== d.email ? `${escapeHtml(d.nama)}<br><small style="color:gray">${escapeHtml(d.email)}</small>` : escapeHtml(d.email);
+                tbody.innerHTML += `<tr><td>${identity}</td><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td></tr>`;
             });
+        };
+
+        // Menggunakan fallback jika index waktu desc belum terpasang
+        onSnapshot(query(collection(db, "history"), orderBy("waktu", "desc")), handleSnap, (err) => {
+            console.warn("OrderBy waktu gagal, mencoba tanpa sorting:", err);
+            onSnapshot(collection(db, "history"), handleSnap);
         });
     }
 
@@ -740,14 +814,25 @@
 
         if(!q || !a || !b || !c || !d || !ans) { showToast("Mohon lengkapi seluruh field soal!"); return; }
 
-        await addDoc(collection(db, "quiz_questions"), { kuisId, q, a, b, c, d, ans, createdAt: serverTimestamp() });
-        showToast("Soal berhasil ditambahkan ke Kuis " + kuisId);
-        
-        document.getElementById('guru-q-text').value = '';
-        ['a','b','c','d'].forEach(opt => document.getElementById('guru-q-'+opt).value = '');
-        document.getElementById('guru-q-answer').value = '';
+        try {
+            await addDoc(collection(db, "quiz_questions"), { 
+                kuisId: String(kuisId), 
+                q, a, b, c, d, ans, 
+                createdAt: serverTimestamp() 
+            });
+            showToast("Soal berhasil ditambahkan ke Kuis " + kuisId);
+            
+            document.getElementById('guru-q-text').value = '';
+            ['a','b','c','d'].forEach(opt => document.getElementById('guru-q-'+opt).value = '');
+            document.getElementById('guru-q-answer').value = '';
+        } catch(e) {
+            showToast("Gagal menyimpan soal: " + e.message);
+        }
     });
 
+    // ==========================================
+    // 6. JOBSHEET ENGINE
+    // ==========================================
     function loadJobsheets() {
         onSnapshot(collection(db, "jobsheets"), (snap) => {
             const studentList = document.getElementById('jobsheet-list-container');
@@ -757,7 +842,7 @@
             if(guruTable) guruTable.innerHTML = '';
 
             if(snap.empty) {
-                if(studentList) studentList.innerHTML = `<div style="color:var(--text-muted);">Belum ada jobsheet tersedia.</div>`;
+                if(studentList) studentList.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:15px;">Belum ada jobsheet tersedia.</div>`;
                 if(guruTable) guruTable.innerHTML = `<tr><td colspan="2" style="text-align:center;">Belum ada data.</td></tr>`;
                 return;
             }
@@ -769,18 +854,18 @@
                 if (studentList) {
                     studentList.innerHTML += `
                         <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; border:1px solid var(--border); border-radius:8px; margin-bottom:12px; background:white;">
-                            <div>📄 <b style="font-size:15px;">${d.judul}</b></div>
-                            <a href="${d.url}" target="_blank" class="btn btn-primary" style="padding:8px 16px; font-size:13px;">Buka & Download PDF</a>
+                            <div>📄 <b style="font-size:15px;">${escapeHtml(d.judul)}</b></div>
+                            <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:8px 16px; font-size:13px;">Buka & Download PDF</a>
                         </div>
                     `;
                 }
                 if (isGuru && guruTable) {
                     guruTable.innerHTML += `
                         <tr>
-                            <td>📄 ${d.judul}</td>
+                            <td>📄 ${escapeHtml(d.judul)}</td>
                             <td>
-                                <a href="${d.url}" target="_blank" class="btn btn-primary" style="padding:6px 12px; font-size:12px;">Lihat</a>
-                                <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="window.delJobsheet('${jId}', '${d.storagePath}')">Hapus</button>
+                                <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:6px 12px; font-size:12px;">Lihat</a>
+                                <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="window.delJobsheet('${jId}', '${d.storagePath || ''}')">Hapus</button>
                             </td>
                         </tr>
                     `;
@@ -815,12 +900,20 @@
 
     window.delJobsheet = async function(docId, path) {
         if(!confirm("Yakin ingin menghapus jobsheet ini dari sistem?")) return;
-        await deleteDoc(doc(db, "jobsheets", docId));
-        try { await deleteObject(storageRef(storage, path)); } catch(e) {}
-        showToast("Jobsheet berhasil dihapus.");
-    }
+        try {
+            await deleteDoc(doc(db, "jobsheets", docId));
+            if(path) {
+                try { await deleteObject(storageRef(storage, path)); } catch(err){}
+            }
+            showToast("Jobsheet berhasil dihapus.");
+        } catch(e) {
+            showToast("Gagal menghapus: " + e.message);
+        }
+    };
 
-    // SIMULATOR WIRING
+    // ==========================================
+    // 7. SIMULATOR WIRING KELISTRIKAN
+    // ==========================================
     let compIdCounter = 0;
     const canvas = document.getElementById('sim-canvas');
     const wireLayer = document.getElementById('wire-layer');
@@ -831,7 +924,7 @@
         'baterai': { name: 'Baterai 12V', icon: '🔋', terms: [{code:'30', pos:'top:10%;left:-8px'}, {code:'31', pos:'bottom:10%;left:-8px'}] },
         'kontak': { name: 'Kunci Kontak', icon: '🔑', terms: [{code:'30', pos:'top:-8px;left:20%'}, {code:'15', pos:'top:-8px;right:20%'}] },
         'sakelar_kanan': { name: 'Sakelar Kanan', icon: '🕹️', terms: [{code:'15', pos:'left:-8px;top:20%'}, {code:'58', pos:'right:-8px;top:50%'}, {code:'56', pos:'bottom:-8px;left:50%'}] },
-        'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terms: [{code:'56', pos:'top:-8px;left:20%'}, {code:'56a', pos:'right:-8px;top:20%'}, {code:'56b', pos:'right:-8px;top:40%'}, {code:'49a', pos:'left:-8px;bottom:20%'}, {code:'L', pos:'bottom:-8px;left:20%'}, {code:'R', pos:'bottom:-8px;right:20%'}, {code:'Ho', pos:'right:-8px;bottom:10%'}] },
+        'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terms: [{code:'15', pos:'left:-8px;top:20%'}, {code:'56', pos:'top:-8px;left:20%'}, {code:'56a', pos:'right:-8px;top:20%'}, {code:'56b', pos:'right:-8px;top:40%'}, {code:'49a', pos:'left:-8px;bottom:20%'}, {code:'L', pos:'bottom:-8px;left:20%'}, {code:'R', pos:'bottom:-8px;right:20%'}, {code:'Ho', pos:'right:-8px;bottom:10%'}] },
         'flasher': { name: 'Flasher', icon: '🔀', terms: [{code:'49', pos:'left:-8px;top:40%'}, {code:'49a', pos:'right:-8px;top:40%'}] },
         'lampu_kepala': { name: 'Lampu Kepala', icon: '💡', terms: [{code:'56a', pos:'left:-8px;top:20%'}, {code:'56b', pos:'left:-8px;top:50%'}, {code:'31', pos:'right:-8px;bottom:20%'}] },
         'lampu_senja': { name: 'Lampu Senja', icon: '💡', terms: [{code:'58', pos:'left:-8px;top:40%'}, {code:'31', pos:'right:-8px;top:40%'}] },
@@ -839,20 +932,20 @@
         'lampu_sein_kanan': { name: 'Sein Kanan', icon: '🚥', terms: [{code:'R', pos:'top:-8px;left:40%'}, {code:'31', pos:'bottom:-8px;left:40%'}] },
         'lampu_rem': { name: 'Lampu Rem', icon: '🔴', terms: [{code:'54', pos:'left:-8px;top:40%'}, {code:'31', pos:'right:-8px;top:40%'}] },
         'sakelar_rem': { name: 'Sakelar Rem', icon: '🕹️', terms: [{code:'15', pos:'top:-8px;left:20%'}, {code:'54', pos:'bottom:-8px;left:20%'}] },
-        'klakson': { name: 'Klakson', icon: '📢', terms: [{code:'15', pos:'top:-8px;left:40%'}, {code:'31', pos:'bottom:-8px;left:40%'}] },
+        'klakson': { name: 'Klakson', icon: '📢', terms: [{code:'Ho', pos:'top:-8px;left:40%'}, {code:'31', pos:'bottom:-8px;left:40%'}] },
         'speedo': { name: 'Instrumen', icon: '📟', terms: [{code:'56a', pos:'top:-8px;left:20%'}, {code:'L', pos:'top:-8px;left:50%'}, {code:'R', pos:'top:-8px;right:20%'}, {code:'31', pos:'bottom:-8px;left:50%'}] },
         'avometer': { name: 'Avometer', icon: '🎛️', terms: [{code:'V+', pos:'left:-8px;top:30%'}, {code:'COM', pos:'right:-8px;top:30%'}], isAvo: true }
     };
 
-    window.dragStart = function(ev, type) { ev.dataTransfer.setData('compType', type); }
+    window.dragStart = function(ev, type) { ev.dataTransfer.setData('compType', type); };
     window.dropComp = function(ev) {
         ev.preventDefault();
-        const type = ev.dataTransfer.getData('compType'); if(!type) return;
+        const type = ev.dataTransfer.getData('compType'); if(!type || !compLibrary[type]) return;
         document.getElementById('empty-canvas-text').style.display = 'none';
 
         const rect = canvas.getBoundingClientRect();
-        const x = ev.clientX - rect.left - 45;
-        const y = ev.clientY - rect.top - 45;
+        const x = Math.max(10, ev.clientX - rect.left - 45);
+        const y = Math.max(10, ev.clientY - rect.top - 45);
         
         compIdCounter++;
         const cId = 'comp_' + compIdCounter;
@@ -873,12 +966,16 @@
             
             tEl.onclick = (e) => {
                 e.stopPropagation();
-                if(!selectedNode) { selectedNode = tId; tEl.classList.add('active'); }
-                else {
-                    if(selectedNode !== tId && nodes[selectedNode].cId !== cId) {
-                        wires.push({ id:`w_${Date.now()}`, from: selectedNode, to: tId }); drawWires();
+                if(!selectedNode) { 
+                    selectedNode = tId; 
+                    tEl.classList.add('active'); 
+                } else {
+                    if(selectedNode !== tId && nodes[selectedNode] && nodes[selectedNode].cId !== cId) {
+                        wires.push({ id:`w_${Date.now()}`, from: selectedNode, to: tId }); 
+                        drawWires();
                     }
-                    document.getElementById(selectedNode).classList.remove('active');
+                    const prevEl = document.getElementById(selectedNode);
+                    if (prevEl) prevEl.classList.remove('active');
                     selectedNode = null;
                 }
             };
@@ -886,35 +983,52 @@
             nodes[tId] = { id: tId, cId: cId, code: t.code };
         });
 
+        // Fitur geser komponen di kanvas
         el.onmousedown = function(e) {
-            if(e.target.classList.contains('terminal')) return;
+            if(e.target.closest('.terminal')) return;
             let shiftX = e.clientX - el.getBoundingClientRect().left;
             let shiftY = e.clientY - el.getBoundingClientRect().top;
+            
             function onMove(ev) {
                 const cRect = canvas.getBoundingClientRect();
-                el.style.left = (ev.clientX - cRect.left - shiftX) + 'px';
-                el.style.top = (ev.clientY - cRect.top - shiftY) + 'px';
+                let newX = ev.clientX - cRect.left - shiftX;
+                let newY = ev.clientY - cRect.top - shiftY;
+                newX = Math.max(0, Math.min(newX, cRect.width - el.offsetWidth));
+                newY = Math.max(0, Math.min(newY, cRect.height - el.offsetHeight));
+                el.style.left = newX + 'px';
+                el.style.top = newY + 'px';
                 drawWires();
             }
             document.addEventListener('mousemove', onMove);
-            document.onmouseup = () => { document.removeEventListener('mousemove', onMove); document.onmouseup = null; };
+            document.onmouseup = () => { 
+                document.removeEventListener('mousemove', onMove); 
+                document.onmouseup = null; 
+            };
         };
         canvas.appendChild(el);
-    }
+    };
 
     function drawWires() {
         wireLayer.innerHTML = '';
         wires.forEach(w => {
-            const el1 = document.getElementById(w.from).getBoundingClientRect();
-            const el2 = document.getElementById(w.to).getBoundingClientRect();
+            const el1 = document.getElementById(w.from);
+            const el2 = document.getElementById(w.to);
+            if (!el1 || !el2) return;
+            const r1 = el1.getBoundingClientRect();
+            const r2 = el2.getBoundingClientRect();
             const cvs = canvas.getBoundingClientRect();
-            wireLayer.innerHTML += `<line x1="${el1.left - cvs.left + 8}" y1="${el1.top - cvs.top + 8}" x2="${el2.left - cvs.left + 8}" y2="${el2.top - cvs.top + 8}" stroke="#e2e8f0" stroke-width="4"/>`;
+            const x1 = r1.left - cvs.left + r1.width / 2;
+            const y1 = r1.top - cvs.top + r1.height / 2;
+            const x2 = r2.left - cvs.left + r2.width / 2;
+            const y2 = r2.top - cvs.top + r2.height / 2;
+            wireLayer.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>`;
         });
     }
 
     document.getElementById('btn-reset-kanvas').addEventListener('click', () => {
         document.querySelectorAll('.canvas-comp').forEach(e => e.remove());
         nodes = {}; wires = []; wireLayer.innerHTML = '';
+        selectedNode = null;
         document.getElementById('empty-canvas-text').style.display = 'block';
     });
 
@@ -924,13 +1038,20 @@
 
         let batP = null, batG = null;
         for (const [tId, node] of Object.entries(nodes)) {
-            if (node.code === '30' && document.getElementById(node.cId).dataset.type === 'baterai') batP = tId;
-            if (node.code === '31' && document.getElementById(node.cId).dataset.type === 'baterai') batG = tId;
+            const compEl = document.getElementById(node.cId);
+            if (!compEl) continue;
+            if (node.code === '30' && compEl.dataset.type === 'baterai') batP = tId;
+            if (node.code === '31' && compEl.dataset.type === 'baterai') batG = tId;
         }
-        if (!batP || !batG) { showToast("Gagal: Sirkuit butuh komponen Baterai 12V!"); return; }
+        if (!batP || !batG) { 
+            showToast("Gagal: Sirkuit butuh Baterai 12V (terminal 30 & 31)!"); 
+            return; 
+        }
 
-        let pNodes = new Set([batP]); let gNodes = new Set([batG]);
+        let pNodes = new Set([batP]); 
+        let gNodes = new Set([batG]);
         let changed = true;
+        
         while(changed) {
             changed = false;
             wires.forEach(w => {
@@ -952,7 +1073,7 @@
                 if (type === 'sakelar_kiri') {
                     if(hasP('56')) { setP('56a'); setP('56b'); }
                     if(hasP('49a')) { setP('L'); setP('R'); }
-                    if(hasP('Ho') || hasP('15')) setP('Ho');
+                    if(hasP('15')) setP('Ho');
                 }
             });
         }
@@ -967,26 +1088,42 @@
             if (type === 'lampu_senja' && hasG('31') && hasP('58')) { el.classList.add('comp-on'); success++; }
             if ((type === 'lampu_sein_kiri' && hasG('31') && hasP('L')) || (type === 'lampu_sein_kanan' && hasG('31') && hasP('R'))) { el.classList.add('comp-on'); success++; }
             if (type === 'lampu_rem' && hasG('31') && hasP('54')) { el.classList.add('comp-on'); success++; }
-            if (type === 'klakson' && hasP('15') && hasG('31')) { el.classList.add('comp-on'); success++; }
+            if (type === 'klakson' && (hasP('Ho') || hasP('15')) && hasG('31')) { el.classList.add('comp-on'); success++; }
             if (type === 'speedo' && hasG('31') && (hasP('56a') || hasP('L') || hasP('R'))) { el.classList.add('comp-on'); success++; }
             if (type === 'avometer' && hasP('V+') && hasG('COM')) {
                 const aDis = document.getElementById('avo_'+cId);
-                aDis.textContent = '12.4V'; aDis.style.background = '#facc15';
+                if (aDis) {
+                    aDis.textContent = '12.4V'; 
+                    aDis.style.background = '#facc15';
+                }
+                el.classList.add('comp-on');
+                success++;
             }
         });
 
-        if (success > 0) showToast(`⚡ Sukses! Arus mengalir dan ${success} beban aktif.`);
-        else showToast("Gagal: Rangkaian putus, massa kurang, atau sakelar belum terhubung.");
+        if (success > 0) showToast(`⚡ Sukses! Arus mengalir dan ${success} komponen aktif.`);
+        else showToast("Gagal: Rangkaian putus, massa kurang (31), atau sakelar belum terhubung.");
     });
 
-    // AI GROQ ASSISTANT
+    // ==========================================
+    // 8. ASISTEN AI (GROQ)
+    // ==========================================
     const GROQ_API_KEY = "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";
-    document.getElementById('btn-ai-send').addEventListener('click', async () => {
-        const text = document.getElementById('ai-input').value.trim();
+    
+    async function sendAiMessage() {
+        const input = document.getElementById('ai-input');
+        const text = input.value.trim();
         if(!text) return;
+        
         const log = document.getElementById('ai-chat-log');
-        log.innerHTML += `<div class="chat-msg msg-user">${text}</div>`;
-        document.getElementById('ai-input').value = '';
+        log.innerHTML += `<div class="chat-msg msg-user">${escapeHtml(text)}</div>`;
+        input.value = '';
+        log.scrollTop = log.scrollHeight;
+        
+        const typingEl = document.createElement('div');
+        typingEl.className = 'chat-msg msg-ai';
+        typingEl.textContent = 'Mengetik jawaban...';
+        log.appendChild(typingEl);
         log.scrollTop = log.scrollHeight;
         
         try {
@@ -994,19 +1131,29 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                 body: JSON.stringify({
-                    model: "openai/gpt-oss-120b",
+                    // Menggunakan model Groq resmi yang aktif
+                    model: "llama-3.3-70b-versatile",
                     messages: [
-                        { role: "system", content: "Kamu ahli kelistrikan motor SMK. Jawab spesifik gunakan standar kode terminal DIN. Jawab singkat." },
+                        { role: "system", content: "Kamu ahli kelistrikan motor SMK. Jawab spesifik gunakan standar kode terminal DIN (30, 31, 15, 56a, 56b, 49, dll). Jawab padat dan jelas." },
                         { role: "user", content: text }
                     ]
                 })
             });
             const data = await res.json();
-            log.innerHTML += `<div class="chat-msg msg-ai">${data.choices[0].message.content.replace(/\n/g, '<br>')}</div>`;
-            log.scrollTop = log.scrollHeight;
+            if (!res.ok || !data.choices || !data.choices[0]) {
+                throw new Error(data.error?.message || "Respon AI gagal");
+            }
+            typingEl.innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
         } catch(e) {
-            showToast("AI Error: Gagal memuat respon.");
+            typingEl.textContent = "AI Error: Gagal memuat respon. Silakan coba lagi.";
+            showToast("AI Error: " + e.message);
         }
+        log.scrollTop = log.scrollHeight;
+    }
+
+    document.getElementById('btn-ai-send').addEventListener('click', sendAiMessage);
+    document.getElementById('ai-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendAiMessage();
     });
 
 </script>
