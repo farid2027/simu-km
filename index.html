@@ -26,7 +26,7 @@
         
         /* Layout */
         .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5, #0f172a); padding:20px; }
-        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .login-card { background: white; padding: 36px 32px; border-radius: 16px; width: 100%; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .app-layout { display: flex; min-height: 100vh; }
         .sidebar { width: var(--sidebar-width); background: #0f172a; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 100; }
         .sidebar-menu { padding: 10px; flex: 1; overflow-y: auto; }
@@ -61,7 +61,7 @@
         .avo-display { background: #84cc16; color: #064e3b; font-family: monospace; font-size: 16px; font-weight: bold; padding: 4px; border-radius: 4px; margin-top: 5px; }
         .draggable-item { padding: 10px; background: white; border: 1px solid var(--border); margin-bottom: 8px; border-radius: 6px; cursor: grab; font-size: 13px; font-weight: 600; }
         
-        /* Toast & Chat */
+        /* 7. Notifikasi Ditengah (Centered Toast) */
         #toast-container { 
             position: fixed; 
             top: 25px; 
@@ -73,6 +73,8 @@
             align-items: center; 
             gap: 10px;
             pointer-events: none;
+            width: 90%;
+            max-width: 480px;
         }
         .toast { 
             background: #0f172a; 
@@ -86,6 +88,7 @@
             text-align: center;
             pointer-events: auto;
             animation: fadeInDown 0.3s ease-out;
+            width: 100%;
         }
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
@@ -100,14 +103,15 @@
 </head>
 <body>
 
+    <!-- CONTAINER NOTIFIKASI DI TENGAH -->
     <div id="toast-container"></div>
 
-    <!-- LOGIN SCREEN -->
+    <!-- 3. HALAMAN LOGIN DENGAN DESKRIPSI LENGKAP -->
     <div class="login-page" id="login-screen">
         <div class="login-card">
-            <h2 style="text-align:center; color:var(--primary); margin-bottom: 5px;">⚡ Simu-KM</h2>
-            <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-bottom:24px;">
-                Trainer Digital Kelistrikan Sepeda Motor
+            <h2 style="text-align:center; color:var(--primary); margin-bottom: 6px;">⚡ Simu-KM</h2>
+            <p style="text-align:center; font-size:12px; color:var(--text-muted); line-height: 1.5; margin-bottom:24px;">
+                <b>Simu-KM (Simulasi Kelistrikan Motor)</b> Merupakan Sebuah Media Pembelajaran Kelistrikan Sepeda Motor Untuk Siswa SMK Jurusan Teknik Sepeda Motor.
             </p>
             
             <label style="font-size:12px; font-weight:600;">Email Akun Sekolah</label>
@@ -123,18 +127,24 @@
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- MAIN APP LAYOUT -->
     <div class="app-layout hidden" id="app-layout">
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <div style="padding: 24px;">
                 <h2 style="color:white; margin:0;">⚡ Simu-KM</h2>
-                <div style="margin-top:12px; padding:10px; background:rgba(255,255,255,0.1); border-radius:8px;">
-                    <div id="sb-name" style="font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Siswa</div>
-                    <div id="sb-email" style="font-size:11px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">user@smk.belajar.id</div>
-                    <span id="sb-role" class="badge badge-siswa" style="display:inline-block; margin-top:6px;">Siswa</span>
+                <div style="margin-top:14px; padding:12px; background:rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; gap:12px;">
+                    <!-- 5. Foto Profil di Sidebar -->
+                    <img id="sb-avatar" src="https://via.placeholder.com/80" onerror="this.src='https://via.placeholder.com/80'" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid var(--primary); flex-shrink:0;">
+                    <div style="overflow:hidden; flex:1;">
+                        <div id="sb-name" style="font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Siswa</div>
+                        <div id="sb-email" style="font-size:11px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">user@smk.belajar.id</div>
+                        <span id="sb-role" class="badge badge-siswa" style="display:inline-block; margin-top:4px;">Siswa</span>
+                    </div>
                 </div>
             </div>
+            
+            <!-- 1. Posisi Menu Profil di Atas (Setelah Dashboard) -->
             <div class="sidebar-menu" id="nav-menu">
                 <div class="nav-item active" data-target="view-dashboard">🏠 Dashboard</div>
                 <div class="nav-item" data-target="view-profile">👤 Profil Saya</div>
@@ -145,7 +155,7 @@
                 <div class="nav-item" data-target="view-simulator">⚙️ Simulator Praktik</div>
                 <div class="nav-item" data-target="view-ai">🤖 AI Asisten</div>
 
-                <!-- Menu Khusus Guru (Hanya Muncul untuk @guru.smk.belajar.id) -->
+                <!-- 2 & 4. Menu Khusus Guru (Hanya untuk @guru.smk.belajar.id) -->
                 <div id="sidebar-guru-section" class="hidden">
                     <div style="padding: 10px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-top: 10px;">Panel Guru</div>
                     <div class="nav-item" data-target="view-guru-rekap">📊 Rekap Nilai Siswa</div>
@@ -153,6 +163,7 @@
                     <div class="nav-item" data-target="view-guru-jobsheet">📁 Kelola Jobsheet</div>
                 </div>
             </div>
+
             <div style="padding: 20px;">
                 <button class="btn btn-danger btn-full" id="btn-logout">🚪 Keluar</button>
             </div>
@@ -167,13 +178,14 @@
 
             <div class="content-area">
                 
-                <!-- DASHBOARD -->
+                <!-- 6. DASHBOARD DENGAN SAPAAN RAMAH "HALO, FARID! 👋" -->
                 <div id="view-dashboard" class="view-section">
-                    <div class="card" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color:white; border:none;">
-                        <h2 id="greet-name">HALO! 👋</h2>
-                        <p id="greet-desc" style="font-size:14px; opacity:0.9;">Pantau riwayat pengerjaan dan nilai kamu di sini.</p>
+                    <div class="card" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color:white; border:none; padding: 28px;">
+                        <h2 id="greet-name" style="font-size: 26px; letter-spacing: 0.5px;">HALO, SISWA! 👋</h2>
+                        <p id="greet-desc" style="font-size:14px; opacity:0.95; margin-top: 6px;">Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM.</p>
                     </div>
                     
+                    <!-- Tabel Riwayat Pengerjaan (Khusus Siswa) -->
                     <div class="card" id="student-history-card">
                         <h3 style="margin-bottom:16px;">📊 Riwayat Pengerjaan Kamu</h3>
                         <table>
@@ -185,21 +197,21 @@
                     </div>
                 </div>
 
-                <!-- PROFIL -->
+                <!-- 5. HALAMAN PROFIL (Lengkap dengan Preview & Perbaikan Save) -->
                 <div id="view-profile" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">👤 Profil Saya</h2>
-                    <div class="card" style="max-width: 600px;">
+                    <div class="card" style="max-width: 620px;">
                         <div style="display:flex; gap:20px; align-items:center; margin-bottom:20px;">
-                            <img id="profile-img-preview" src="https://via.placeholder.com/80" onerror="this.src='https://via.placeholder.com/80?text=Error'" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
+                            <img id="profile-img-preview" src="https://via.placeholder.com/80" onerror="this.src='https://via.placeholder.com/80?text=Error'" style="width:85px; height:85px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                             <div style="flex:1;">
-                                <label style="font-size:12px; font-weight:600;">URL Foto Profil</label>
-                                <input type="text" id="prof-foto" class="form-input" placeholder="https://contoh.com/foto.jpg">
-                                <p style="font-size:11px; color:var(--text-muted); margin-top:-8px; margin-bottom:8px;">Gunakan <b>Copy image address</b> (Salin alamat gambar) dari browser.</p>
+                                <label style="font-size:12px; font-weight:600;">URL / Tautan Foto Profil</label>
+                                <input type="text" id="prof-foto" class="form-input" placeholder="Tempel tautan foto (.jpg, .png, Google Drive)">
+                                <p style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:4px;">Foto langsung ter-update di samping dan di sidebar setelah disimpan.</p>
                             </div>
                         </div>
                         
                         <label style="font-size:12px; font-weight:600;">Nama Lengkap</label>
-                        <input type="text" id="prof-nama" class="form-input" placeholder="Nama Lengkap Kamu">
+                        <input type="text" id="prof-nama" class="form-input" placeholder="Nama Lengkap Kamu (contoh: Farid)">
                         
                         <label style="font-size:12px; font-weight:600;">Tempat, Tanggal Lahir (TTL)</label>
                         <input type="text" id="prof-ttl" class="form-input" placeholder="Contoh: Malang, 17 Agustus 2005">
@@ -218,8 +230,8 @@
                 <div id="view-materi" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📚 Materi & Jobsheet</h2>
                     <div class="card">
-                        <h4>Materi Kelistrikan Tanpa Starter</h4>
-                        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Pelajari standar terminal DIN (30, 31, 15, 56a, 56b, 49, dll) untuk merangkai penerangan, sein, rem, dan instrumen secara benar.</p>
+                        <h4>Materi Kelistrikan Standar DIN</h4>
+                        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Pelajari standar terminal DIN (30: Baterai (+), 31: Massa (-), 15: Kunci Kontak beban, 56a/b: Lampu Jauh/Dekat, 49/49a: Flasher Sein).</p>
                     </div>
                     <h3 style="margin-bottom:12px;">📁 Download Jobsheet Praktikum</h3>
                     <div id="jobsheet-list-container">
@@ -268,7 +280,7 @@
                     <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                         <div>
                             <h2 style="margin:0;">⚙️ Simulator Praktik Kelistrikan</h2>
-                            <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik terminal (titik abu-abu) untuk merangkai kabel.</p>
+                            <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik terminal untuk menghubungkan kabel.</p>
                         </div>
                         <div style="display:flex; gap:10px;">
                             <button class="btn btn-warning" id="btn-uji-sirkuit">⚡ Uji Rangkaian</button>
@@ -317,7 +329,7 @@
                 </div>
 
                 <!-- ===================================== -->
-                <!-- PANEL GURU (KONTEN) -->
+                <!-- PANEL GURU (KONTEN KHUSUS) -->
                 <!-- ===================================== -->
 
                 <div id="view-guru-rekap" class="view-section hidden">
@@ -404,10 +416,12 @@
     let isGuru = false;
     let currentUserEmail = "";
 
+    // 7. TOAST NOTIFIKASI DI TENGAH
     function showToast(msg) {
         const c = document.getElementById('toast-container');
         const t = document.createElement('div');
-        t.className = 'toast'; t.textContent = msg;
+        t.className = 'toast'; 
+        t.textContent = msg;
         c.appendChild(t);
         setTimeout(() => t.remove(), 4000);
     }
@@ -419,7 +433,7 @@
         return d.innerHTML;
     }
 
-    // Helper timeout agar aplikasi tidak pernah freeze / hang jika Firestore diblokir ekstensi AdBlock
+    // Helper timeout agar aplikasi tidak pernah freeze / hang
     function withTimeout(promise, ms = 2000) {
         return Promise.race([
             promise,
@@ -427,13 +441,36 @@
         ]);
     }
 
+    // 5. HELPER FORMAT LINK GAMBAR (Support Google Drive & Google Search)
+    function formatImageUrl(url) {
+        if (!url) return '';
+        url = url.trim();
+        const gDriveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (gDriveMatch && gDriveMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${gDriveMatch[1]}`;
+        }
+        const gDriveIdMatch = url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (url.includes('drive.google.com') && gDriveIdMatch && gDriveIdMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${gDriveIdMatch[1]}`;
+        }
+        if (url.includes('google.com/imgres') || url.includes('imgurl=')) {
+            try {
+                const urlObj = new URL(url);
+                const imgurl = urlObj.searchParams.get('imgurl');
+                if (imgurl) return decodeURIComponent(imgurl);
+            } catch(e){}
+        }
+        return url;
+    }
+
+    // JAM REALTIME
     setInterval(() => {
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
         document.getElementById('clock').textContent = now.toLocaleDateString('id-ID', options) + " WIB";
     }, 1000);
 
-    // Navigasi Menu Sidebar
+    // NAVIGASI MENU SIDEBAR
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -446,19 +483,19 @@
     });
 
     // ==========================================
-    // 2. ATURAN ROLE (GURU vs SISWA)
+    // 2 & 4. LOGIKA ROLE (GURU vs SISWA)
     // ==========================================
     function checkValidDomain(email) {
         if (!email || !email.includes('@')) return false;
         const e = email.toLowerCase().trim();
-        // Hanya menerima domain belajar.id resmi
         return e.endsWith('@guru.smk.belajar.id') || e.endsWith('@smk.belajar.id');
     }
 
     function detectRole(email) {
-        const e = (email || '').toLowerCase().trim();
-        // @guru.smk.belajar.id atau mengandung @guru -> GURU, selain itu -> SISWA
-        if (e.endsWith('@guru.smk.belajar.id') || e.includes('@guru')) {
+        if (!email) return 'siswa';
+        const e = email.toLowerCase().trim();
+        // @guru.smk.belajar.id atau email mengandung guru -> GURU
+        if (e.endsWith('@guru.smk.belajar.id') || e.includes('@guru') || e.includes('guru.smk') || e.startsWith('guru@')) {
             return 'guru';
         }
         return 'siswa';
@@ -466,36 +503,45 @@
 
     function applyUIRole(email, pNama, pFoto, pTtl, pWa, roleFromDb = '') {
         currentUserEmail = email.toLowerCase().trim();
-        isGuru = (roleFromDb === 'guru') || (detectRole(currentUserEmail) === 'guru');
+        const autoRole = detectRole(currentUserEmail);
+        
+        // JIKA EMAIL GURU, PASTI GURU (Prioritas Tinggi)
+        isGuru = (autoRole === 'guru') || (roleFromDb === 'guru');
 
-        // Beralih ke layar aplikasi utama seketika
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('app-layout').classList.remove('hidden');
 
-        document.getElementById('sb-name').textContent = pNama;
-        document.getElementById('sb-email').textContent = email;
-        document.getElementById('greet-name').textContent = `HALO, ${pNama.toUpperCase()}! 👋`;
+        const cleanNama = pNama || currentUserEmail.split('@')[0];
+        const upperNama = cleanNama.toUpperCase();
 
-        document.getElementById('prof-nama').value = pNama;
+        // 6. Sapaan Ramah: "HALO, FARID! 👋"
+        document.getElementById('sb-name').textContent = cleanNama;
+        document.getElementById('sb-email').textContent = currentUserEmail;
+        document.getElementById('greet-name').textContent = `HALO, ${upperNama}! 👋`;
+
+        // 5. Terapkan Foto Profil ke Sidebar & Halaman Profil
+        const finalFoto = formatImageUrl(pFoto) || 'https://via.placeholder.com/80';
+        document.getElementById('sb-avatar').src = finalFoto;
+        document.getElementById('profile-img-preview').src = finalFoto;
         document.getElementById('prof-foto').value = (pFoto && pFoto !== 'https://via.placeholder.com/80') ? pFoto : '';
-        document.getElementById('profile-img-preview').src = pFoto || 'https://via.placeholder.com/80';
+        document.getElementById('prof-nama').value = cleanNama;
         document.getElementById('prof-ttl').value = pTtl || '';
         document.getElementById('prof-wa').value = pWa || '';
-        document.getElementById('prof-email').value = email;
+        document.getElementById('prof-email').value = currentUserEmail;
 
         const guruSidebar = document.getElementById('sidebar-guru-section');
 
         if (isGuru) {
             document.getElementById('sb-role').textContent = 'Guru';
             document.getElementById('sb-role').className = 'badge badge-guru';
-            document.getElementById('greet-desc').textContent = "Anda masuk sebagai Guru. Gunakan panel di sebelah kiri untuk mengelola kelas.";
+            document.getElementById('greet-desc').textContent = "Selamat datang, Bapak/Ibu Guru! Gunakan Panel Guru untuk mengelola nilai, soal kuis, dan jobsheet.";
             document.getElementById('student-history-card').classList.add('hidden'); 
             if (guruSidebar) guruSidebar.classList.remove('hidden');
             loadGuruRekap();
         } else {
             document.getElementById('sb-role').textContent = 'Siswa';
             document.getElementById('sb-role').className = 'badge badge-siswa';
-            document.getElementById('greet-desc').textContent = "Pantau riwayat pengerjaan dan nilai kamu di sini.";
+            document.getElementById('greet-desc').textContent = "Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM. Pantau tugas dan nilaimu di sini.";
             document.getElementById('student-history-card').classList.remove('hidden'); 
             if (guruSidebar) guruSidebar.classList.add('hidden');
             loadStudentHistory();
@@ -503,17 +549,29 @@
         loadJobsheets();
     }
 
-    // LISTENER AUTENTIKASI (Resilient terhadap AdBlock)
+    // LISTENER AUTHENTICATION
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             const email = (user.email || '').toLowerCase().trim();
             const roleDefault = detectRole(email);
             let pNama = email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '', roleUser = roleDefault;
 
-            // 1. BUKA UI LANGSUNG (Tanpa menunggu Firestore agar tidak stuck)
+            // Cek data lokal dari localStorage dahulu agar responsif
+            try {
+                const localData = localStorage.getItem('simu_profile_' + user.uid);
+                if (localData) {
+                    const parsed = JSON.parse(localData);
+                    pNama = parsed.nama || pNama;
+                    pFoto = parsed.foto || pFoto;
+                    pTtl = parsed.ttl || pTtl;
+                    pWa = parsed.wa || pWa;
+                }
+            } catch(e){}
+
+            // 1. Langsung Tampilkan Layar Utama
             applyUIRole(email, pNama, pFoto, pTtl, pWa, roleUser);
 
-            // 2. Ambil data profil di latar belakang
+            // 2. Ambil Profil Firestore di Background
             try {
                 const userRef = doc(db, "users", user.uid);
                 const docSnap = await withTimeout(getDoc(userRef), 2000);
@@ -523,11 +581,25 @@
                     pFoto = data.foto || pFoto;
                     pTtl = data.ttl || pTtl;
                     pWa = data.wa || pWa;
-                    roleUser = data.role || roleUser;
+                    // Pastikan jika email guru, role Firestore disinkronkan ke guru
+                    if (roleDefault === 'guru' && data.role !== 'guru') {
+                        setDoc(userRef, { role: 'guru' }, { merge: true });
+                        roleUser = 'guru';
+                    } else {
+                        roleUser = data.role || roleDefault;
+                    }
                     applyUIRole(email, pNama, pFoto, pTtl, pWa, roleUser);
+                } else {
+                    // Dokumen baru
+                    await setDoc(userRef, {
+                        email: email,
+                        role: roleDefault,
+                        nama: pNama,
+                        foto: pFoto
+                    }, { merge: true });
                 }
             } catch(e) {
-                console.warn("Firestore tidak terjangkau (kemungkinan AdBlock aktif):", e);
+                console.warn("Firestore background sync offline/blocked:", e);
             }
         } else {
             document.getElementById('login-screen').classList.remove('hidden');
@@ -547,12 +619,13 @@
         
         try {
             await signInWithEmailAndPassword(auth, email, pass);
-            showToast("Login Berhasil!");
             const roleUser = detectRole(email);
-            applyUIRole(email, email.split('@')[0], 'https://via.placeholder.com/80', '', '', roleUser);
+            const namaUser = email.split('@')[0];
+            showToast(`HALO, ${namaUser.toUpperCase()}! Login Berhasil 👋`);
+            applyUIRole(email, namaUser, 'https://via.placeholder.com/80', '', '', roleUser);
         } catch(e) {
             if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
-                showToast("Akun tidak ditemukan atau sandi salah!");
+                showToast("Akun tidak dapat ditemukan, silakan daftar akun atau masukkan kembali sandi yang benar!");
             } else {
                 showToast("Gagal Login: " + e.message);
             }
@@ -565,28 +638,26 @@
         const password = document.getElementById('password-input').value.trim();
         
         if(!checkValidDomain(email)) { 
-            showToast("Gagal: Pendaftaran dibatasi untuk @smk.belajar.id (siswa) atau @guru.smk.belajar.id (guru)"); 
+            showToast("Gagal: Pendaftaran dibatasi hanya untuk @smk.belajar.id atau @guru.smk.belajar.id"); 
             return; 
         }
         
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
             const roleUser = detectRole(email);
+            const namaUser = email.split('@')[0];
             
-            // Simpan profil (non-blocking)
             try {
                 await withTimeout(setDoc(doc(db, "users", userCred.user.uid), {
                     email: email.toLowerCase(),
                     role: roleUser,
-                    nama: email.split('@')[0],
+                    nama: namaUser,
                     foto: 'https://via.placeholder.com/80'
                 }, { merge: true }), 2000);
-            } catch(err) {
-                console.warn("Database profil Firestore offline/terblokir.");
-            }
+            } catch(err){}
 
-            showToast("Pendaftaran Berhasil sebagai " + (roleUser === 'guru' ? 'Guru' : 'Siswa') + "!");
-            applyUIRole(email, email.split('@')[0], 'https://via.placeholder.com/80', '', '', roleUser);
+            showToast(`Pendaftaran Berhasil sebagai ${roleUser === 'guru' ? 'Guru' : 'Siswa'}!`);
+            applyUIRole(email, namaUser, 'https://via.placeholder.com/80', '', '', roleUser);
         } catch(e) {
             showToast("Gagal Daftar: " + e.message);
         }
@@ -599,35 +670,58 @@
 
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-    // UPDATE PREVIEW GAMBAR
+    // 5. LIVE PREVIEW FOTO PROFIL SAAT LINK DIKETIK / DITEMPEL
     document.getElementById('prof-foto').addEventListener('input', (e) => {
         const val = e.target.value.trim();
-        if(val.includes('google.com/imgres')) {
-            showToast("⚠️ Gunakan Klik Kanan di gambarnya lalu pilih 'Copy image address' (Salin alamat gambar).");
+        const formatted = formatImageUrl(val);
+        const preview = document.getElementById('profile-img-preview');
+        if (formatted) {
+            preview.src = formatted;
+        } else {
+            preview.src = 'https://via.placeholder.com/80';
         }
-        document.getElementById('profile-img-preview').src = val || 'https://via.placeholder.com/80';
     });
 
-    // SIMPAN PROFIL
+    // 5. SIMPAN PROFIL (DIPERBAIKI: Langsung Terapkan ke UI & LocalStorage)
     document.getElementById('btn-save-profile').addEventListener('click', async () => {
-        const foto = document.getElementById('prof-foto').value.trim();
+        const rawFoto = document.getElementById('prof-foto').value.trim();
+        const foto = formatImageUrl(rawFoto);
         const nama = document.getElementById('prof-nama').value.trim();
         const ttl = document.getElementById('prof-ttl').value.trim();
         const wa = document.getElementById('prof-wa').value.trim();
         
+        const finalNama = nama || currentUserEmail.split('@')[0];
+        const finalFoto = foto || 'https://via.placeholder.com/80';
+
+        // 1. Update Langsung ke UI
+        document.getElementById('sb-name').textContent = finalNama;
+        document.getElementById('greet-name').textContent = `HALO, ${finalNama.toUpperCase()}! 👋`;
+        document.getElementById('sb-avatar').src = finalFoto;
+        document.getElementById('profile-img-preview').src = finalFoto;
+
+        // 2. Simpan ke LocalStorage agar permanen di browser ini
+        try {
+            if (auth.currentUser) {
+                localStorage.setItem('simu_profile_' + auth.currentUser.uid, JSON.stringify({
+                    foto: finalFoto, nama: finalNama, ttl, wa
+                }));
+            }
+        } catch(e){}
+
+        // 3. Simpan ke Firestore
         try {
             await withTimeout(setDoc(doc(db, "users", auth.currentUser.uid), {
-                foto, nama, ttl, wa, email: auth.currentUser.email
+                foto: finalFoto, 
+                nama: finalNama, 
+                ttl, 
+                wa, 
+                email: auth.currentUser.email
             }, { merge: true }), 2500);
             
-            showToast("Profil berhasil disimpan!");
-            const finalName = nama || auth.currentUser.email.split('@')[0];
-            document.getElementById('sb-name').textContent = finalName;
-            document.getElementById('greet-name').textContent = `HALO, ${finalName.toUpperCase()}! 👋`;
-            if(foto) document.getElementById('profile-img-preview').src = foto;
+            showToast("Profil dan foto berhasil disimpan!");
         } catch(error) {
-            showToast("Gagal menyimpan profil: Pastikan koneksi lancar & nonaktifkan AdBlock.");
-            console.error(error);
+            console.warn("Gagal simpan Firestore, data tersimpan di lokal:", error);
+            showToast("Profil tersimpan di browser Anda!");
         }
     });
 
@@ -663,11 +757,7 @@
                     });
                 }
                 updateQuizLockUI();
-            }, (err) => {
-                console.warn("History Firestore offline/terblokir:", err);
-                const tbody = document.getElementById('student-history-table');
-                if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">Data offline (Matikan AdBlock untuk menyinkronkan data).</td></tr>`;
-            });
+            }, (err) => console.warn(err));
         } catch(err){}
     }
 
@@ -734,7 +824,7 @@
             const snap = await withTimeout(getDocs(qRef), 2000);
             snap.forEach(docSnap => currentQuestions.push(docSnap.data()));
         } catch(e) {
-            console.warn("Memakai soal cadangan (Firestore offline/terblokir):", e);
+            console.warn("Memakai soal cadangan:", e);
         }
 
         if (currentQuestions.length === 0) currentQuestions = quizId === 1 ? fallbackQ1 : fallbackQ2;
@@ -790,7 +880,6 @@
             showToast(`Kuis Selesai! Nilai Kamu: ${finalScore}`);
             cancelQuiz();
 
-            // Simpan riwayat kuis
             try {
                 let namaSiswa = currentUserEmail.split('@')[0];
                 try {
@@ -810,7 +899,7 @@
                     waktu: serverTimestamp()
                 }), 2500);
             } catch(e) {
-                console.warn("Gagal menyimpan ke Firestore:", e);
+                console.warn("Gagal menyimpan riwayat:", e);
             }
         }
     };
@@ -834,7 +923,7 @@
 
         try {
             onSnapshot(query(collection(db, "history"), orderBy("waktu", "desc")), handleSnap, (err) => {
-                console.warn("Sorting waktu gagal, mencoba tanpa filter:", err);
+                console.warn("Sorting waktu gagal, memakai query default:", err);
                 onSnapshot(collection(db, "history"), handleSnap);
             });
         } catch(err){}
@@ -868,7 +957,7 @@
     });
 
     // ==========================================
-    // 6. ENGINE JOBSHEET
+    // 6. JOBSHEET ENGINE
     // ==========================================
     function loadJobsheets() {
         try {
@@ -1022,7 +1111,6 @@
             nodes[tId] = { id: tId, cId: cId, code: t.code };
         });
 
-        // Drag posisi komponen di kanvas
         el.onmousedown = function(e) {
             if(e.target.closest('.terminal')) return;
             let shiftX = e.clientX - el.getBoundingClientRect().left;
@@ -1145,7 +1233,7 @@
     });
 
     // ==========================================
-    // 8. ASISTEN AI KELISTRIKAN (GROQ)
+    // 8. ASISTEN AI (GROQ)
     // ==========================================
     const GROQ_API_KEY = "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";
     
@@ -1172,7 +1260,7 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        { role: "system", content: "Kamu ahli kelistrikan motor SMK. Jawab spesifik gunakan standar kode terminal DIN (30, 31, 15, 56a, 56b, 49, dll). Jawab padat dan jelas." },
+                        { role: "system", content: "Kamu instruktur kelistrikan sepeda motor SMK. Jawab spesifik gunakan standar kode terminal DIN (30, 31, 15, 56a, 56b, 49, dll). Jawab padat dan jelas." },
                         { role: "user", content: text }
                     ]
                 })
