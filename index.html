@@ -162,7 +162,7 @@
                     <h2 style="margin-bottom:20px;">👤 Profil Saya</h2>
                     <div class="card" style="max-width: 600px;">
                         <div style="display:flex; gap:20px; align-items:center; margin-bottom:20px;">
-                            <img id="profile-img-preview" src="https://via.placeholder.com/80" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
+                            <img id="profile-img-preview" src="https://via.placeholder.com/80" onerror="this.src='https://via.placeholder.com/80?text=Error'" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
                             <div style="flex:1;">
                                 <label style="font-size:12px; font-weight:600;">URL Foto Profil</label>
                                 <input type="text" id="prof-foto" class="form-input" placeholder="https://contoh.com/foto.jpg">
@@ -406,8 +406,8 @@
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUserEmail = user.email.toLowerCase().trim();
-            // DIPERKUAT: Hanya yang berakhiran @guru.smk.belajar.id yang jadi guru
-            isGuru = currentUserEmail.endsWith('@guru.smk.belajar.id');
+            // PERBAIKAN DETEKSI GURU (Super Ketat)
+            isGuru = currentUserEmail.includes('guru.smk.belajar.id');
             
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-layout').classList.remove('hidden');
@@ -488,21 +488,31 @@
 
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-    // SIMPAN PROFIL
+    // UPDATE PREVIEW GAMBAR SAAT LINK DITEMPEL
+    document.getElementById('prof-foto').addEventListener('input', (e) => {
+        document.getElementById('profile-img-preview').src = e.target.value || 'https://via.placeholder.com/80';
+    });
+
+    // SIMPAN PROFIL DENGAN TRY-CATCH
     document.getElementById('btn-save-profile').addEventListener('click', async () => {
         const foto = document.getElementById('prof-foto').value.trim();
         const nama = document.getElementById('prof-nama').value.trim();
         const ttl = document.getElementById('prof-ttl').value.trim();
         const wa = document.getElementById('prof-wa').value.trim();
         
-        await setDoc(doc(db, "users", auth.currentUser.uid), {
-            foto, nama, ttl, wa, email: auth.currentUser.email
-        }, { merge: true });
-        
-        showToast("Profil berhasil disimpan!");
-        document.getElementById('sb-name').textContent = nama || auth.currentUser.email.split('@')[0];
-        document.getElementById('greet-name').textContent = `Selamat Datang, ${nama || auth.currentUser.email.split('@')[0]}!`;
-        if(foto) document.getElementById('profile-img-preview').src = foto;
+        try {
+            await setDoc(doc(db, "users", auth.currentUser.uid), {
+                foto, nama, ttl, wa, email: auth.currentUser.email
+            }, { merge: true });
+            
+            showToast("Profil berhasil disimpan!");
+            document.getElementById('sb-name').textContent = nama || auth.currentUser.email.split('@')[0];
+            document.getElementById('greet-name').textContent = `Selamat Datang, ${nama || auth.currentUser.email.split('@')[0]}!`;
+            if(foto) document.getElementById('profile-img-preview').src = foto;
+        } catch(error) {
+            showToast("Gagal menyimpan profil: Pastikan koneksi lancar.");
+            console.error(error);
+        }
     });
 
     // HISTORY SISWA
