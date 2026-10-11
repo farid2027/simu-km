@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simu-KM | Trainer Kelistrikan Sepeda Motor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1; --primary-dark: #4f46e5; --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
-            --bg: #f1f5f9; --surface: #ffffff; --border: #e2e8f0; --text: #0f172a; --text-muted: #64748b;
+            --primary: #dc2626; --primary-dark: #b91c1c; --success: #10b981; --warning: #f59e0b; --danger: #7f1d1d;
+            --bg: #fbf4f4; --surface: #ffffff; --border: #ecdcdc; --text: #1c0a0a; --text-muted: #7a6464;
+            --bolt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M70 8 38 62h24l-6 50 36-60H68z' fill='white' fill-opacity='0.05'/%3E%3C/svg%3E");
             --radius: 12px; --sidebar-width: 260px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -25,15 +26,18 @@
         .card { background: var(--surface); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; }
         
         /* Layout */
-        .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5, #0f172a); padding:20px; }
-        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background-image: var(--bolt), linear-gradient(135deg, #7f1d1d, #1c0505 70%, #0a0303); background-size: 120px 120px, cover; padding:20px; }
+        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; border-top: 6px solid #dc2626; box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(220,38,38,0.25); }
+        .login-logo { width: 66px; height: 66px; margin: 0 auto 10px; border-radius: 18px; background: linear-gradient(135deg, #dc2626, #7f1d1d); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(220,38,38,0.45); }
+        .login-logo svg { width: 34px; height: 34px; fill: #fbbf24; filter: drop-shadow(0 0 6px rgba(251,191,36,0.9)); }
         .app-layout { display: flex; min-height: 100vh; }
-        .sidebar { width: var(--sidebar-width); background: #0f172a; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; }
+        .sidebar { width: var(--sidebar-width); background-image: var(--bolt), linear-gradient(180deg, #230a0a, #0a0303); background-size: 120px 120px, cover; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; border-right: 2px solid #7f1d1d; }
         .sidebar-menu { padding: 10px; flex: 1; overflow-y: auto; }
         .nav-item { padding: 12px 16px; margin-bottom: 4px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
-        .nav-item:hover, .nav-item.active { background: var(--primary); }
+        .nav-item:hover { background: rgba(220,38,38,0.35); }
+        .nav-item.active { background: linear-gradient(90deg, #dc2626, #991b1b); box-shadow: 0 0 16px rgba(220,38,38,0.5); border-left: 4px solid #fbbf24; }
         .main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
-        .topbar { background: white; padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position:sticky; top:0; z-index:50;}
+        .topbar { background: white; padding: 16px 24px; border-bottom: 3px solid var(--primary); display: flex; justify-content: space-between; align-items: center; position:sticky; top:0; z-index:50;}
         .content-area { padding: 24px; max-width: 1100px; width: 100%; margin: 0 auto; }
         
         /* Tables & Data */
@@ -60,7 +64,7 @@
         }
         .quiz-option:hover:not(.locked) { 
             border-color: var(--primary); 
-            background: #f5f3ff; 
+            background: #fef2f2; 
             transform: translateY(-1px);
         }
         .quiz-option input { margin-right: 12px; accent-color: var(--primary); cursor: pointer; }
@@ -119,13 +123,13 @@
         
         /* Simulator Wiring Engine */
         .simulator-layout { display: grid; grid-template-columns: 1fr 280px; gap: 16px; }
-        #sim-canvas { position: relative; background: #1e293b; min-height: 550px; width: 100%; border-radius: 12px; overflow: hidden; background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 20px 20px; }
+        #sim-canvas { position: relative; background: #2a1212; min-height: 550px; width: 100%; border-radius: 12px; overflow: hidden; background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 20px 20px; }
         .canvas-comp { position: absolute; background: white; padding: 10px; border-radius: 8px; cursor: move; text-align: center; border: 2px solid var(--border); z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.2); user-select: none; min-width: 90px; }
         .canvas-comp .c-icon { font-size: 28px; pointer-events: none; }
         .canvas-comp .c-name { font-size: 11px; font-weight: 700; margin-top: 4px; pointer-events: none; }
         .terminal { position: absolute; width: 14px; height: 14px; background: #ef4444; border: 2px solid white; border-radius: 50%; cursor: crosshair; }
         .terminal:hover { transform: scale(1.3); background: #f59e0b; }
-        .terminal-label { position: absolute; font-size: 9px; font-weight: 800; color: #fff; background: #0f172a; padding: 1px 3px; border-radius: 3px; pointer-events: none; white-space: nowrap; }
+        .terminal-label { position: absolute; font-size: 9px; font-weight: 800; color: #fff; background: #1c0a0a; padding: 1px 3px; border-radius: 3px; pointer-events: none; white-space: nowrap; }
         .draggable-item { background: white; padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; cursor: grab; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .draggable-item:hover { border-color: var(--primary); background: #f8fafc; }
 
@@ -135,9 +139,61 @@
         .msg-user { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
         .msg-ai { align-self: flex-start; background: white; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
 
+        /* ===== TEMA MERAH + PETIR ===== */
+        h2, .brand-text, .stat-value, .section-title { font-family: 'Rajdhani', 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.5px; }
+        h2 { font-size: 28px; }
+        @keyframes flicker { 0%,18%,22%,60%,100% { opacity: 1; } 20%,62% { opacity: 0.35; } 64% { opacity: 0.9; } 66% { opacity: 0.3; } }
+
+        .brand { display: flex; align-items: center; gap: 8px; padding: 16px 20px; border-bottom: 1px solid #2a1212; font-size: 26px; font-weight: 700; }
+        .brand svg { width: 26px; height: 26px; fill: #fbbf24; filter: drop-shadow(0 0 6px rgba(251,191,36,0.9)); animation: flicker 3s infinite; }
+        .brand-text span { color: #ef4444; }
+
+        .hero { position: relative; overflow: hidden; border-radius: 18px; padding: 34px 36px; margin-bottom: 20px; color: #fff; background-image: var(--bolt), linear-gradient(120deg, #120505 0%, #7f1d1d 55%, #dc2626 100%); background-size: 120px 120px, cover; box-shadow: 0 12px 30px rgba(220,38,38,0.25); }
+        .hero-content { position: relative; z-index: 2; max-width: 680px; }
+        .hero-tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); padding: 4px 12px; border-radius: 999px; margin-bottom: 12px; }
+        .hero h2 { font-size: 40px; font-weight: 700; line-height: 1.1; margin-bottom: 8px; text-transform: uppercase; }
+        .hero p { opacity: 0.92; font-size: 14px; line-height: 1.6; }
+        .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        .hero-chips span { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); }
+        .hero-bolt { position: absolute; z-index: 1; fill: #fbbf24; filter: drop-shadow(0 0 14px rgba(251,191,36,0.85)); animation: flicker 3s infinite; }
+        .hero-bolt-1 { right: 50px; top: -12px; width: 180px; transform: rotate(8deg); }
+        .hero-bolt-2 { right: 250px; bottom: -34px; width: 105px; transform: rotate(-12deg); animation-delay: 1.2s; }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 22px; }
+        .stat-card { display: flex; align-items: center; gap: 14px; background: #fff; border: 1px solid var(--border); border-left: 5px solid var(--primary); border-radius: 14px; padding: 16px 18px; box-shadow: 0 4px 12px rgba(127,29,29,0.06); transition: 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(220,38,38,0.18); }
+        .stat-icon { width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: linear-gradient(135deg, #fee2e2, #fecaca); }
+        .stat-value { font-size: 28px; font-weight: 700; color: #991b1b; line-height: 1; }
+        .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+
+        .section-title { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; margin: 6px 0 12px; text-transform: uppercase; }
+        .section-title::before { content: '⚡'; color: #f59e0b; }
+
+        .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-bottom: 22px; }
+        .quick-card { display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 14px; cursor: pointer; background: #fff; border: 1px solid var(--border); position: relative; overflow: hidden; transition: 0.2s; }
+        .quick-card::after { content: '⚡'; position: absolute; right: -6px; bottom: -14px; font-size: 56px; opacity: 0.07; }
+        .quick-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 22px rgba(220,38,38,0.2); }
+        .quick-ico { width: 50px; height: 50px; flex-shrink: 0; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #dc2626, #7f1d1d); box-shadow: 0 6px 14px rgba(220,38,38,0.35); }
+        .quick-card b { display: block; font-size: 14px; }
+        .quick-card .sub { font-size: 12px; color: var(--text-muted); }
+
+        .info-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 16px; margin-bottom: 22px; }
+        @media (max-width: 1000px) { .info-grid { grid-template-columns: 1fr; } }
+        .info-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+        .info-card h3 { font-size: 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .term-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
+        .term-row:last-child { border-bottom: none; }
+        .term-code { min-width: 66px; text-align: center; font-weight: 800; font-size: 13px; padding: 4px 8px; border-radius: 6px; color: #fff; background: linear-gradient(135deg, #dc2626, #991b1b); }
+        .flow { display: flex; flex-direction: column; gap: 4px; }
+        .flow-step { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #fef2f2; border: 1px solid #fecaca; font-size: 13px; font-weight: 600; }
+        .flow-arrow { text-align: center; color: #f59e0b; font-size: 14px; line-height: 1; font-weight: 800; }
+        .tips-card { background: linear-gradient(120deg, #1c0a0a, #450a0a); color: #fff; border-radius: 14px; padding: 20px 22px; margin-bottom: 22px; border-left: 5px solid #fbbf24; }
+        .tips-card h3 { color: #fbbf24; margin-bottom: 10px; font-size: 16px; }
+        .tips-card ul { padding-left: 18px; font-size: 13px; line-height: 1.8; opacity: 0.92; }
+
         /* Notification Toast Centered */
         #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; align-items: center; width: 100%; max-width: 500px; }
-        .toast { background: #0f172a; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.3); pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); border-left: 5px solid var(--primary); text-align: center; }
+        .toast { background: #1c0a0a; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.3); pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); border-left: 5px solid var(--primary); text-align: center; }
         @keyframes toastIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
@@ -151,10 +207,10 @@
     <div id="login-screen" class="login-page">
         <div class="login-card">
             <div style="text-align: center; margin-bottom: 24px;">
-                <div style="font-size: 44px; margin-bottom: 8px;">🏍️⚡</div>
-                <h2 style="font-size: 22px; font-weight: 800; color: var(--text);">Simu-KM</h2>
+                <div class="login-logo"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-13h-7z"/></svg></div>
+                <h2 class="brand-text" style="font-size: 32px; font-weight: 700; color: var(--text);">SIMU<span style="color:#dc2626;">-KM</span></h2>
                 <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
-                    Simu-KM (Simulasi Kelistrikan Motor) Merupakan Sebuah Media Pembelajaran Interaktif Trainer Kelistrikan Sepeda Motor Berbasis Web
+                    Trainer Kelistrikan Sepeda Motor Digital
                 </p>
             </div>
             
@@ -176,7 +232,8 @@
     <div id="app-layout" class="app-layout hidden">
         <!-- SIDEBAR -->
         <div class="sidebar">
-            <div style="padding: 20px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 12px;">
+            <div class="brand"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-13h-7z"/></svg><span class="brand-text">SIMU<span>-KM</span></span></div>
+            <div style="padding: 20px; border-bottom: 1px solid #2a1212; display: flex; align-items: center; gap: 12px;">
                 <img id="sb-avatar" src="https://via.placeholder.com/80" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
                 <div style="overflow: hidden;">
                     <h4 id="sb-name" style="font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Nama Siswa</h4>
@@ -194,7 +251,7 @@
                 <div class="nav-item" data-target="view-simulator">⚙️ Simulator Praktik</div>
                 <div class="nav-item" data-target="view-ai">🤖 Tanya AI (Groq)</div>
 
-                <div id="sidebar-guru-section" class="hidden" style="margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 10px;">
+                <div id="sidebar-guru-section" class="hidden" style="margin-top: 15px; border-top: 1px solid #2a1212; padding-top: 10px;">
                     <div style="padding: 8px 16px; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Panel Guru</div>
                     <div class="nav-item" data-target="view-guru-rekap">📊 Rekap Nilai Siswa</div>
                     <div class="nav-item" data-target="view-guru-jobsheet">📁 Kelola Jobsheet</div>
@@ -202,7 +259,7 @@
                 </div>
             </div>
 
-            <div style="padding: 16px; border-top: 1px solid #1e293b;">
+            <div style="padding: 16px; border-top: 1px solid #2a1212;">
                 <button class="btn btn-danger btn-full" id="btn-logout" style="font-size: 13px;">🚪 Keluar Akun</button>
             </div>
         </div>
@@ -246,11 +303,80 @@
 
                 <!-- VIEW DASHBOARD -->
                 <div id="view-dashboard" class="view-section">
-                    <div class="card" style="background: linear-gradient(135deg, #4f46e5, #3b82f6); color: white;">
-                        <h2 id="greet-name" style="font-size: 26px; font-weight: 800; margin-bottom: 8px;">HALO! 👋</h2>
-                        <p id="greet-desc" style="opacity: 0.9; font-size: 14px; max-width: 650px; line-height: 1.5;">
-                            Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM.
-                        </p>
+                    <!-- HERO -->
+                    <div class="hero">
+                        <svg class="hero-bolt hero-bolt-1" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-13h-7z"/></svg>
+                        <svg class="hero-bolt hero-bolt-2" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-13h-7z"/></svg>
+                        <div class="hero-content">
+                            <div class="hero-tag">⚡ TRAINER KELISTRIKAN SEPEDA MOTOR</div>
+                            <h2 id="greet-name">HALO! 👋</h2>
+                            <p id="greet-desc">Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM.</p>
+                            <div class="hero-chips">
+                                <span>🔋 Baterai 12V DC</span><span>🛡️ Sekering 15A</span><span>📟 Standar DIN</span><span>🏍️ Teknik Sepeda Motor</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KARTU STATISTIK -->
+                    <div class="stat-grid">
+                        <div class="stat-card"><div class="stat-icon" id="stat-i1">🏆</div><div><div class="stat-value" id="stat-v1">-</div><div class="stat-label" id="stat-l1">Kuis Diselesaikan</div></div></div>
+                        <div class="stat-card"><div class="stat-icon" id="stat-i2">📊</div><div><div class="stat-value" id="stat-v2">-</div><div class="stat-label" id="stat-l2">Rata-rata Nilai</div></div></div>
+                        <div class="stat-card"><div class="stat-icon" id="stat-i3">⭐</div><div><div class="stat-value" id="stat-v3">-</div><div class="stat-label" id="stat-l3">Nilai Tertinggi</div></div></div>
+                        <div class="stat-card"><div class="stat-icon" id="stat-i4">🎯</div><div><div class="stat-value" id="stat-v4">-</div><div class="stat-label" id="stat-l4">Status Kompetensi</div></div></div>
+                    </div>
+
+                    <!-- MENU CEPAT -->
+                    <div class="section-title">Menu Cepat</div>
+                    <div class="quick-grid" id="quick-siswa">
+                        <div class="quick-card" data-goto="view-jobsheet"><div class="quick-ico">📄</div><div><b>Jobsheet PDF</b><span class="sub">Panduan praktik kelistrikan</span></div></div>
+                        <div class="quick-card" data-goto="view-kuis"><div class="quick-ico">📝</div><div><b>Kuis Interaktif</b><span class="sub">Uji pemahaman terminal DIN</span></div></div>
+                        <div class="quick-card" data-goto="view-simulator"><div class="quick-ico">⚙️</div><div><b>Simulator Praktik</b><span class="sub">Rangkai kabel secara virtual</span></div></div>
+                        <div class="quick-card" data-goto="view-ai"><div class="quick-ico">🤖</div><div><b>Tanya AI</b><span class="sub">Instruktur kelistrikan motor</span></div></div>
+                    </div>
+                    <div class="quick-grid hidden" id="quick-guru">
+                        <div class="quick-card" data-goto="view-guru-rekap"><div class="quick-ico">📊</div><div><b>Rekap Nilai Siswa</b><span class="sub">Pantau hasil kuis</span></div></div>
+                        <div class="quick-card" data-goto="view-guru-jobsheet"><div class="quick-ico">📁</div><div><b>Kelola Jobsheet</b><span class="sub">Unggah &amp; atur PDF</span></div></div>
+                        <div class="quick-card" data-goto="view-guru-kuis"><div class="quick-ico">📝</div><div><b>Kelola Soal Kuis</b><span class="sub">Tambah, edit, hapus soal</span></div></div>
+                        <div class="quick-card" data-goto="view-simulator"><div class="quick-ico">⚙️</div><div><b>Simulator Praktik</b><span class="sub">Coba rangkaian kelistrikan</span></div></div>
+                    </div>
+
+                    <!-- REFERENSI TERMINAL & ALUR ARUS -->
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h3>📟 Kode Terminal DIN Wajib Hafal</h3>
+                            <div class="term-row"><span class="term-code">30</span><span>Positif (+) langsung dari baterai</span></div>
+                            <div class="term-row"><span class="term-code">31</span><span>Massa / Ground (−)</span></div>
+                            <div class="term-row"><span class="term-code">15</span><span>Beban setelah kunci kontak ON</span></div>
+                            <div class="term-row"><span class="term-code">49 / 49a</span><span>Input / output flasher sein</span></div>
+                            <div class="term-row"><span class="term-code">56a / 56b</span><span>Lampu jauh / lampu dekat</span></div>
+                            <div class="term-row"><span class="term-code">58</span><span>Lampu senja &amp; lampu panel</span></div>
+                            <div class="term-row"><span class="term-code">54</span><span>Lampu rem (lewat sakelar rem)</span></div>
+                        </div>
+                        <div class="info-card">
+                            <h3>⚡ Alur Arus Dasar Sepeda Motor</h3>
+                            <div class="flow">
+                                <div class="flow-step">🔋 Baterai 12V — terminal 30 (+)</div>
+                                <div class="flow-arrow">▼</div>
+                                <div class="flow-step">🛡️ Sekering 15A — pengaman utama</div>
+                                <div class="flow-arrow">▼</div>
+                                <div class="flow-step">🔑 Kunci Kontak — 30 ➔ 15</div>
+                                <div class="flow-arrow">▼</div>
+                                <div class="flow-step">💡 Beban: lampu, klakson, flasher</div>
+                                <div class="flow-arrow">▼</div>
+                                <div class="flow-step">🔩 Massa bodi — terminal 31 (−)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TIPS KESELAMATAN -->
+                    <div class="tips-card">
+                        <h3>⚠️ Tips Keselamatan Praktik Kelistrikan</h3>
+                        <ul>
+                            <li>Lepas kutub negatif (−) baterai lebih dulu sebelum membongkar kabel.</li>
+                            <li>Gunakan sekering sesuai rating (15A); jangan diganti kawat atau sekering yang lebih besar.</li>
+                            <li>Pastikan kunci kontak OFF dan tangan kering saat memasang atau mengukur komponen.</li>
+                            <li>Ukur tegangan dengan avometer pada skala DCV 20V untuk sistem 12V.</li>
+                        </ul>
                     </div>
 
                     <div id="student-history-card" class="card">
@@ -309,7 +435,7 @@
                                     <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Pilih jawaban yang paling tepat. Skor total diskalakan ke 100 poin.</div>
                                 </div>
                                 <div style="display:flex; align-items:center; gap:10px;">
-                                    <span id="quiz-point-badge" class="badge" style="background:#e0e7ff; color:#4338ca; font-size:12px; font-weight:700;">⭐ Bobot: 10 Poin / Soal</span>
+                                    <span id="quiz-point-badge" class="badge" style="background:#fee2e2; color:#991b1b; font-size:12px; font-weight:700;">⭐ Bobot: 10 Poin / Soal</span>
                                     <span style="font-weight:700; color:var(--text); font-size:14px; background:#f1f5f9; padding:4px 10px; border-radius:6px; border:1px solid #cbd5e1;">Soal <span id="current-q-num">1</span>/<span id="total-q">0</span></span>
                                 </div>
                             </div>
@@ -318,7 +444,7 @@
                                 <div id="quiz-progress-bar" style="height:100%; width:0%; background:var(--primary); transition:width 0.3s ease;"></div>
                             </div>
 
-                            <div id="quiz-question-text" style="font-size:16px; font-weight:700; margin-bottom:18px; line-height:1.5; color:#0f172a;">Memuat soal...</div>
+                            <div id="quiz-question-text" style="font-size:16px; font-weight:700; margin-bottom:18px; line-height:1.5; color:#1c0a0a;">Memuat soal...</div>
                             
                             <div id="quiz-options"></div>
                             
@@ -411,7 +537,7 @@
 
                 <!-- TANYA AI (INTEGRASI GROQ API) -->
                 <div id="view-ai" class="view-section hidden">
-                    <h2 style="margin-bottom:15px; color:#4f46e5;">🤖 Asisten AI Kelistrikan Sepeda Motor</h2>
+                    <h2 style="margin-bottom:15px; color:#b91c1c;">🤖 Asisten AI Kelistrikan Sepeda Motor</h2>
                     <p style="font-size:13px; color:var(--text-muted); margin-top:-10px; margin-bottom:15px;">Tanyakan kode terminal (30, 31, 15, 56, dll), alur sekering, atau cara kerja rangkaian penerangan. AI hanya menjawab seputar kelistrikan sepeda motor.</p>
                     <div class="card" style="padding:16px;">
                         <div class="chat-log" id="ai-chat-log">
@@ -625,6 +751,33 @@
         });
     });
 
+    // Kartu menu cepat di dashboard -> pindah ke menu terkait
+    document.querySelectorAll('[data-goto]').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelector(`.nav-item[data-target="${el.dataset.goto}"]`)?.click();
+        });
+    });
+
+    // Label & ikon kartu statistik sesuai peran
+    function setRoleDashboard(guru) {
+        const cfg = guru
+            ? [['📝', 'Total Pengerjaan Kuis'], ['👥', 'Siswa Aktif'], ['📊', 'Rata-rata Kelas'], ['📁', 'Jobsheet Aktif']]
+            : [['🏆', 'Kuis Diselesaikan'], ['📊', 'Rata-rata Nilai'], ['⭐', 'Nilai Tertinggi'], ['🎯', 'Status Kompetensi']];
+        cfg.forEach(([ico, label], i) => {
+            const iEl = document.getElementById('stat-i' + (i + 1));
+            const lEl = document.getElementById('stat-l' + (i + 1));
+            if (iEl) iEl.textContent = ico;
+            if (lEl) lEl.textContent = label;
+        });
+        document.getElementById('quick-siswa').classList.toggle('hidden', guru);
+        document.getElementById('quick-guru').classList.toggle('hidden', !guru);
+    }
+
+    function setStatValue(n, v) {
+        const el = document.getElementById('stat-v' + n);
+        if (el) el.textContent = v;
+    }
+
     // ==========================================
     // 2. LOGIKA ROLE (GURU vs SISWA)
     // ==========================================
@@ -675,6 +828,7 @@
             document.getElementById('greet-desc').textContent = "Selamat datang, Bapak/Ibu Guru! Gunakan Panel Guru untuk mengelola nilai, soal kuis, dan jobsheet.";
             document.getElementById('student-history-card').classList.add('hidden'); 
             if (guruSidebar) guruSidebar.classList.remove('hidden');
+            setRoleDashboard(true);
             loadGuruRekap();
             loadGuruQuestionsTable();
         } else {
@@ -683,6 +837,7 @@
             document.getElementById('greet-desc').textContent = "Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM. Pantau tugas dan nilaimu di sini.";
             document.getElementById('student-history-card').classList.remove('hidden'); 
             if (guruSidebar) guruSidebar.classList.add('hidden');
+            setRoleDashboard(false);
             loadStudentHistory();
         }
         loadJobsheets();
@@ -876,6 +1031,19 @@
                         }
                     });
                 }
+                // Statistik dashboard siswa
+                const nilaiList = [];
+                const kuisSet = new Set();
+                snap.forEach(s => {
+                    const d = s.data();
+                    nilaiList.push(Number(d.nilai) || 0);
+                    if (d.kuisId !== undefined) kuisSet.add(String(d.kuisId));
+                });
+                const avg = nilaiList.length ? Math.round(nilaiList.reduce((a, b) => a + b, 0) / nilaiList.length) : null;
+                setStatValue(1, `${kuisSet.size}/2`);
+                setStatValue(2, avg === null ? '-' : avg);
+                setStatValue(3, nilaiList.length ? Math.max(...nilaiList) : '-');
+                setStatValue(4, avg === null ? 'Belum Mulai' : (avg >= 75 ? 'Kompeten' : 'Remedial'));
                 updateQuizLockUI();
             }, (err) => console.warn(err));
         } catch(err){}
@@ -1228,6 +1396,19 @@
     // ==========================================
     function loadGuruRekap() {
         const handleSnap = (snap) => {
+            // Statistik dashboard guru
+            const emails = new Set();
+            let total = 0, sum = 0;
+            snap.forEach(s => {
+                const d = s.data();
+                total++;
+                sum += Number(d.nilai) || 0;
+                if (d.email) emails.add(d.email);
+            });
+            setStatValue(1, total);
+            setStatValue(2, emails.size);
+            setStatValue(3, total ? Math.round(sum / total) : '-');
+
             const tbody = document.getElementById('guru-rekap-table');
             if(!tbody) return;
             tbody.innerHTML = '';
@@ -1417,6 +1598,7 @@
     function loadJobsheets() {
         try {
             onSnapshot(collection(db, "jobsheets"), (snap) => {
+                if (isGuru) setStatValue(4, snap.size);
                 const sContainer = document.getElementById('student-jobsheet-list');
                 const gTbody = document.getElementById('guru-jobsheet-table');
                 
@@ -1554,7 +1736,7 @@
         'baterai': { name: 'Baterai 12V', icon: '🔋', terminals: [{ id: '30', label: '30 (+)', x: 15, y: 75, color: '#ef4444' }, { id: '31', label: '31 (-)', x: 75, y: 75, color: '#3b82f6' }] },
         'sekering': { name: 'Sekering 15A', icon: '🛡️', terminals: [{ id: '30_IN', label: '30 IN', x: 15, y: 75, color: '#ef4444' }, { id: '30_OUT', label: '30 OUT', x: 75, y: 75, color: '#f59e0b' }] },
         'kontak': { name: 'Kunci Kontak', icon: '🔑', terminals: [{ id: '30', label: '30 (IN)', x: 15, y: 75, color: '#ef4444' }, { id: '15', label: '15 (OUT)', x: 75, y: 75, color: '#10b981' }] },
-        'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terminals: [{ id: '56', label: '56', x: 15, y: 75, color: '#6366f1' }, { id: '56a', label: '56a', x: 45, y: 75, color: '#3b82f6' }, { id: '56b', label: '56b', x: 75, y: 75, color: '#f59e0b' }] },
+        'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terminals: [{ id: '56', label: '56', x: 15, y: 75, color: '#dc2626' }, { id: '56a', label: '56a', x: 45, y: 75, color: '#3b82f6' }, { id: '56b', label: '56b', x: 75, y: 75, color: '#f59e0b' }] },
         'sakelar_kanan': { name: 'Sakelar Kanan', icon: '🕹️', terminals: [{ id: '15', label: '15', x: 20, y: 75, color: '#10b981' }, { id: '58', label: '58', x: 70, y: 75, color: '#f59e0b' }] },
         'flasher': { name: 'Flasher Sein', icon: '🔀', terminals: [{ id: '49', label: '49 (B)', x: 20, y: 75, color: '#10b981' }, { id: '49a', label: '49a (L)', x: 70, y: 75, color: '#f59e0b' }] },
         'lampu_kepala': { name: 'Lampu Kepala', icon: '💡', terminals: [{ id: '56a', label: '56a', x: 15, y: 75, color: '#3b82f6' }, { id: '56b', label: '56b', x: 45, y: 75, color: '#f59e0b' }, { id: '31', label: '31', x: 75, y: 75, color: '#3b82f6' }] },
