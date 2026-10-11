@@ -928,7 +928,7 @@
         alert(types.includes('sekering') ? "✅ Sirkuit Aktif & Aman dengan Sekering 15A!" : "⚠️ Peringatan: Sirkuit belum dilengkapi Sekering 15A pengaman!");
     });
 
-    // ASISTEN AI (MENGGUNAKAN MODEL GPT-OSS-120B DAN API KEY BARU KAMU)
+    // ASISTEN AI (DENGAN INSTRUKSI KETAT KHUSUS KELISTRIKAN MOTOR)
     const GROQ_API_KEY = "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";
 
     document.getElementById('btn-ai-send').addEventListener('click', async () => {
@@ -946,7 +946,6 @@
 
         try {
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                model: "openai/gpt-oss-120b",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -955,10 +954,13 @@
                 body: JSON.stringify({
                     model: "openai/gpt-oss-120b",
                     messages: [
-                        { role: "system", content: "Kamu adalah instruktur ahli kelistrikan sepeda motor SMK." },
+                        { 
+                            role: "system", 
+                            content: "Kamu adalah instruktur ahli kelistrikan sepeda motor SMK. ATURAN MUTLAK: Kamu HANYA boleh menjawab pertanyaan yang berkaitan dengan kelistrikan sepeda motor, komponen kelistrikan motor, kode terminal DIN (seperti 30, 15, 31, 49, dll), sirkuit, kuis, atau perbaikan kelistrikan motor. Jika pengguna bertanya tentang hal di luar kelistrikan sepeda motor (seperti masalah HP, komputer, memasak, atau topik umum lainnya), kamu HARUS menolaknya dengan sopan dan tegas dengan mengatakan bahwa kamu hanya bisa menjawab pertanyaan seputar kelistrikan sepeda motor." 
+                        },
                         { role: "user", content: prompt }
                     ],
-                    temperature: 0.6
+                    temperature: 0.3
                 })
             });
 
