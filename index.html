@@ -142,7 +142,6 @@
                 <!-- DASHBOARD -->
                 <div id="view-dashboard" class="view-section">
                     <div class="card" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color:white; border:none;">
-                        <!-- Sapaan Interaktif yang Diminta -->
                         <h2 id="greet-name">HALO! 👋</h2>
                         <p id="greet-desc" style="font-size:14px; opacity:0.9;">Pantau riwayat pengerjaan dan nilai kamu di sini.</p>
                     </div>
@@ -408,14 +407,22 @@
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUserEmail = user.email.toLowerCase().trim();
-            // PERBAIKAN DETEKSI GURU (Super Ketat)
-            isGuru = currentUserEmail.includes('@guru.smk.belajar.id');
+            
+            // Cek langsung dari database Firestore apakah user ini terdaftar sebagai guru
+            const userRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(userRef);
+            
+            if (currentUserEmail.includes('guru.smk.belajar.id')) {
+                isGuru = true;
+            } else if (docSnap.exists() && docSnap.data().role === 'guru') {
+                isGuru = true;
+            } else {
+                isGuru = false;
+            }
             
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-layout').classList.remove('hidden');
             
-            const userRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(userRef);
             let pNama = user.email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '';
             
             if (docSnap.exists()) {
@@ -428,8 +435,6 @@
             
             document.getElementById('sb-name').textContent = pNama;
             document.getElementById('sb-email').textContent = user.email;
-            
-            // SAPAAN INTERAKTIF: Mengubah jadi huruf kapital "HALO, [NAMA]! 👋"
             document.getElementById('greet-name').textContent = `HALO, ${pNama.toUpperCase()}! 👋`;
             
             document.getElementById('prof-nama').value = pNama;
@@ -476,13 +481,28 @@
             });
     });
 
-    document.getElementById('btn-register').addEventListener('click', () => {
+    // Pendaftaran Akun Baru dengan Penyimpanan Role Otomatis ke Firestore
+    document.getElementById('btn-register').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
+        const password = document.getElementById('password-input').value.trim();
         if(!checkValidDomain(email)) { showToast("Gagal: Pendaftaran dibatasi hanya untuk domain sekolah."); return; }
         
-        createUserWithEmailAndPassword(auth, email, document.getElementById('password-input').value)
-            .then(() => showToast("Pendaftaran Berhasil!"))
-            .catch(e => showToast("Gagal Daftar: " + e.message));
+        try {
+            const userCred = await createUserWithEmailAndPassword(auth, email, password);
+            const roleUser = email.includes('guru.smk.belajar.id') ? 'guru' : 'siswa';
+            
+            // Simpan role ke database firestore agar tidak salah baca
+            await setDoc(doc(db, "users", userCred.user.uid), {
+                email: email,
+                role: roleUser,
+                nama: email.split('@')[0],
+                foto: 'https://via.placeholder.com/80'
+            }, { merge: true });
+
+            showToast("Pendaftaran Berhasil!");
+        } catch(e) {
+            showToast("Gagal Daftar: " + e.message);
+        }
     });
 
     document.getElementById('btn-forgot').addEventListener('click', (e) => {
@@ -492,7 +512,7 @@
 
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-    // UPDATE PREVIEW GAMBAR SAAT LINK DITEMPEL DENGAN PERINGATAN LINK GOOGLE
+    // UPDATE PREVIEW GAMBAR SAAT LINK DITEMPEL
     document.getElementById('prof-foto').addEventListener('input', (e) => {
         const val = e.target.value.trim();
         if(val.includes('google.com/imgres')) {
@@ -501,7 +521,7 @@
         document.getElementById('profile-img-preview').src = val || 'https://via.placeholder.com/80';
     });
 
-    // SIMPAN PROFIL DENGAN TRY-CATCH & SAPAAN UPDATE
+    // SIMPAN PROFIL
     document.getElementById('btn-save-profile').addEventListener('click', async () => {
         const foto = document.getElementById('prof-foto').value.trim();
         const nama = document.getElementById('prof-nama').value.trim();
@@ -516,10 +536,7 @@
             showToast("Profil berhasil disimpan!");
             const finalName = nama || auth.currentUser.email.split('@')[0];
             document.getElementById('sb-name').textContent = finalName;
-            
-            // SAPAAN IKUT BERUBAH
             document.getElementById('greet-name').textContent = `HALO, ${finalName.toUpperCase()}! 👋`;
-            
             if(foto) document.getElementById('profile-img-preview').src = foto;
         } catch(error) {
             showToast("Gagal menyimpan profil: Pastikan koneksi lancar.");
@@ -888,7 +905,7 @@
                 if (pNodes.has(w.from) && !pNodes.has(w.to)) { pNodes.add(w.to); changed = true; }
                 if (pNodes.has(w.to) && !pNodes.has(w.from)) { pNodes.add(w.from); changed = true; }
                 if (gNodes.has(w.from) && !gNodes.has(w.to)) { gNodes.add(w.to); changed = true; }
-                if (gNodes.has(w.to) && !gNodes.has(w.from)) { gNodes.add(w.from); changed = true; }
+                if (gNodes.has(w.to) && !gNodes.has(w.from)) { gNodes.add(gNodes.from); changed = true; } // Safety fix
             });
 
             document.querySelectorAll('.canvas-comp').forEach(el => {
