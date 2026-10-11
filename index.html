@@ -26,7 +26,7 @@
         
         /* Layout */
         .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5, #0f172a); padding:20px; }
-        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .app-layout { display: flex; min-height: 100vh; }
         .sidebar { width: var(--sidebar-width); background: #0f172a; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; }
         .sidebar-menu { padding: 10px; flex: 1; overflow-y: auto; }
@@ -78,7 +78,9 @@
     <div class="login-page" id="login-screen">
         <div class="login-card">
             <h2 style="text-align:center; color:var(--primary); margin-bottom: 5px;">⚡ Simu-KM</h2>
-            <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-bottom:24px;">Trainer Kelistrikan Motor Digital</p>
+            <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-bottom:24px; line-height:1.5;">
+                Simu-KM (Simulasi Kelistrikan Motor) Merupakan Sebuah Media Pembelajaran Kelistrikan Sepeda Motor Untuk Siswa SMK Jurusan Teknik Sepeda Motor.
+            </p>
             
             <label style="font-size:12px; font-weight:600;">Email Akun Sekolah</label>
             <input type="email" id="email-input" class="form-input" placeholder="@smk.belajar.id atau @guru.smk.belajar.id">
@@ -109,12 +111,14 @@
             <div class="sidebar-menu" id="nav-menu">
                 <div class="nav-item active" data-target="view-dashboard">🏠 Dashboard</div>
                 
+                <!-- Profil Dipindah ke Atas -->
+                <div class="nav-item" data-target="view-profile">👤 Profil Saya</div>
+                
                 <!-- Menu Umum (Siswa & Guru) -->
                 <div class="nav-item" data-target="view-materi">📚 Materi & Jobsheet</div>
                 <div class="nav-item" data-target="view-kuis">📝 Kuis Interaktif</div>
                 <div class="nav-item" data-target="view-simulator">⚙️ Simulator Praktik</div>
                 <div class="nav-item" data-target="view-ai">🤖 AI Asisten</div>
-                <div class="nav-item" data-target="view-profile">👤 Profil Saya</div>
 
                 <!-- Menu Khusus Guru -->
                 <div class="nav-guru hidden">
@@ -420,8 +424,9 @@
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            currentUserEmail = user.email;
-            isGuru = user.email.endsWith('@guru.smk.belajar.id');
+            currentUserEmail = user.email.toLowerCase().trim();
+            // PERBAIKAN DETEKSI GURU (Cek keberadaan '@guru.smk.belajar.id')
+            isGuru = currentUserEmail.includes('@guru.smk.belajar.id');
             
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-layout').classList.remove('hidden');
@@ -464,7 +469,7 @@
                 document.getElementById('sb-role').textContent = 'Siswa';
                 document.getElementById('sb-role').className = 'badge badge-siswa';
                 document.getElementById('greet-desc').textContent = "Pantau riwayat pengerjaan dan nilai kamu di sini.";
-                document.getElementById('student-history-card').classList.remove('hidden');
+                document.getElementById('student-history-card').classList.remove('hidden'); // Tampilkan history siswa
                 document.querySelectorAll('.nav-guru').forEach(el => el.classList.add('hidden'));
                 loadStudentHistory();
             }
@@ -500,7 +505,7 @@
             .catch(e => showToast("Gagal Daftar: " + e.message));
     });
 
-    // Lupa Sandi
+    // Lupa Sandi Kembali Muncul
     document.getElementById('btn-forgot').addEventListener('click', (e) => {
         e.preventDefault();
         alert("INFORMASI ADMIN SIMU-KM\n\nJika Anda lupa kata sandi, silakan hubungi admin di bawah ini:\n\nEmail: rifqi.miftah.2405346@students.um.ac.id\nWhatsApp: 089635894135");
