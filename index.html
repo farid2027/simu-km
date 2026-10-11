@@ -145,7 +145,7 @@
                 <div class="nav-item" data-target="view-simulator">⚙️ Simulator Praktik</div>
                 <div class="nav-item" data-target="view-ai">🤖 AI Asisten</div>
 
-                <!-- Menu Khusus Guru (Hanya di Sidebar) -->
+                <!-- Menu Khusus Guru (Hanya Muncul untuk @guru.smk.belajar.id) -->
                 <div id="sidebar-guru-section" class="hidden">
                     <div style="padding: 10px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-top: 10px;">Panel Guru</div>
                     <div class="nav-item" data-target="view-guru-rekap">📊 Rekap Nilai Siswa</div>
@@ -317,7 +317,7 @@
                 </div>
 
                 <!-- ===================================== -->
-                <!-- PANEL GURU (Konten) -->
+                <!-- PANEL GURU (KONTEN) -->
                 <!-- ===================================== -->
 
                 <div id="view-guru-rekap" class="view-section hidden">
@@ -419,13 +419,21 @@
         return d.innerHTML;
     }
 
+    // Helper timeout agar aplikasi tidak pernah freeze / hang jika Firestore diblokir ekstensi AdBlock
+    function withTimeout(promise, ms = 2000) {
+        return Promise.race([
+            promise,
+            new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout/Blocked")), ms))
+        ]);
+    }
+
     setInterval(() => {
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
         document.getElementById('clock').textContent = now.toLocaleDateString('id-ID', options) + " WIB";
     }, 1000);
 
-    // Navigasi Menu
+    // Navigasi Menu Sidebar
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -438,18 +446,19 @@
     });
 
     // ==========================================
-    // 2. LOGIKA ROLE (GURU vs SISWA)
+    // 2. ATURAN ROLE (GURU vs SISWA)
     // ==========================================
-    // Jika mengandung @guru berarti guru, jika hanya smk.belajar.id berarti siswa
     function checkValidDomain(email) {
         if (!email || !email.includes('@')) return false;
         const e = email.toLowerCase().trim();
-        return e.endsWith('@smk.belajar.id') || e.endsWith('@guru.smk.belajar.id') || (e.includes('@guru') && e.endsWith('.belajar.id'));
+        // Hanya menerima domain belajar.id resmi
+        return e.endsWith('@guru.smk.belajar.id') || e.endsWith('@smk.belajar.id');
     }
 
     function detectRole(email) {
         const e = (email || '').toLowerCase().trim();
-        if (e.includes('@guru')) {
+        // @guru.smk.belajar.id atau mengandung @guru -> GURU, selain itu -> SISWA
+        if (e.endsWith('@guru.smk.belajar.id') || e.includes('@guru')) {
             return 'guru';
         }
         return 'siswa';
@@ -457,9 +466,9 @@
 
     function applyUIRole(email, pNama, pFoto, pTtl, pWa, roleFromDb = '') {
         currentUserEmail = email.toLowerCase().trim();
-        // @guru berarti guru, selain itu adalah siswa
-        isGuru = (roleFromDb === 'guru') || detectRole(currentUserEmail) === 'guru';
+        isGuru = (roleFromDb === 'guru') || (detectRole(currentUserEmail) === 'guru');
 
+        // Beralih ke layar aplikasi utama seketika
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('app-layout').classList.remove('hidden');
 
@@ -494,51 +503,53 @@
         loadJobsheets();
     }
 
+    // LISTENER AUTENTIKASI (Resilient terhadap AdBlock)
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             const email = (user.email || '').toLowerCase().trim();
-            const userRef = doc(db, "users", user.uid);
-            let pNama = email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '', roleFromDb = '';
-            
+            const roleDefault = detectRole(email);
+            let pNama = email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '', roleUser = roleDefault;
+
+            // 1. BUKA UI LANGSUNG (Tanpa menunggu Firestore agar tidak stuck)
+            applyUIRole(email, pNama, pFoto, pTtl, pWa, roleUser);
+
+            // 2. Ambil data profil di latar belakang
             try {
-                const docSnap = await getDoc(userRef);
-                if (docSnap.exists()) {
+                const userRef = doc(db, "users", user.uid);
+                const docSnap = await withTimeout(getDoc(userRef), 2000);
+                if (docSnap && docSnap.exists()) {
                     const data = docSnap.data();
                     pNama = data.nama || pNama;
                     pFoto = data.foto || pFoto;
                     pTtl = data.ttl || pTtl;
                     pWa = data.wa || pWa;
-                    roleFromDb = data.role || '';
-                } else {
-                    roleFromDb = detectRole(email);
-                    await setDoc(userRef, {
-                        email: email,
-                        role: roleRole,
-                        nama: pNama,
-                        foto: pFoto
-                    }, { merge: true });
+                    roleUser = data.role || roleUser;
+                    applyUIRole(email, pNama, pFoto, pTtl, pWa, roleUser);
                 }
             } catch(e) {
-                console.error("Gagal mengambil data user:", e);
+                console.warn("Firestore tidak terjangkau (kemungkinan AdBlock aktif):", e);
             }
-            applyUIRole(email, pNama, pFoto, pTtl, pWa, roleFromDb);
         } else {
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('app-layout').classList.add('hidden');
         }
     });
 
+    // TOMBOL LOGIN
     document.getElementById('btn-login').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
         const pass = document.getElementById('password-input').value.trim();
+        
         if(!checkValidDomain(email)) { 
-            showToast("Gagal: Gunakan email @smk.belajar.id atau @guru.smk.belajar.id"); 
+            showToast("Gagal: Email harus @smk.belajar.id (siswa) atau @guru.smk.belajar.id (guru)"); 
             return; 
         }
         
         try {
             await signInWithEmailAndPassword(auth, email, pass);
             showToast("Login Berhasil!");
+            const roleUser = detectRole(email);
+            applyUIRole(email, email.split('@')[0], 'https://via.placeholder.com/80', '', '', roleUser);
         } catch(e) {
             if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
                 showToast("Akun tidak ditemukan atau sandi salah!");
@@ -548,11 +559,13 @@
         }
     });
 
+    // TOMBOL DAFTAR
     document.getElementById('btn-register').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
         const password = document.getElementById('password-input').value.trim();
+        
         if(!checkValidDomain(email)) { 
-            showToast("Gagal: Pendaftaran dibatasi hanya untuk domain sekolah (@smk.belajar.id atau @guru.smk.belajar.id)."); 
+            showToast("Gagal: Pendaftaran dibatasi untuk @smk.belajar.id (siswa) atau @guru.smk.belajar.id (guru)"); 
             return; 
         }
         
@@ -560,14 +573,20 @@
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
             const roleUser = detectRole(email);
             
-            await setDoc(doc(db, "users", userCred.user.uid), {
-                email: email.toLowerCase(),
-                role: roleUser,
-                nama: email.split('@')[0],
-                foto: 'https://via.placeholder.com/80'
-            }, { merge: true });
+            // Simpan profil (non-blocking)
+            try {
+                await withTimeout(setDoc(doc(db, "users", userCred.user.uid), {
+                    email: email.toLowerCase(),
+                    role: roleUser,
+                    nama: email.split('@')[0],
+                    foto: 'https://via.placeholder.com/80'
+                }, { merge: true }), 2000);
+            } catch(err) {
+                console.warn("Database profil Firestore offline/terblokir.");
+            }
 
             showToast("Pendaftaran Berhasil sebagai " + (roleUser === 'guru' ? 'Guru' : 'Siswa') + "!");
+            applyUIRole(email, email.split('@')[0], 'https://via.placeholder.com/80', '', '', roleUser);
         } catch(e) {
             showToast("Gagal Daftar: " + e.message);
         }
@@ -584,7 +603,7 @@
     document.getElementById('prof-foto').addEventListener('input', (e) => {
         const val = e.target.value.trim();
         if(val.includes('google.com/imgres')) {
-            showToast("⚠️ Itu link pencarian Google! Klik Kanan di gambarnya lalu pilih 'Copy image address' (Salin alamat gambar).");
+            showToast("⚠️ Gunakan Klik Kanan di gambarnya lalu pilih 'Copy image address' (Salin alamat gambar).");
         }
         document.getElementById('profile-img-preview').src = val || 'https://via.placeholder.com/80';
     });
@@ -597,9 +616,9 @@
         const wa = document.getElementById('prof-wa').value.trim();
         
         try {
-            await setDoc(doc(db, "users", auth.currentUser.uid), {
+            await withTimeout(setDoc(doc(db, "users", auth.currentUser.uid), {
                 foto, nama, ttl, wa, email: auth.currentUser.email
-            }, { merge: true });
+            }, { merge: true }), 2500);
             
             showToast("Profil berhasil disimpan!");
             const finalName = nama || auth.currentUser.email.split('@')[0];
@@ -607,7 +626,7 @@
             document.getElementById('greet-name').textContent = `HALO, ${finalName.toUpperCase()}! 👋`;
             if(foto) document.getElementById('profile-img-preview').src = foto;
         } catch(error) {
-            showToast("Gagal menyimpan profil: Pastikan koneksi lancar.");
+            showToast("Gagal menyimpan profil: Pastikan koneksi lancar & nonaktifkan AdBlock.");
             console.error(error);
         }
     });
@@ -624,26 +643,32 @@
     }
 
     function loadStudentHistory() {
-        const q = query(collection(db, "history"), where("email", "==", currentUserEmail));
-        onSnapshot(q, (snap) => {
-            const tbody = document.getElementById('student-history-table');
-            if (tbody) tbody.innerHTML = '';
-            kuis1Selesai = false;
+        try {
+            const q = query(collection(db, "history"), where("email", "==", currentUserEmail));
+            onSnapshot(q, (snap) => {
+                const tbody = document.getElementById('student-history-table');
+                if (tbody) tbody.innerHTML = '';
+                kuis1Selesai = false;
 
-            if(snap.empty && tbody) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada riwayat aktivitas.</td></tr>`;
-            } else if (tbody) {
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    const dateStr = formatTanggalLengkap(d.waktu?.seconds);
-                    tbody.innerHTML += `<tr><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
-                    if ((d.kuisId === 1 || d.kuisId === "1") && parseInt(d.nilai) >= 0) {
-                        kuis1Selesai = true; 
-                    }
-                });
-            }
-            updateQuizLockUI();
-        }, (err) => console.error(err));
+                if(snap.empty && tbody) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada riwayat aktivitas.</td></tr>`;
+                } else if (tbody) {
+                    snap.forEach(docSnap => {
+                        const d = docSnap.data();
+                        const dateStr = formatTanggalLengkap(d.waktu?.seconds);
+                        tbody.innerHTML += `<tr><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
+                        if ((d.kuisId === 1 || d.kuisId === "1") && parseInt(d.nilai) >= 0) {
+                            kuis1Selesai = true; 
+                        }
+                    });
+                }
+                updateQuizLockUI();
+            }, (err) => {
+                console.warn("History Firestore offline/terblokir:", err);
+                const tbody = document.getElementById('student-history-table');
+                if (tbody) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">Data offline (Matikan AdBlock untuk menyinkronkan data).</td></tr>`;
+            });
+        } catch(err){}
     }
 
     function updateQuizLockUI() {
@@ -680,7 +705,7 @@
     }
 
     // ==========================================
-    // 4. KUIS ENGINE
+    // 4. ENGINE KUIS
     // ==========================================
     let currentQuizId = 1;
     let currentQuestions = [];
@@ -706,10 +731,10 @@
         currentQuestions = [];
         try {
             const qRef = query(collection(db, "quiz_questions"), where("kuisId", "==", String(quizId)));
-            const snap = await getDocs(qRef);
+            const snap = await withTimeout(getDocs(qRef), 2000);
             snap.forEach(docSnap => currentQuestions.push(docSnap.data()));
         } catch(e) {
-            console.error("Gagal memuat soal Firestore, memakai fallback:", e);
+            console.warn("Memakai soal cadangan (Firestore offline/terblokir):", e);
         }
 
         if (currentQuestions.length === 0) currentQuestions = quizId === 1 ? fallbackQ1 : fallbackQ2;
@@ -762,20 +787,31 @@
             renderQuestion();
         } else {
             const finalScore = Math.round((score / currentQuestions.length) * 100);
-            const userRef = doc(db, "users", auth.currentUser.uid);
-            const docSnap = await getDoc(userRef);
-            const namaSiswa = docSnap.exists() && docSnap.data().nama ? docSnap.data().nama : currentUserEmail;
-
-            await addDoc(collection(db, "history"), {
-                email: currentUserEmail,
-                nama: namaSiswa,
-                kegiatan: `Kuis ${currentQuizId}`,
-                kuisId: currentQuizId,
-                nilai: finalScore,
-                waktu: serverTimestamp()
-            });
             showToast(`Kuis Selesai! Nilai Kamu: ${finalScore}`);
             cancelQuiz();
+
+            // Simpan riwayat kuis
+            try {
+                let namaSiswa = currentUserEmail.split('@')[0];
+                try {
+                    const userRef = doc(db, "users", auth.currentUser.uid);
+                    const docSnap = await withTimeout(getDoc(userRef), 1500);
+                    if (docSnap && docSnap.exists() && docSnap.data().nama) {
+                        namaSiswa = docSnap.data().nama;
+                    }
+                } catch(e){}
+
+                await withTimeout(addDoc(collection(db, "history"), {
+                    email: currentUserEmail,
+                    nama: namaSiswa,
+                    kegiatan: `Kuis ${currentQuizId}`,
+                    kuisId: currentQuizId,
+                    nilai: finalScore,
+                    waktu: serverTimestamp()
+                }), 2500);
+            } catch(e) {
+                console.warn("Gagal menyimpan ke Firestore:", e);
+            }
         }
     };
 
@@ -796,11 +832,12 @@
             });
         };
 
-        // Menggunakan fallback jika index waktu desc belum terpasang
-        onSnapshot(query(collection(db, "history"), orderBy("waktu", "desc")), handleSnap, (err) => {
-            console.warn("OrderBy waktu gagal, mencoba tanpa sorting:", err);
-            onSnapshot(collection(db, "history"), handleSnap);
-        });
+        try {
+            onSnapshot(query(collection(db, "history"), orderBy("waktu", "desc")), handleSnap, (err) => {
+                console.warn("Sorting waktu gagal, mencoba tanpa filter:", err);
+                onSnapshot(collection(db, "history"), handleSnap);
+            });
+        } catch(err){}
     }
 
     document.getElementById('btn-save-question').addEventListener('click', async () => {
@@ -812,14 +849,14 @@
         const d = document.getElementById('guru-q-d').value.trim();
         const ans = document.getElementById('guru-q-answer').value;
 
-        if(!q || !a || !b || !c || !d || !ans) { showToast("Mohon lengkapi seluruh field soal!"); return; }
+        if(!q || !a || !b || !c || !d || !ans) { showToast("Mohon lengkapi seluruh kolom soal!"); return; }
 
         try {
-            await addDoc(collection(db, "quiz_questions"), { 
+            await withTimeout(addDoc(collection(db, "quiz_questions"), { 
                 kuisId: String(kuisId), 
                 q, a, b, c, d, ans, 
                 createdAt: serverTimestamp() 
-            });
+            }), 2500);
             showToast("Soal berhasil ditambahkan ke Kuis " + kuisId);
             
             document.getElementById('guru-q-text').value = '';
@@ -831,47 +868,49 @@
     });
 
     // ==========================================
-    // 6. JOBSHEET ENGINE
+    // 6. ENGINE JOBSHEET
     // ==========================================
     function loadJobsheets() {
-        onSnapshot(collection(db, "jobsheets"), (snap) => {
-            const studentList = document.getElementById('jobsheet-list-container');
-            const guruTable = document.getElementById('guru-jobsheet-table');
-            
-            if(studentList) studentList.innerHTML = '';
-            if(guruTable) guruTable.innerHTML = '';
-
-            if(snap.empty) {
-                if(studentList) studentList.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:15px;">Belum ada jobsheet tersedia.</div>`;
-                if(guruTable) guruTable.innerHTML = `<tr><td colspan="2" style="text-align:center;">Belum ada data.</td></tr>`;
-                return;
-            }
-
-            snap.forEach(docSnap => {
-                const d = docSnap.data();
-                const jId = docSnap.id;
+        try {
+            onSnapshot(collection(db, "jobsheets"), (snap) => {
+                const studentList = document.getElementById('jobsheet-list-container');
+                const guruTable = document.getElementById('guru-jobsheet-table');
                 
-                if (studentList) {
-                    studentList.innerHTML += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; border:1px solid var(--border); border-radius:8px; margin-bottom:12px; background:white;">
-                            <div>📄 <b style="font-size:15px;">${escapeHtml(d.judul)}</b></div>
-                            <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:8px 16px; font-size:13px;">Buka & Download PDF</a>
-                        </div>
-                    `;
+                if(studentList) studentList.innerHTML = '';
+                if(guruTable) guruTable.innerHTML = '';
+
+                if(snap.empty) {
+                    if(studentList) studentList.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:15px;">Belum ada jobsheet tersedia.</div>`;
+                    if(guruTable) guruTable.innerHTML = `<tr><td colspan="2" style="text-align:center;">Belum ada data.</td></tr>`;
+                    return;
                 }
-                if (isGuru && guruTable) {
-                    guruTable.innerHTML += `
-                        <tr>
-                            <td>📄 ${escapeHtml(d.judul)}</td>
-                            <td>
-                                <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:6px 12px; font-size:12px;">Lihat</a>
-                                <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="window.delJobsheet('${jId}', '${d.storagePath || ''}')">Hapus</button>
-                            </td>
-                        </tr>
-                    `;
-                }
-            });
-        });
+
+                snap.forEach(docSnap => {
+                    const d = docSnap.data();
+                    const jId = docSnap.id;
+                    
+                    if (studentList) {
+                        studentList.innerHTML += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; border:1px solid var(--border); border-radius:8px; margin-bottom:12px; background:white;">
+                                <div>📄 <b style="font-size:15px;">${escapeHtml(d.judul)}</b></div>
+                                <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:8px 16px; font-size:13px;">Buka & Download PDF</a>
+                            </div>
+                        `;
+                    }
+                    if (isGuru && guruTable) {
+                        guruTable.innerHTML += `
+                            <tr>
+                                <td>📄 ${escapeHtml(d.judul)}</td>
+                                <td>
+                                    <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:6px 12px; font-size:12px;">Lihat</a>
+                                    <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="window.delJobsheet('${jId}', '${d.storagePath || ''}')">Hapus</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+            }, (err) => console.warn(err));
+        } catch(err){}
     }
 
     document.getElementById('btn-upload-js').addEventListener('click', async () => {
@@ -885,7 +924,7 @@
         const sPath = `jobsheets/${Date.now()}_${file.name}`;
         const sRef = storageRef(storage, sPath);
         
-        showToast("Sedang mengupload PDF, tunggu sebentar...");
+        showToast("Sedang mengupload PDF...");
         try {
             await uploadBytes(sRef, file);
             const url = await getDownloadURL(sRef);
@@ -983,7 +1022,7 @@
             nodes[tId] = { id: tId, cId: cId, code: t.code };
         });
 
-        // Fitur geser komponen di kanvas
+        // Drag posisi komponen di kanvas
         el.onmousedown = function(e) {
             if(e.target.closest('.terminal')) return;
             let shiftX = e.clientX - el.getBoundingClientRect().left;
@@ -1106,7 +1145,7 @@
     });
 
     // ==========================================
-    // 8. ASISTEN AI (GROQ)
+    // 8. ASISTEN AI KELISTRIKAN (GROQ)
     // ==========================================
     const GROQ_API_KEY = "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";
     
@@ -1131,7 +1170,6 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                 body: JSON.stringify({
-                    // Menggunakan model Groq resmi yang aktif
                     model: "llama-3.3-70b-versatile",
                     messages: [
                         { role: "system", content: "Kamu ahli kelistrikan motor SMK. Jawab spesifik gunakan standar kode terminal DIN (30, 31, 15, 56a, 56b, 49, dll). Jawab padat dan jelas." },
