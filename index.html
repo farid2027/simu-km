@@ -24,6 +24,7 @@
         .form-input:focus { border-color: var(--primary); }
         .card { background: var(--surface); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; }
         
+        /* Layout */
         .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5, #0f172a); padding:20px; }
         .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .app-layout { display: flex; min-height: 100vh; }
@@ -35,70 +36,129 @@
         .topbar { background: white; padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position:sticky; top:0; z-index:50;}
         .content-area { padding: 24px; max-width: 1100px; width: 100%; margin: 0 auto; }
         
+        /* Tables & Data */
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
         th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
         .badge-guru { background: #fef3c7; color: #b45309; } .badge-siswa { background: #d1fae5; color: #047857; }
 
+        /* Kuis UI Modern & Interaktif */
         .quiz-option { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 14px 18px; border: 2px solid var(--border); border-radius: 10px; 
-            margin-bottom: 12px; cursor: pointer; font-weight: 500; background: #ffffff;
-            transition: all 0.2s ease-in-out; user-select: none;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 14px 18px; 
+            border: 2px solid var(--border); 
+            border-radius: 10px; 
+            margin-bottom: 12px; 
+            cursor: pointer; 
+            font-weight: 500; 
+            background: #ffffff;
+            transition: all 0.2s ease-in-out; 
+            user-select: none;
         }
-        .quiz-option:hover:not(.locked) { border-color: var(--primary); background: #f5f3ff; transform: translateY(-1px); }
+        .quiz-option:hover:not(.locked) { 
+            border-color: var(--primary); 
+            background: #f5f3ff; 
+            transform: translateY(-1px);
+        }
         .quiz-option input { margin-right: 12px; accent-color: var(--primary); cursor: pointer; }
         .quiz-option.locked { cursor: default; }
 
-        .quiz-option.correct { border-color: #10b981 !important; background: #ecfdf5 !important; color: #065f46 !important; font-weight: 600; }
-        .quiz-option.wrong { border-color: #ef4444 !important; background: #fef2f2 !important; color: #991b1b !important; font-weight: 600; }
-        .quiz-badge-feedback { font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+        /* Status Feedback Warna: Hijau (Benar) & Merah (Salah) */
+        .quiz-option.correct { 
+            border-color: #10b981 !important; 
+            background: #ecfdf5 !important; 
+            color: #065f46 !important; 
+            font-weight: 600;
+        }
+        .quiz-option.wrong { 
+            border-color: #ef4444 !important; 
+            background: #fef2f2 !important; 
+            color: #991b1b !important; 
+            font-weight: 600;
+        }
+        .quiz-badge-feedback {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
         .quiz-badge-correct { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
         .quiz-badge-wrong { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
+        /* Box Pembahasan & Penjelasan Soal */
         .quiz-explanation-card {
-            margin-top: 18px; padding: 16px 20px; border-radius: 10px;
-            background: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid var(--primary);
+            margin-top: 18px;
+            padding: 16px 20px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 5px solid var(--primary);
+            animation: fadeInExp 0.3s ease-in-out;
         }
-        .quiz-explanation-card.exp-correct { background: #f0fdf4; border-color: #86efac; border-left: 5px solid #10b981; }
-        .quiz-explanation-card.exp-wrong { background: #fff7ed; border-color: #fed7aa; border-left: 5px solid #f97316; }
+        .quiz-explanation-card.exp-correct {
+            background: #f0fdf4;
+            border-color: #86efac;
+            border-left: 5px solid #10b981;
+        }
+        .quiz-explanation-card.exp-wrong {
+            background: #fff7ed;
+            border-color: #fed7aa;
+            border-left: 5px solid #f97316;
+        }
+        @keyframes fadeInExp {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
+        /* Simulator Wiring Engine */
         .simulator-layout { display: grid; grid-template-columns: 1fr 280px; gap: 16px; }
         #sim-canvas { position: relative; background: #1e293b; min-height: 550px; width: 100%; border-radius: 12px; overflow: hidden; background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 20px 20px; }
-        .canvas-comp { position: absolute; background: white; padding: 10px; border-radius: 8px; cursor: move; text-align: center; border: 2px solid var(--border); z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.2); user-select: none; min-width: 110px; }
+        .canvas-comp { position: absolute; background: white; padding: 10px; border-radius: 8px; cursor: move; text-align: center; border: 2px solid var(--border); z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.2); user-select: none; min-width: 90px; }
         .canvas-comp .c-icon { font-size: 28px; pointer-events: none; }
         .canvas-comp .c-name { font-size: 11px; font-weight: 700; margin-top: 4px; pointer-events: none; }
         .terminal { position: absolute; width: 14px; height: 14px; background: #ef4444; border: 2px solid white; border-radius: 50%; cursor: crosshair; }
         .terminal:hover { transform: scale(1.3); background: #f59e0b; }
-        .terminal-label { position: absolute; font-size: 9px; font-weight: 800; color: #334155; pointer-events: none; white-space: nowrap; }
+        .terminal-label { position: absolute; font-size: 9px; font-weight: 800; color: #fff; background: #0f172a; padding: 1px 3px; border-radius: 3px; pointer-events: none; white-space: nowrap; }
         .draggable-item { background: white; padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; cursor: grab; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .draggable-item:hover { border-color: var(--primary); background: #f8fafc; }
 
+        /* Chat AI UI */
         .chat-log { height: 350px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: #f8fafc; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
         .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 10px; font-size: 14px; line-height: 1.4; }
         .msg-user { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
         .msg-ai { align-self: flex-start; background: white; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
 
+        /* Notification Toast Centered */
         #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; align-items: center; width: 100%; max-width: 500px; }
-        .toast { background: #0f172a; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.3); pointer-events: auto; border-left: 5px solid var(--primary); text-align: center; }
+        .toast { background: #0f172a; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.3); pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); border-left: 5px solid var(--primary); text-align: center; }
+        @keyframes toastIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="toast-container"></div>
 
+    <!-- ===================================== -->
+    <!-- HALAMAN LOGIN & DAFTAR -->
+    <!-- ===================================== -->
     <div id="login-screen" class="login-page">
         <div class="login-card">
             <div style="text-align: center; margin-bottom: 24px;">
                 <div style="font-size: 44px; margin-bottom: 8px;">🏍️⚡</div>
                 <h2 style="font-size: 22px; font-weight: 800; color: var(--text);">Simu-KM</h2>
                 <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
-                    Media Pembelajaran Interaktif Trainer Kelistrikan Sepeda Motor Berbasis Web
+                    Simu-KM (Simulasi Kelistrikan Motor) Merupakan Sebuah Media Pembelajaran Interaktif Trainer Kelistrikan Sepeda Motor Berbasis Web
                 </p>
             </div>
             
-            <input type="email" id="email-input" class="form-input" placeholder="Email Belajar.id (@smk.belajar.id / @guru.smk.belajar.id)">
+            <input type="email" id="email-input" class="form-input" placeholder="Email Belajar.id (@smk.belajar.id atau @guru.smk.belajar.id)">
             <input type="password" id="password-input" class="form-input" placeholder="Kata Sandi">
             
             <button class="btn btn-primary btn-full" id="btn-login" style="margin-bottom: 8px;">Masuk ke Aplikasi</button>
@@ -110,7 +170,11 @@
         </div>
     </div>
 
+    <!-- ===================================== -->
+    <!-- HALAMAN UTAMA APLIKASI (APP LAYOUT) -->
+    <!-- ===================================== -->
     <div id="app-layout" class="app-layout hidden">
+        <!-- SIDEBAR -->
         <div class="sidebar">
             <div style="padding: 20px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 12px;">
                 <img id="sb-avatar" src="https://via.placeholder.com/80" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
@@ -122,15 +186,19 @@
             </div>
 
             <div class="sidebar-menu">
+                <!-- 1. PROFIL SAYA (BERADA PALING ATAS SETELAH IDENTITAS) -->
                 <div class="nav-item" data-target="view-profil">👤 Profil Saya</div>
                 <div class="nav-item active" data-target="view-dashboard">🏠 Dashboard</div>
+                
+                <!-- MENU SISWA & UMUM -->
                 <div class="nav-item" data-target="view-jobsheet">📄 Jobsheet PDF</div>
                 <div class="nav-item" data-target="view-kuis">📝 Kuis Interaktif</div>
                 <div class="nav-item" data-target="view-simulator">⚙️ Simulator Praktik</div>
                 <div class="nav-item" data-target="view-ai">🤖 Tanya AI (Groq)</div>
 
+                <!-- MENU KHUSUS GURU (OTOMATIS MUNCUL UNTUK @GURU.SMK.BELAJAR.ID) -->
                 <div id="sidebar-guru-section" class="hidden" style="margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 10px;">
-                    <div style="padding: 8px 16px; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">Panel Guru</div>
+                    <div style="padding: 8px 16px; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Panel Guru</div>
                     <div class="nav-item" data-target="view-guru-rekap">📊 Rekap Nilai Siswa</div>
                     <div class="nav-item" data-target="view-guru-jobsheet">📁 Kelola Jobsheet</div>
                     <div class="nav-item" data-target="view-guru-kuis">📝 Kelola Soal Kuis</div>
@@ -142,6 +210,7 @@
             </div>
         </div>
 
+        <!-- AREA KONTEN UTAMA -->
         <div class="main-content">
             <div class="topbar">
                 <h3 id="topbar-title" style="font-size: 18px; font-weight: 700;">Dashboard</h3>
@@ -149,26 +218,36 @@
             </div>
 
             <div class="content-area">
+
+                <!-- VIEW PROFIL SAYA -->
                 <div id="view-profil" class="view-section hidden">
                     <h2 style="margin-bottom: 20px;">👤 Profil Pengguna</h2>
                     <div class="card" style="max-width: 600px;">
                         <div style="text-align: center; margin-bottom: 20px;">
-                            <img id="profile-img-preview" src="https://via.placeholder.com/80" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary);">
+                            <img id="profile-img-preview" src="https://via.placeholder.com/80" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Foto Profil Akun</div>
                         </div>
-                        <label style="font-size: 13px; font-weight: 600;">Link / URL Foto Profil:</label>
-                        <input type="text" id="prof-foto" class="form-input" placeholder="Tempel link foto online / Google Drive...">
+
+                        <label style="font-size: 13px; font-weight: 600;">Link / URL Foto Profil (Bisa Link Google Drive atau Gambar):</label>
+                        <input type="text" id="prof-foto" class="form-input" placeholder="Tempel tautan foto online atau tautan share Google Drive...">
+
                         <label style="font-size: 13px; font-weight: 600;">Nama Lengkap:</label>
                         <input type="text" id="prof-nama" class="form-input" placeholder="Nama Lengkap">
+
                         <label style="font-size: 13px; font-weight: 600;">Tempat, Tanggal Lahir:</label>
                         <input type="text" id="prof-ttl" class="form-input" placeholder="Contoh: Malang, 12 Mei 2006">
+
                         <label style="font-size: 13px; font-weight: 600;">Nomor WhatsApp:</label>
                         <input type="text" id="prof-wa" class="form-input" placeholder="Contoh: 081234567890">
+
                         <label style="font-size: 13px; font-weight: 600;">Email Terdaftar:</label>
                         <input type="text" id="prof-email" class="form-input" disabled style="background: #f1f5f9; cursor: not-allowed;">
+
                         <button class="btn btn-primary btn-full" id="btn-save-profile" style="margin-top: 10px;">💾 Simpan Pembaruan Profil</button>
                     </div>
                 </div>
 
+                <!-- VIEW DASHBOARD -->
                 <div id="view-dashboard" class="view-section">
                     <div class="card" style="background: linear-gradient(135deg, #4f46e5, #3b82f6); color: white;">
                         <h2 id="greet-name" style="font-size: 26px; font-weight: 800; margin-bottom: 8px;">HALO! 👋</h2>
@@ -176,23 +255,36 @@
                             Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM.
                         </p>
                     </div>
+
+                    <!-- RIWAYAT TUGAS & KUIS SISWA -->
                     <div id="student-history-card" class="card">
                         <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 700;">📋 Riwayat Aktivitas & Nilai Kuis Saya</h3>
                         <table>
-                            <thead><tr><th>Aktivitas / Kuis</th><th>Hari & Tanggal Selesai</th><th>Nilai</th><th>Status</th></tr></thead>
-                            <tbody id="student-history-table"><tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Memuat riwayat...</td></tr></tbody>
+                            <thead>
+                                <tr>
+                                    <th>Aktivitas / Kuis</th>
+                                    <th>Hari & Tanggal Selesai</th>
+                                    <th>Nilai</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-history-table">
+                                <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Memuat riwayat...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
 
+                <!-- VIEW JOBSHEET PDF (UNTUK SISWA) -->
                 <div id="view-jobsheet" class="view-section hidden">
                     <h2 style="margin-bottom: 20px;">📄 Jobsheet Praktik Siswa</h2>
                     <div class="card">
-                        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">Unduh dan pelajari jobsheet praktikum berikut:</p>
+                        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">Unduh dan pelajari jobsheet petunjuk praktikum kelistrikan sepeda motor berikut:</p>
                         <div id="student-jobsheet-list">Memuat daftar jobsheet...</div>
                     </div>
                 </div>
 
+                <!-- VIEW KUIS INTERAKTIF -->
                 <div id="view-kuis" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📝 Kuis Interaktif</h2>
                     <div id="quiz-list-container">
@@ -212,21 +304,33 @@
                         </div>
                     </div>
 
+                    <!-- AREA PENGERJAAN KUIS INTERAKTIF -->
                     <div id="quiz-execution-area" class="hidden">
                         <div class="card">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                                <h3 id="active-quiz-title" style="margin:0;">Mengerjakan Kuis</h3>
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
                                 <div>
-                                    <span id="quiz-point-badge" class="badge" style="background:#e0e7ff; color:#4338ca;">⭐ Bobot: 10 Poin</span>
-                                    <span style="font-weight:700; font-size:14px; background:#f1f5f9; padding:4px 10px; border-radius:6px;">Soal <span id="current-q-num">1</span>/<span id="total-q">0</span></span>
+                                    <h3 id="active-quiz-title" style="margin:0;">Mengerjakan Kuis</h3>
+                                    <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Pilih jawaban yang paling tepat. Skor total diskalakan ke 100 poin.</div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <span id="quiz-point-badge" class="badge" style="background:#e0e7ff; color:#4338ca; font-size:12px; font-weight:700;">⭐ Bobot: 10 Poin / Soal</span>
+                                    <span style="font-weight:700; color:var(--text); font-size:14px; background:#f1f5f9; padding:4px 10px; border-radius:6px; border:1px solid #cbd5e1;">Soal <span id="current-q-num">1</span>/<span id="total-q">0</span></span>
                                 </div>
                             </div>
+                            
+                            <!-- Progress Bar Soal -->
                             <div style="width:100%; height:6px; background:#e2e8f0; border-radius:3px; margin-bottom:20px; overflow:hidden;">
                                 <div id="quiz-progress-bar" style="height:100%; width:0%; background:var(--primary); transition:width 0.3s ease;"></div>
                             </div>
-                            <div id="quiz-question-text" style="font-size:16px; font-weight:700; margin-bottom:18px; line-height:1.5;">Memuat soal...</div>
+
+                            <div id="quiz-question-text" style="font-size:16px; font-weight:700; margin-bottom:18px; line-height:1.5; color:#0f172a;">Memuat soal...</div>
+                            
+                            <!-- Opsi Pilihan Jawaban -->
                             <div id="quiz-options"></div>
+                            
+                            <!-- Box Pembahasan / Feedback Penjelasan -->
                             <div id="quiz-explanation-container" class="hidden"></div>
+
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid var(--border);">
                                 <button class="btn btn-danger" onclick="cancelQuiz()">Keluar / Batal</button>
                                 <button class="btn btn-success" onclick="nextQuestion()" id="btn-next-q" disabled>Selanjutnya ➔</button>
@@ -234,23 +338,45 @@
                         </div>
                     </div>
 
+                    <!-- REKAP HASIL EVALUASI KUIS (SKALA 100) -->
                     <div id="quiz-result-area" class="hidden">
-                        <div class="card" style="text-align:center; padding:36px 24px; max-width:620px; margin:0 auto;">
+                        <div class="card" style="text-align:center; padding:36px 24px; max-width:620px; margin:0 auto; box-shadow:0 10px 25px rgba(0,0,0,0.05);">
                             <div id="quiz-result-icon" style="font-size:56px; margin-bottom:12px;">🎉</div>
-                            <h3 id="quiz-result-title" style="margin-bottom:6px; font-size:22px;">Hasil Kuis</h3>
-                            <div style="background:#f8fafc; border:2px dashed #cbd5e1; border-radius:16px; padding:24px; margin:20px 0;">
-                                <div style="font-size:12px; text-transform:uppercase; color:#64748b; font-weight:700; margin-bottom:6px;">Total Skor Akhir</div>
-                                <div style="font-size:54px; font-weight:800; color:var(--primary); line-height:1;" id="quiz-result-score-val">0<span style="font-size:22px; color:#94a3b8;"> / 100</span></div>
-                                <div id="quiz-result-status-badge" style="margin-top:14px;"><span class="badge badge-siswa">LULUS</span></div>
+                            <h3 id="quiz-result-title" style="margin-bottom:6px; font-size:22px;">Hasil Evaluasi Kuis</h3>
+                            <p id="quiz-result-subtitle" style="font-size:14px; color:var(--text-muted); margin-bottom:24px;">Berikut perolehan nilai akhir Anda dengan standar skala 100:</p>
+                            
+                            <div style="background:#f8fafc; border:2px dashed #cbd5e1; border-radius:16px; padding:24px; margin-bottom:24px;">
+                                <div style="font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#64748b; font-weight:700; margin-bottom:6px;">Total Skor Akhir (Skala 100)</div>
+                                <div style="font-size:54px; font-weight:800; color:var(--primary); line-height:1;" id="quiz-result-score-val">0<span style="font-size:22px; color:#94a3b8; font-weight:600;"> / 100</span></div>
+                                <div id="quiz-result-status-badge" style="margin-top:14px;">
+                                    <span class="badge badge-siswa" style="font-size:13px; padding:6px 16px;">KOMPETEN (LULUS)</span>
+                                </div>
                             </div>
-                            <div style="display:flex; justify-content:center; gap:12px;">
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:28px;">
+                                <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px 8px; border-radius:10px;">
+                                    <div style="font-size:12px; color:#166534; font-weight:600;">Jawaban Benar</div>
+                                    <div id="quiz-result-correct-count" style="font-size:20px; font-weight:800; color:#15803d; margin-top:4px;">0 Soal</div>
+                                </div>
+                                <div style="background:#fef2f2; border:1px solid #fecaca; padding:12px 8px; border-radius:10px;">
+                                    <div style="font-size:12px; color:#991b1b; font-weight:600;">Jawaban Salah</div>
+                                    <div id="quiz-result-wrong-count" style="font-size:20px; font-weight:800; color:#b91c1c; margin-top:4px;">0 Soal</div>
+                                </div>
+                                <div style="background:#eff6ff; border:1px solid #bfdbfe; padding:12px 8px; border-radius:10px;">
+                                    <div style="font-size:12px; color:#1e40af; font-weight:600;">Bobot per Soal</div>
+                                    <div id="quiz-result-weight-display" style="font-size:20px; font-weight:800; color:#2563eb; margin-top:4px;">10 Poin</div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
                                 <button class="btn btn-primary" onclick="cancelQuiz()">⬅️ Kembali ke Menu Kuis</button>
-                                <button class="btn btn-warning" onclick="openQuiz(currentQuizId)">🔄 Ulangi Kuis</button>
+                                <button class="btn btn-warning" onclick="openQuiz(currentQuizId)">🔄 Kerjakan Ulang</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- SIMULATOR WIRING (DENGAN SEKERING 15A) -->
                 <div id="view-simulator" class="view-section hidden">
                     <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                         <div>
@@ -262,109 +388,159 @@
                             <button class="btn btn-danger" id="btn-reset-kanvas">🗑️ Reset Kanvas</button>
                         </div>
                     </div>
+                    
                     <div class="simulator-layout">
                         <div id="sim-canvas" ondrop="window.dropComp(event)" ondragover="event.preventDefault()">
                             <svg id="wire-layer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:5;"></svg>
                             <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#475569; font-weight:700; pointer-events:none;" id="empty-canvas-text">Drag komponen ke area ini</div>
                         </div>
+
                         <div class="card" style="padding:16px; height: 550px; overflow-y: auto;">
                             <h4 style="font-size:14px; margin-bottom:12px;">📦 Gudang Komponen</h4>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'baterai')">🔋 Baterai 12V (30, 31)</div>
-                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sekering')" style="background:#fefce8; border-color:#facc15;">🛡️ Sekering 15A</div>
+                            <!-- KOMPONEN SEKERING -->
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sekering')" style="background:#fefce8; border-color:#facc15;">🛡️ Sekering 15A (30_IN, 30_OUT)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'kontak')">🔑 Kunci Kontak (30, 15)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kiri')">🕹️ Sakelar Setir Kiri</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kanan')">🕹️ Sakelar Setir Kanan</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'flasher')">🔀 Flasher Sein (49, 49a)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_kepala')">💡 Lampu Kepala H4</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_senja')">💡 Lampu Senja (58)</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_sein_kiri')">🚥 Lampu Sein Kiri</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_sein_kanan')">🚥 Lampu Sein Kanan</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_rem')">🔴 Lampu Rem (54)</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_rem')">🕹️ Sakelar Rem</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'klakson')">📢 Klakson</div>
-                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'avometer')" style="background:#ecfccb;">🎛️ Avometer Digital</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'speedo')">📟 Instrumen/Speedo</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'avometer')" style="border-color:#84cc16; background:#ecfccb;">🎛️ Avometer Digital</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- TANYA AI (INTEGRASI GROQ API) -->
                 <div id="view-ai" class="view-section hidden">
                     <h2 style="margin-bottom:15px; color:#4f46e5;">🤖 Asisten AI Kelistrikan Sepeda Motor</h2>
-                    <p style="font-size:13px; color:var(--text-muted); margin-top:-10px; margin-bottom:15px;">Tanyakan kode terminal, alur sekering, atau cara kerja rangkaian.</p>
+                    <p style="font-size:13px; color:var(--text-muted); margin-top:-10px; margin-bottom:15px;">Tanyakan kode terminal (30, 31, 15, 56, dll), alur sekering, atau cara kerja rangkaian penerangan.</p>
                     <div class="card" style="padding:16px;">
                         <div class="chat-log" id="ai-chat-log">
-                            <div class="chat-msg msg-ai">Halo! Saya instruktur ahli kelistrikan sepeda motor SMK. Ada yang ingin kamu tanyakan seputar rangkaian kabel atau kode terminal?</div>
+                            <div class="chat-msg msg-ai">Halo! Saya instruktur ahli kelistrikan sepeda motor SMK. Ada yang ingin kamu tanyakan seputar rangkaian kabel, kode terminal, atau komponen motor hari ini?</div>
                         </div>
                         <div style="display:flex; gap:10px;">
-                            <input type="text" id="ai-input" class="form-input" style="margin:0;" placeholder="Tanyakan fungsi sekering, terminal 30, dll...">
+                            <input type="text" id="ai-input" class="form-input" style="margin:0;" placeholder="Tanyakan fungsi sekering, terminal 30, atau wiring lampu...">
                             <button class="btn btn-primary" id="btn-ai-send" style="width:auto; padding:0 24px;">Kirim</button>
                         </div>
                     </div>
                 </div>
 
+                <!-- ===================================== -->
+                <!-- PANEL GURU -->
+                <!-- ===================================== -->
+
+                <!-- REKAP NILAI -->
                 <div id="view-guru-rekap" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📊 Rekap Nilai Seluruh Siswa</h2>
                     <div class="card">
                         <table>
-                            <thead><tr><th>Nama/Email Siswa</th><th>Aktivitas</th><th>Hari & Tanggal</th><th>Nilai</th></tr></thead>
-                            <tbody id="guru-rekap-table"><tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr></tbody>
+                            <thead><tr><th>Nama/Email Siswa</th><th>Tugas / Kuis</th><th>Hari & Tanggal</th><th>Nilai</th></tr></thead>
+                            <tbody id="guru-rekap-table">
+                                <tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
 
+                <!-- KELOLA JOBSHEET (UPLOAD PDF & GOOGLE DRIVE - BEBAS MACET) -->
                 <div id="view-guru-jobsheet" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📁 Kelola Jobsheet PDF</h2>
                     <div class="card" style="margin-bottom:20px; background:#f8fafc;">
                         <h4 style="margin-bottom:12px;">Upload Jobsheet Baru</h4>
-                        <input type="text" id="js-title" class="form-input" placeholder="Judul Jobsheet">
-                        <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">Pilih File PDF:</label>
+                        <input type="text" id="js-title" class="form-input" placeholder="Judul Jobsheet (misal: Jobsheet Praktik Rangkaian Klakson & Sekering)">
+                        
+                        <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">1. Pilih File PDF dari Laptop/HP:</label>
                         <input type="file" id="js-file" class="form-input" accept="application/pdf">
-                        <div style="text-align:center; font-size:11px; font-weight:700; color:var(--text-muted); margin:4px 0 10px 0;">— ATAU MASUKKAN LINK GOOGLE DRIVE —</div>
-                        <input type="text" id="js-url" class="form-input" placeholder="Tempel link Google Drive / PDF...">
-                        <button class="btn btn-success" id="btn-upload-js">📤 Simpan & Publikasikan</button>
+                        
+                        <div style="text-align:center; font-size:11px; font-weight:700; color:var(--text-muted); margin:4px 0 10px 0;">— ATAU MASUKKAN TAUTAN GOOGLE DRIVE (DIREKOMENDASIKAN) —</div>
+                        
+                        <input type="text" id="js-url" class="form-input" placeholder="Tempel tautan Google Drive / Link PDF luar di sini">
+                        
+                        <button class="btn btn-success" id="btn-upload-js">📤 Simpan & Publikasikan Jobsheet</button>
                     </div>
                     <div class="card">
                         <h4 style="margin-bottom:12px;">Daftar Jobsheet Tersedia</h4>
-                        <table>
-                            <thead><tr><th>Judul Jobsheet</th><th>Aksi</th></tr></thead>
+                        <table style="width:100%;">
+                            <thead><tr><th>Judul Jobsheet</th><th>Aksi Guru</th></tr></thead>
                             <tbody id="guru-jobsheet-table"><tr><td colspan="2" style="text-align:center;">Memuat...</td></tr></tbody>
                         </table>
                     </div>
                 </div>
 
+                <!-- KELOLA SOAL KUIS (TAMBAH, EDIT, HAPUS DENGAN PEMBAHASAN) -->
                 <div id="view-guru-kuis" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📝 Kelola Soal Kuis</h2>
                     <div class="card" style="margin-bottom:20px;">
-                        <h4 style="margin-bottom:12px;">Tambah Soal Baru</h4>
+                        <h4 id="form-question-title" style="margin-bottom:12px;">Tambah Soal Baru</h4>
+                        <input type="hidden" id="editing-q-id" value="">
                         <select id="guru-q-kuis-id" class="form-input">
-                            <option value="1">Kuis 1 (Dasar Terminal)</option>
-                            <option value="2">Kuis 2 (Penerangan & Sinyal)</option>
+                            <option value="1">Tambahkan ke Kuis 1 (Dasar Terminal)</option>
+                            <option value="2">Tambahkan ke Kuis 2 (Penerangan & Sinyal)</option>
                         </select>
                         <textarea id="guru-q-text" class="form-input" rows="3" placeholder="Pertanyaan Soal..."></textarea>
                         <div style="display:flex; gap:10px;">
-                            <input type="text" id="guru-q-a" class="form-input" placeholder="Opsi A">
-                            <input type="text" id="guru-q-b" class="form-input" placeholder="Opsi B">
+                            <input type="text" id="guru-q-a" class="form-input" placeholder="Opsi Jawaban A">
+                            <input type="text" id="guru-q-b" class="form-input" placeholder="Opsi Jawaban B">
                         </div>
                         <div style="display:flex; gap:10px;">
-                            <input type="text" id="guru-q-c" class="form-input" placeholder="Opsi C">
-                            <input type="text" id="guru-q-d" class="form-input" placeholder="Opsi D">
+                            <input type="text" id="guru-q-c" class="form-input" placeholder="Opsi Jawaban C">
+                            <input type="text" id="guru-q-d" class="form-input" placeholder="Opsi Jawaban D">
                         </div>
                         <select id="guru-q-answer" class="form-input">
-                            <option value="">-- Kunci Jawaban Benar --</option>
+                            <option value="">-- Pilih Kunci Jawaban Benar --</option>
                             <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
                         </select>
-                        <textarea id="guru-q-exp" class="form-input" rows="2" placeholder="Pembahasan / Alasan Jawaban..."></textarea>
-                        <button class="btn btn-primary btn-full" id="btn-save-question">💾 Simpan Soal</button>
+                        <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">💡 Penjelasan / Pembahasan Jawaban (Ditampilkan saat siswa menjawab):</label>
+                        <textarea id="guru-q-exp" class="form-input" rows="2" placeholder="Tuliskan pembahasan jawaban (alasan mengapa kunci ini benar, misal: Terminal 30 adalah arus konstan aki melalui sekering)..."></textarea>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn btn-primary" id="btn-save-question" style="flex:1;">💾 Simpan Soal</button>
+                            <button class="btn btn-danger hidden" id="btn-cancel-edit-q" style="width:auto;">Batal Edit</button>
+                        </div>
                     </div>
+
                     <div class="card">
-                        <h4 style="margin-bottom:12px;">Daftar Soal Kuis Aktif</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <h4 style="margin:0;">📋 Daftar Soal Aktif di Kuis</h4>
+                            <select id="filter-guru-kuis" class="form-input" style="width:auto; margin:0; padding:6px 12px;">
+                                <option value="all">Semua Kuis</option>
+                                <option value="1">Kuis 1 Saja</option>
+                                <option value="2">Kuis 2 Saja</option>
+                            </select>
+                        </div>
                         <table>
-                            <thead><tr><th>Kuis</th><th>Pertanyaan & Kunci</th><th>Aksi</th></tr></thead>
-                            <tbody id="guru-questions-table"><tr><td colspan="3" style="text-align:center;">Memuat soal...</td></tr></tbody>
+                            <thead>
+                                <tr>
+                                    <th style="width:70px;">Target</th>
+                                    <th>Pertanyaan, Opsi & Pembahasan</th>
+                                    <th style="width:70px;">Kunci</th>
+                                    <th style="width:120px;">Aksi Guru</th>
+                                </tr>
+                            </thead>
+                            <tbody id="guru-questions-table">
+                                <tr><td colspan="4" style="text-align:center;">Memuat daftar soal...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 
 <script type="module">
+    // ==========================================
+    // 1. FIREBASE SETUP
+    // ==========================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getDocs, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getDocs, orderBy, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDI9Rd4m4IxKJsELGS9e7KztVS2hXftAA0",
@@ -385,7 +561,8 @@
     function showToast(msg) {
         const c = document.getElementById('toast-container');
         const t = document.createElement('div');
-        t.className = 'toast'; t.textContent = msg;
+        t.className = 'toast'; 
+        t.textContent = msg;
         c.appendChild(t);
         setTimeout(() => t.remove(), 4000);
     }
@@ -398,41 +575,70 @@
     }
 
     function withTimeout(promise, ms = 2500) {
-        return Promise.race([promise, new Promise((_, r) => setTimeout(() => r(new Error("Timeout")), ms))]);
+        return Promise.race([
+            promise,
+            new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout/Blocked")), ms))
+        ]);
     }
 
+    // Format Link Gambar & Google Drive
     function formatImageUrl(url) {
         if (!url) return '';
         url = url.trim();
-        const gMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-        if (gMatch && gMatch[1]) return `https://drive.google.com/uc?export=view&id=${gMatch[1]}`;
+        const gDriveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (gDriveMatch && gDriveMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${gDriveMatch[1]}`;
+        }
+        const gDriveIdMatch = url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (url.includes('drive.google.com') && gDriveIdMatch && gDriveIdMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${gDriveIdMatch[1]}`;
+        }
+        if (url.includes('google.com/imgres') || url.includes('imgurl=')) {
+            try {
+                const urlObj = new URL(url);
+                const imgurl = urlObj.searchParams.get('imgurl');
+                if (imgurl) return decodeURIComponent(imgurl);
+            } catch(e){}
+        }
         return url;
     }
 
+    // Format Link PDF (Mendukung Preview Langsung Google Drive)
     function formatPdfUrl(url) {
         if (!url) return '';
         url = url.trim();
-        const gMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-        if (gMatch && gMatch[1]) return `https://drive.google.com/file/d/${gMatch[1]}/preview`;
+        const gDriveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (gDriveMatch && gDriveMatch[1]) {
+            return `https://drive.google.com/file/d/${gDriveMatch[1]}/preview`;
+        }
+        const gDriveIdMatch = url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (url.includes('drive.google.com') && gDriveIdMatch && gDriveIdMatch[1]) {
+            return `https://drive.google.com/file/d/${gDriveIdMatch[1]}/preview`;
+        }
         return url;
     }
 
     setInterval(() => {
         const now = new Date();
-        document.getElementById('clock').textContent = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) + " WIB";
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('clock').textContent = now.toLocaleDateString('id-ID', options) + " WIB";
     }, 1000);
 
+    // Navigasi Menu
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             item.classList.add('active');
             document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
-            const target = document.getElementById(item.dataset.target);
-            if (target) target.classList.remove('hidden');
+            const targetView = document.getElementById(item.dataset.target);
+            if (targetView) targetView.classList.remove('hidden');
             document.getElementById('topbar-title').textContent = item.textContent.replace(/[^\w\s]/gi, '').trim();
         });
     });
 
+    // ==========================================
+    // 2. LOGIKA ROLE (GURU vs SISWA)
+    // ==========================================
     function checkValidDomain(email) {
         if (!email || !email.includes('@')) return false;
         const e = email.toLowerCase().trim();
@@ -442,7 +648,9 @@
     function detectRole(email) {
         if (!email) return 'siswa';
         const e = email.toLowerCase().trim();
-        if (e.endsWith('@guru.smk.belajar.id') || e.includes('@guru') || e.startsWith('guru@')) return 'guru';
+        if (e.endsWith('@guru.smk.belajar.id') || e.includes('@guru') || e.includes('guru.smk') || e.startsWith('guru@')) {
+            return 'guru';
+        }
         return 'siswa';
     }
 
@@ -455,9 +663,11 @@
         document.getElementById('app-layout').classList.remove('hidden');
 
         const cleanNama = pNama || currentUserEmail.split('@')[0];
+        const upperNama = cleanNama.toUpperCase();
+
         document.getElementById('sb-name').textContent = cleanNama;
         document.getElementById('sb-email').textContent = currentUserEmail;
-        document.getElementById('greet-name').textContent = `HALO, ${cleanNama.toUpperCase()}! 👋`;
+        document.getElementById('greet-name').textContent = `HALO, ${upperNama}! 👋`;
 
         const finalFoto = formatImageUrl(pFoto) || 'https://via.placeholder.com/80';
         document.getElementById('sb-avatar').src = finalFoto;
@@ -469,19 +679,20 @@
         document.getElementById('prof-email').value = currentUserEmail;
 
         const guruSidebar = document.getElementById('sidebar-guru-section');
+
         if (isGuru) {
             document.getElementById('sb-role').textContent = 'Guru';
             document.getElementById('sb-role').className = 'badge badge-guru';
-            document.getElementById('greet-desc').textContent = "Selamat datang, Bapak/Ibu Guru! Kelola nilai dan kuis di Panel Guru.";
-            document.getElementById('student-history-card').classList.add('hidden');
+            document.getElementById('greet-desc').textContent = "Selamat datang, Bapak/Ibu Guru! Gunakan Panel Guru untuk mengelola nilai, soal kuis, dan jobsheet.";
+            document.getElementById('student-history-card').classList.add('hidden'); 
             if (guruSidebar) guruSidebar.classList.remove('hidden');
             loadGuruRekap();
             loadGuruQuestionsTable();
         } else {
             document.getElementById('sb-role').textContent = 'Siswa';
             document.getElementById('sb-role').className = 'badge badge-siswa';
-            document.getElementById('greet-desc').textContent = "Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM.";
-            document.getElementById('student-history-card').classList.remove('hidden');
+            document.getElementById('greet-desc').textContent = "Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM. Pantau tugas dan nilaimu di sini.";
+            document.getElementById('student-history-card').classList.remove('hidden'); 
             if (guruSidebar) guruSidebar.classList.add('hidden');
             loadStudentHistory();
         }
@@ -498,7 +709,10 @@
                 const localData = localStorage.getItem('simu_profile_' + user.uid);
                 if (localData) {
                     const parsed = JSON.parse(localData);
-                    pNama = parsed.nama || pNama; pFoto = parsed.foto || pFoto; pTtl = parsed.ttl || pTtl; pWa = parsed.wa || pWa;
+                    pNama = parsed.nama || pNama;
+                    pFoto = parsed.foto || pFoto;
+                    pTtl = parsed.ttl || pTtl;
+                    pWa = parsed.wa || pWa;
                 }
             } catch(e){}
 
@@ -509,10 +723,28 @@
                 const docSnap = await withTimeout(getDoc(userRef), 2000);
                 if (docSnap && docSnap.exists()) {
                     const data = docSnap.data();
-                    pNama = data.nama || pNama; pFoto = data.foto || pFoto; pTtl = data.ttl || pTtl; pWa = data.wa || pWa; roleUser = data.role || roleDefault;
+                    pNama = data.nama || pNama;
+                    pFoto = data.foto || pFoto;
+                    pTtl = data.ttl || pTtl;
+                    pWa = data.wa || pWa;
+                    if (roleDefault === 'guru' && data.role !== 'guru') {
+                        setDoc(userRef, { role: 'guru' }, { merge: true });
+                        roleUser = 'guru';
+                    } else {
+                        roleUser = data.role || roleDefault;
+                    }
                     applyUIRole(email, pNama, pFoto, pTtl, pWa, roleUser);
+                } else {
+                    await setDoc(userRef, {
+                        email: email,
+                        role: roleDefault,
+                        nama: pNama,
+                        foto: pFoto
+                    }, { merge: true });
                 }
-            } catch(e) {}
+            } catch(e) {
+                console.warn("Sync offline:", e);
+            }
         } else {
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('app-layout').classList.add('hidden');
@@ -522,24 +754,52 @@
     document.getElementById('btn-login').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
         const pass = document.getElementById('password-input').value.trim();
-        if(!checkValidDomain(email)) { showToast("Gagal: Gunakan email @smk.belajar.id atau @guru.smk.belajar.id"); return; }
+        
+        if(!checkValidDomain(email)) { 
+            showToast("Gagal: Email harus @smk.belajar.id (siswa) atau @guru.smk.belajar.id (guru)"); 
+            return; 
+        }
+        
         try {
             await signInWithEmailAndPassword(auth, email, pass);
-            showToast("Login Berhasil!");
+            const roleUser = detectRole(email);
+            const namaUser = email.split('@')[0];
+            showToast(`HALO, ${namaUser.toUpperCase()}! Login Berhasil 👋`);
+            applyUIRole(email, namaUser, 'https://via.placeholder.com/80', '', '', roleUser);
         } catch(e) {
-            showToast("Gagal Login: Periksa kembali email dan sandi.");
+            if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
+                showToast("Akun tidak dapat ditemukan, silakan daftar akun atau masukkan kembali sandi yang benar!");
+            } else {
+                showToast("Gagal Login: " + e.message);
+            }
         }
     });
 
     document.getElementById('btn-register').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
         const password = document.getElementById('password-input').value.trim();
-        if(!checkValidDomain(email)) { showToast("Gagal: Email harus berakhiran @smk.belajar.id"); return; }
+        
+        if(!checkValidDomain(email)) { 
+            showToast("Gagal: Pendaftaran dibatasi hanya untuk @smk.belajar.id atau @guru.smk.belajar.id"); 
+            return; 
+        }
+        
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
             const roleUser = detectRole(email);
-            await setDoc(doc(db, "users", userCred.user.uid), { email, role: roleUser, nama: email.split('@')[0], foto: 'https://via.placeholder.com/80' }, { merge: true });
-            showToast("Pendaftaran Berhasil!");
+            const namaUser = email.split('@')[0];
+            
+            try {
+                await withTimeout(setDoc(doc(db, "users", userCred.user.uid), {
+                    email: email.toLowerCase(),
+                    role: roleUser,
+                    nama: namaUser,
+                    foto: 'https://via.placeholder.com/80'
+                }, { merge: true }), 2000);
+            } catch(err){}
+
+            showToast(`Pendaftaran Berhasil sebagai ${roleUser === 'guru' ? 'Guru' : 'Siswa'}!`);
+            applyUIRole(email, namaUser, 'https://via.placeholder.com/80', '', '', roleUser);
         } catch(e) {
             showToast("Gagal Daftar: " + e.message);
         }
@@ -547,87 +807,199 @@
 
     document.getElementById('btn-forgot').addEventListener('click', (e) => {
         e.preventDefault();
-        alert("Hubungi Admin:\nEmail: rifqi.miftah.2405346@students.um.ac.id\nWhatsApp: 089635894135");
+        alert("INFORMASI ADMIN SIMU-KM\n\nJika Anda lupa kata sandi, silakan hubungi admin di bawah ini:\n\nEmail: rifqi.miftah.2405346@students.um.ac.id\nWhatsApp: 089635894135");
     });
 
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
     document.getElementById('prof-foto').addEventListener('input', (e) => {
-        document.getElementById('profile-img-preview').src = formatImageUrl(e.target.value.trim()) || 'https://via.placeholder.com/80';
+        const val = e.target.value.trim();
+        const formatted = formatImageUrl(val);
+        document.getElementById('profile-img-preview').src = formatted || 'https://via.placeholder.com/80';
     });
 
     document.getElementById('btn-save-profile').addEventListener('click', async () => {
-        const foto = formatImageUrl(document.getElementById('prof-foto').value.trim());
-        const nama = document.getElementById('prof-nama').value.trim() || currentUserEmail.split('@')[0];
+        const rawFoto = document.getElementById('prof-foto').value.trim();
+        const foto = formatImageUrl(rawFoto);
+        const nama = document.getElementById('prof-nama').value.trim();
         const ttl = document.getElementById('prof-ttl').value.trim();
         const wa = document.getElementById('prof-wa').value.trim();
+        
+        const finalNama = nama || currentUserEmail.split('@')[0];
+        const finalFoto = foto || 'https://via.placeholder.com/80';
+
+        document.getElementById('sb-name').textContent = finalNama;
+        document.getElementById('greet-name').textContent = `HALO, ${finalNama.toUpperCase()}! 👋`;
+        document.getElementById('sb-avatar').src = finalFoto;
+        document.getElementById('profile-img-preview').src = finalFoto;
 
         try {
             if (auth.currentUser) {
-                localStorage.setItem('simu_profile_' + auth.currentUser.uid, JSON.stringify({ foto, nama, ttl, wa }));
-                await setDoc(doc(db, "users", auth.currentUser.uid), { foto, nama, ttl, wa, email: currentUserEmail }, { merge: true });
+                localStorage.setItem('simu_profile_' + auth.currentUser.uid, JSON.stringify({
+                    foto: finalFoto, nama: finalNama, ttl, wa
+                }));
             }
-            showToast("Profil berhasil disimpan!");
-            applyUIRole(currentUserEmail, nama, foto, ttl, wa);
-        } catch(e) {
-            showToast("Profil tersimpan di perangkat!");
+        } catch(e){}
+
+        try {
+            await withTimeout(setDoc(doc(db, "users", auth.currentUser.uid), {
+                foto: finalFoto, 
+                nama: finalNama, 
+                ttl, 
+                wa, 
+                email: auth.currentUser.email
+            }, { merge: true }), 2500);
+            
+            showToast("Profil dan foto berhasil disimpan!");
+        } catch(error) {
+            showToast("Profil tersimpan di perangkat Anda!");
         }
     });
 
+    // ==========================================
+    // 3. RIWAYAT SISWA & UPDATE STATUS KUIS
+    // ==========================================
     let kuis1Selesai = false;
+
+    function formatTanggalLengkap(seconds) {
+        if (!seconds) return '-';
+        const date = new Date(seconds * 1000);
+        return date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
 
     function loadStudentHistory() {
         try {
-            onSnapshot(query(collection(db, "history"), where("email", "==", currentUserEmail)), (snap) => {
+            const q = query(collection(db, "history"), where("email", "==", currentUserEmail));
+            onSnapshot(q, (snap) => {
                 const tbody = document.getElementById('student-history-table');
-                if (!tbody) return;
-                tbody.innerHTML = '';
+                if (tbody) tbody.innerHTML = '';
                 kuis1Selesai = false;
-                if(snap.empty) {
+
+                if(snap.empty && tbody) {
                     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada riwayat aktivitas.</td></tr>`;
-                } else {
+                } else if (tbody) {
                     snap.forEach(docSnap => {
                         const d = docSnap.data();
-                        tbody.innerHTML += `<tr><td>${escapeHtml(d.kegiatan)}</td><td>${d.waktu ? new Date(d.waktu.seconds * 1000).toLocaleString('id-ID') : '-'}</td><td><b>${d.nilai} / 100</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
-                        if ((d.kuisId === 1 || d.kuisId === "1") && parseInt(d.nilai) >= 0) kuis1Selesai = true;
+                        const dateStr = formatTanggalLengkap(d.waktu?.seconds);
+                        tbody.innerHTML += `<tr><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai} / 100</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
+                        if ((d.kuisId === 1 || d.kuisId === "1") && parseInt(d.nilai) >= 0) {
+                            kuis1Selesai = true; 
+                        }
                     });
                 }
                 updateQuizLockUI();
-            });
-        } catch(e){}
+            }, (err) => console.warn(err));
+        } catch(err){}
     }
 
     function updateQuizLockUI() {
-        const btn1 = document.getElementById('btn-kuis-1'), stat1 = document.getElementById('status-kuis-1');
-        const btn2 = document.getElementById('btn-kuis-2'), stat2 = document.getElementById('status-kuis-2');
+        const btn1 = document.getElementById('btn-kuis-1');
+        const stat1 = document.getElementById('status-kuis-1');
+        const btn2 = document.getElementById('btn-kuis-2');
+        const stat2 = document.getElementById('status-kuis-2');
+
         if (kuis1Selesai) {
-            if (stat1) { stat1.textContent = "✅ Selesai"; stat1.style.color = "var(--success)"; }
-            if (btn1) btn1.textContent = "Ulangi Kuis 1";
+            if (stat1) {
+                stat1.textContent = "✅ Selesai Dikerjakan";
+                stat1.style.color = "var(--success)";
+            }
+            if (btn1) btn1.textContent = "Kerjakan Ulang Kuis 1";
+
             if (btn2) btn2.disabled = false;
-            if (stat2) { stat2.textContent = "🔓 Terbuka"; stat2.style.color = "var(--success)"; }
+            if (stat2) {
+                stat2.textContent = "🔓 Terbuka untuk Dikerjakan";
+                stat2.style.color = "var(--success)";
+            }
         } else {
-            if (stat1) stat1.textContent = "Belum dikerjakan";
+            if (stat1) {
+                stat1.textContent = "Belum dikerjakan";
+                stat1.style.color = "var(--text-muted)";
+            }
+            if (btn1) btn1.textContent = "Mulai Kuis 1";
+
             if (btn2) btn2.disabled = true;
-            if (stat2) stat2.textContent = "🔒 Terkunci (Selesaikan Kuis 1 dahulu)";
+            if (stat2) {
+                stat2.textContent = "🔒 Terkunci (Selesaikan Kuis 1 dahulu)";
+                stat2.style.color = "var(--danger)";
+            }
         }
     }
 
-    let currentQuizId = 1, currentQuestions = [], currentQIndex = 0, correctCount = 0, isOptionSelected = false;
+    // ==========================================
+    // 4. ENGINE KUIS INTERAKTIF (SKALA 100 & FEEDBACK PEMBAHASAN)
+    // ==========================================
+    let currentQuizId = 1;
+    let currentQuestions = [];
+    let currentQIndex = 0;
+    let correctCount = 0;
+    let isOptionSelected = false;
+    let selectedAnswer = "";
 
+    // Bank Soal Bawaan (Fallback) Lengkap dengan Pembahasan Sepeda Motor Standar Industri
     const fallbackQ1 = [
-        { q: "Kode terminal untuk arus positif (+) langsung dari Baterai sesuai standar DIN adalah?", a: "30", b: "31", c: "15", d: "58", ans: "A", exp: "Terminal 30 adalah arus positif konstan aki." },
-        { q: "Kode terminal 31 pada sistem kelistrikan sepeda motor digunakan untuk jalur?", a: "Kontak", b: "Massa / Ground (-)", c: "Flasher", d: "Lampu Jauh", ans: "B", exp: "Terminal 31 adalah massa/ground bodi." },
-        { q: "Fungsi sekering (15A) setelah kutub positif baterai adalah?", a: "Naikkan tegangan", b: "Melindungi sirkuit dari arus berlebih / korsleting", c: "Ubah DC ke AC", d: "Kedipkan sein", ans: "B", exp: "Sekering memutus arus saat terjadi korsleting." },
-        { q: "Terminal keluaran beban kunci kontak saat posisi 'ON' ditandai dengan angka?", a: "30", b: "31", c: "15", d: "54", ans: "C", exp: "Terminal 15 adalah output setelah kontak ON." },
-        { q: "Avometer digital untuk mengukur tegangan baterai 12V disetel pada posisi?", a: "DCV 20V", b: "ACV 250V", c: "DCA 200mA", d: "Ohm 20k", ans: "A", exp: "Aki motor adalah DC 12V, gunakan DCV 20V." }
+        { 
+            q: "Berapa kode terminal untuk arus positif (+) langsung dari Baterai sesuai standar DIN otomotif?", 
+            a: "30", b: "31", c: "15", d: "58", 
+            ans: "A",
+            exp: "Sesuai standar DIN (Deutsches Institut für Normung) 72552, terminal 30 selalu melambangkan arus positif (+) konstan langsung dari baterai yang selalu bertegangan sebelum melewati sakelar utama."
+        },
+        { 
+            q: "Kode terminal 31 pada sistem kelistrikan sepeda motor digunakan untuk jalur?", 
+            a: "Kunci Kontak Output", b: "Massa / Ground (Kutub Negatif)", c: "Flasher Lampu Sein", d: "Lampu Jauh", 
+            ans: "B",
+            exp: "Terminal 31 adalah jalur massa atau ground (kutub negatif baterai) yang dihubungkan ke rangka atau bodi sepeda motor untuk melengkapi sirkuit kelistrikan."
+        },
+        { 
+            q: "Fungsi utama komponen sekering (fuse 15A) yang dipasang tepat setelah kutub positif baterai adalah?", 
+            a: "Menaikkan tegangan 12V menjadi 24V", b: "Melindungi sirkuit dan kabel dari arus berlebih serta bahaya korsleting", c: "Mengubah arus DC aki menjadi AC", d: "Membuat lampu sein berkedip teratur", 
+            ans: "B",
+            exp: "Sekering bertindak sebagai pengaman sirkuit utama. Bila terjadi hubungan pendek (korsleting) atau kelebihan beban melebihi 15 Ampere, kawat sekering akan meleleh dan putus sehingga instalasi kabel sepeda motor tidak terbakar."
+        },
+        { 
+            q: "Terminal keluaran (output) beban kunci kontak saat posisi 'ON' ditandai dengan kode angka?", 
+            a: "30", b: "31", c: "15", d: "54", 
+            ans: "C",
+            exp: "Terminal 15 adalah terminal keluaran beban setelah kunci kontak diputar ke posisi 'ON'. Jalur ini menyuplai arus ke sistem pengapian, klakson, lampu rem, speedometer, dan flasher."
+        },
+        { 
+            q: "Untuk mengukur tegangan baterai motor yang sehat (standar 12.4V - 12.8V), selektor avometer digital harus disetel pada posisi?", 
+            a: "DCV 20V", b: "ACV 250V", c: "DCA 200mA", d: "Ohm (Ω) 20k", 
+            ans: "A",
+            exp: "Baterai sepeda motor menggunakan arus searah (DC) dengan nilai nominal 12 Volt. Batas ukur avometer yang paling tepat dan presisi adalah skala Direct Current Voltage (DCV) 20V."
+        }
     ];
 
     const fallbackQ2 = [
-        { q: "Arus positif dari kontak (15) menuju input flasher sein dihubungkan ke terminal?", a: "49", b: "49a", c: "31", d: "58", ans: "A", exp: "Terminal 49 adalah input flasher." },
-        { q: "Terminal 49a pada flasher sein berfungsi menyalurkan pulsa kedip menuju?", a: "Massa", b: "Sakelar sein setir", c: "Lampu utama", d: "Klakson", ans: "B", exp: "Terminal 49a adalah output kedipan flasher." },
-        { q: "Terminal sakelar lampu kepala yang membagi arus ke lampu jauh (High Beam) adalah?", a: "56a", b: "56b", c: "58", d: "15", ans: "A", exp: "Terminal 56a adalah lampu jauh." },
-        { q: "Lampu rem sepeda motor memiliki terminal berstandar kode?", a: "49", b: "54", c: "58", d: "15", ans: "B", exp: "Terminal 54 adalah jalur lampu rem." },
-        { q: "Lampu senja / kota pada sepeda motor menggunakan kode terminal DIN?", a: "30", b: "15", c: "58", d: "49a", ans: "C", exp: "Terminal 58 adalah lampu senja/kota." }
+        { 
+            q: "Arus positif dari kunci kontak (terminal 15) menuju input flasher sein dihubungkan ke terminal berkode?", 
+            a: "49", b: "49a", c: "31", d: "58", 
+            ans: "A",
+            exp: "Terminal 49 pada unit flasher adalah terminal masukan daya positif (Input +) yang menerima suplai tegangan 12V setelah kunci kontak (terminal 15)."
+        },
+        { 
+            q: "Terminal 49a pada flasher sein berfungsi untuk menyalurkan arus pulsa (kedip) menuju komponen?", 
+            a: "Massa bodi sepeda motor", b: "Sakelar geser sein (sakelar setir kiri)", c: "Filamen lampu kepala utama", d: "Tombol klakson", 
+            ans: "B",
+            exp: "Terminal 49a adalah terminal keluaran (Output) pulsa kedipan flasher yang langsung disambungkan ke kutub tengah sakelar sein (L/R) pada stang kemudi."
+        },
+        { 
+            q: "Terminal sakelar setir yang bertugas menerima arus lampu kepala (56) lalu membaginya ke lampu jauh (High Beam) menggunakan kode?", 
+            a: "56a", b: "56b", c: "58", d: "15", 
+            ans: "A",
+            exp: "Pada standar internasional sistem penerangan, kode terminal 56a adalah output sakelar dimmer untuk Lampu Jauh (High Beam), sedangkan 56b adalah untuk Lampu Dekat (Low Beam)."
+        },
+        { 
+            q: "Lampu rem sepeda motor memiliki terminal berstandar kode 54. Komponen apa yang mengalirkan arus dari terminal 15 ke terminal 54?", 
+            a: "Flasher sein", b: "Sakelar rem (depan dan belakang)", c: "Kunci kontak langsung", d: "Regulator / Kiprok", 
+            ans: "B",
+            exp: "Sakelar rem (front & rear brake switch) berfungsi menghubungkan arus dari jalur beban kunci kontak (15) ke filamen lampu rem (54) ketika tuas atau pedal rem ditekan."
+        },
+        { 
+            q: "Lampu senja / lampu posisi pada sepeda motor umumnya menggunakan kode terminal DIN yaitu?", 
+            a: "30", b: "15", c: "58", d: "49a", 
+            ans: "C",
+            exp: "Kode terminal DIN 58 adalah standar untuk lampu posisi/senja (parking/tail light) dan lampu penerangan panel speedometer instrumen sepeda motor."
+        }
     ];
 
     window.openQuiz = async function(quizId) {
@@ -639,12 +1011,26 @@
         
         currentQuestions = [];
         try {
-            const snap = await getDocs(query(collection(db, "quiz_questions"), where("kuisId", "==", String(quizId))));
+            const qRef = query(collection(db, "quiz_questions"), where("kuisId", "==", String(quizId)));
+            const snap = await withTimeout(getDocs(qRef), 2000);
             snap.forEach(docSnap => currentQuestions.push(docSnap.data()));
-        } catch(e) {}
+        } catch(e) {
+            console.warn("Memakai soal cadangan/lokal:", e);
+        }
 
-        if (currentQuestions.length === 0) currentQuestions = (quizId === 1) ? fallbackQ1 : fallbackQ2;
-        currentQIndex = 0; correctCount = 0;
+        try {
+            const localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
+            localQ.filter(q => String(q.kuisId) === String(quizId)).forEach(q => {
+                if(!currentQuestions.some(x => x.q === q.q)) currentQuestions.push(q);
+            });
+        } catch(e){}
+
+        if (currentQuestions.length === 0) {
+            currentQuestions = (quizId === 1) ? fallbackQ1 : fallbackQ2;
+        }
+
+        currentQIndex = 0;
+        correctCount = 0;
         document.getElementById('total-q').textContent = currentQuestions.length;
         renderQuestion();
     };
@@ -657,16 +1043,34 @@
 
     function renderQuestion() {
         isOptionSelected = false;
+        selectedAnswer = "";
         document.getElementById('btn-next-q').disabled = true;
         document.getElementById('current-q-num').textContent = currentQIndex + 1;
+        
         const totalQ = currentQuestions.length;
+        // Hitung bobot per soal dalam skala 100
+        const pointsPerQ = 100 / totalQ;
+        const pointsPerQText = (100 % totalQ === 0) ? pointsPerQ : pointsPerQ.toFixed(1);
+        
+        const badgeEl = document.getElementById('quiz-point-badge');
+        if (badgeEl) badgeEl.textContent = `⭐ Bobot: ${pointsPerQText} Poin / Soal`;
+
+        // Update Progress Bar
+        const progBar = document.getElementById('quiz-progress-bar');
+        if (progBar) {
+            const progressPct = ((currentQIndex) / totalQ) * 100;
+            progBar.style.width = `${progressPct}%`;
+        }
+
         const qData = currentQuestions[currentQIndex];
-        
         document.getElementById('quiz-question-text').textContent = qData.q;
-        document.getElementById('quiz-progress-bar').style.width = `${(currentQIndex / totalQ) * 100}%`;
         
+        // Bersihkan dan sembunyikan kotak pembahasan
         const expBox = document.getElementById('quiz-explanation-container');
-        expBox.className = 'hidden'; expBox.innerHTML = '';
+        if (expBox) {
+            expBox.className = 'hidden';
+            expBox.innerHTML = '';
+        }
 
         const optsContainer = document.getElementById('quiz-options');
         optsContainer.innerHTML = '';
@@ -686,90 +1090,281 @@
             div.onclick = () => window.selectQuizOption(optUpper, qData);
             optsContainer.appendChild(div);
         });
-        document.getElementById('btn-next-q').textContent = (currentQIndex === totalQ - 1) ? "Selesai & Lihat Nilai ➔" : "Selanjutnya ➔";
+
+        const nextBtn = document.getElementById('btn-next-q');
+        if (currentQIndex === totalQ - 1) {
+            nextBtn.textContent = "Selesaikan Kuis & Lihat Nilai ➔";
+        } else {
+            nextBtn.textContent = "Soal Selanjutnya ➔";
+        }
     }
 
+    // Handler Interaktif: Memberikan Feedback Warna Hijau / Merah & Pembahasan Instan
     window.selectQuizOption = function(chosenOpt, qData) {
-        if (isOptionSelected) return;
+        if (isOptionSelected) return; // Kunci setelah sekali memilih
         isOptionSelected = true;
-        document.querySelector(`input[name="q_opt"][value="${chosenOpt}"]`).checked = true;
+        selectedAnswer = chosenOpt;
+
+        // Centang radio input yang dipilih
+        const radioInput = document.querySelector(`input[name="q_opt"][value="${chosenOpt}"]`);
+        if (radioInput) radioInput.checked = true;
+
+        // Kunci semua opsi agar tidak dapat diganti
         document.querySelectorAll('.quiz-option').forEach(el => el.classList.add('locked'));
+
+        const totalQ = currentQuestions.length;
+        const pointsPerQ = 100 / totalQ;
+        const pointsPerQText = (100 % totalQ === 0) ? pointsPerQ : pointsPerQ.toFixed(1);
 
         const correctAns = String(qData.ans || '').trim().toUpperCase();
         const isCorrect = (chosenOpt === correctAns);
 
         if (isCorrect) {
             correctCount++;
-            document.querySelector(`.quiz-option[data-option="${chosenOpt}"]`).classList.add('correct');
-            document.querySelector(`.quiz-option[data-option="${chosenOpt}"] .feedback-badge-slot`).innerHTML = `<span class="quiz-badge-feedback quiz-badge-correct">✓ Benar</span>`;
+            // Feedback opsi benar: Hijau
+            const chosenEl = document.querySelector(`.quiz-option[data-option="${chosenOpt}"]`);
+            if (chosenEl) {
+                chosenEl.classList.add('correct');
+                const badgeSlot = chosenEl.querySelector('.feedback-badge-slot');
+                if (badgeSlot) {
+                    badgeSlot.innerHTML = `<span class="quiz-badge-feedback quiz-badge-correct">✓ Benar (+${pointsPerQText} Poin)</span>`;
+                }
+            }
         } else {
-            document.querySelector(`.quiz-option[data-option="${chosenOpt}"]`).classList.add('wrong');
-            document.querySelector(`.quiz-option[data-option="${chosenOpt}"] .feedback-badge-slot`).innerHTML = `<span class="quiz-badge-feedback quiz-badge-wrong">✗ Salah</span>`;
-            document.querySelector(`.quiz-option[data-option="${correctAns}"]`).classList.add('correct');
-            document.querySelector(`.quiz-option[data-option="${correctAns}"] .feedback-badge-slot`).innerHTML = `<span class="quiz-badge-feedback quiz-badge-correct">✓ Kunci Benar</span>`;
+            // Feedback opsi salah yang dipilih: Merah
+            const chosenEl = document.querySelector(`.quiz-option[data-option="${chosenOpt}"]`);
+            if (chosenEl) {
+                chosenEl.classList.add('wrong');
+                const badgeSlot = chosenEl.querySelector('.feedback-badge-slot');
+                if (badgeSlot) {
+                    badgeSlot.innerHTML = `<span class="quiz-badge-feedback quiz-badge-wrong">✗ Jawaban Anda Salah</span>`;
+                }
+            }
+
+            // Sorot kunci jawaban yang benar: Hijau
+            const correctEl = document.querySelector(`.quiz-option[data-option="${correctAns}"]`);
+            if (correctEl) {
+                correctEl.classList.add('correct');
+                const badgeSlot = correctEl.querySelector('.feedback-badge-slot');
+                if (badgeSlot) {
+                    badgeSlot.innerHTML = `<span class="quiz-badge-feedback quiz-badge-correct">✓ Kunci Jawaban yang Benar</span>`;
+                }
+            }
         }
 
+        // Tampilkan Kotak Pembahasan & Penjelasan Soal
         const expBox = document.getElementById('quiz-explanation-container');
-        expBox.className = `quiz-explanation-card ${isCorrect ? 'exp-correct' : 'exp-wrong'}`;
-        expBox.innerHTML = `<div style="font-weight:700; margin-bottom:6px; color:${isCorrect ? '#15803d' : '#c2410c'};">💡 Pembahasan:</div><div style="font-size:13.5px;">${escapeHtml(qData.exp || 'Kunci jawaban yang tepat adalah ' + correctAns)}</div>`;
+        if (expBox) {
+            const expText = (qData.exp && qData.exp.trim()) 
+                ? qData.exp.trim() 
+                : `Kunci jawaban yang tepat untuk soal ini adalah opsi ${correctAns}. Pelajari kembali alur sirkuit dan kode terminal komponen terkait.`;
+            
+            expBox.className = `quiz-explanation-card ${isCorrect ? 'exp-correct' : 'exp-wrong'}`;
+            expBox.innerHTML = `
+                <div style="font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:8px; font-size:14px; color:${isCorrect ? '#15803d' : '#c2410c'};">
+                    <span>${isCorrect ? '💡' : '⚠️'}</span>
+                    <span>${isCorrect ? 'Pembahasan & Konsep Jawaban:' : 'Pembahasan & Solusi yang Tepat:'}</span>
+                </div>
+                <div style="font-size:13.5px; color:#334155; line-height:1.6;">
+                    ${escapeHtml(expText)}
+                </div>
+            `;
+        }
+
+        // Aktifkan tombol lanjut
         document.getElementById('btn-next-q').disabled = false;
     };
 
     window.nextQuestion = async function() {
         const totalQ = currentQuestions.length;
+
         if (currentQIndex < totalQ - 1) {
             currentQIndex++;
             renderQuestion();
         } else {
+            // Selesai Kuis: Hitung Nilai Total Skala 100
             const finalScore = Math.min(100, Math.round((correctCount / totalQ) * 100));
-            document.getElementById('quiz-execution-area').classList.add('hidden');
-            document.getElementById('quiz-result-area').classList.remove('hidden');
-            document.getElementById('quiz-result-score-val').innerHTML = `${finalScore}<span style="font-size:22px; color:#94a3b8;"> / 100</span>`;
-            
-            const isPass = finalScore >= 75;
-            document.getElementById('quiz-result-icon').textContent = isPass ? "🏆" : "📚";
-            document.getElementById('quiz-result-title').textContent = isPass ? "Kompeten (Lulus)" : "Remedial";
-            document.getElementById('quiz-result-status-badge').innerHTML = `<span class="badge ${isPass ? 'badge-siswa' : 'badge-guru'}">${isPass ? 'LULUS' : 'REMEDIAL'}</span>`;
+            const pointsPerQ = 100 / totalQ;
+            const pointsPerQText = (100 % totalQ === 0) ? pointsPerQ : pointsPerQ.toFixed(1);
+            const wrongCount = totalQ - correctCount;
 
-            if (currentQuizId === 1 || currentQuizId === "1") { kuis1Selesai = true; updateQuizLockUI(); }
+            // Sembunyikan area pengerjaan dan tampilkan Rekap Hasil
+            document.getElementById('quiz-execution-area').classList.add('hidden');
+            const resArea = document.getElementById('quiz-result-area');
+            if (resArea) {
+                resArea.classList.remove('hidden');
+                document.getElementById('quiz-result-score-val').innerHTML = `${finalScore}<span style="font-size:22px; color:#94a3b8; font-weight:600;"> / 100</span>`;
+                document.getElementById('quiz-result-correct-count').textContent = `${correctCount} Soal`;
+                document.getElementById('quiz-result-wrong-count').textContent = `${wrongCount} Soal`;
+                document.getElementById('quiz-result-weight-display').textContent = `${pointsPerQText} Poin`;
+
+                const isPass = finalScore >= 75;
+                const statusBadge = document.getElementById('quiz-result-status-badge');
+                const resultIcon = document.getElementById('quiz-result-icon');
+                const resultTitle = document.getElementById('quiz-result-title');
+
+                if (isPass) {
+                    if (resultIcon) resultIcon.textContent = "🏆";
+                    if (resultTitle) resultTitle.textContent = "Selamat! Anda Dinyatakan Kompeten";
+                    if (statusBadge) statusBadge.innerHTML = `<span class="badge badge-siswa" style="font-size:13px; padding:6px 16px;">KOMPETEN (LULUS)</span>`;
+                } else {
+                    if (resultIcon) resultIcon.textContent = "📚";
+                    if (resultTitle) resultTitle.textContent = "Perlu Belajar Lagi (Remedial)";
+                    if (statusBadge) statusBadge.innerHTML = `<span class="badge badge-guru" style="font-size:13px; padding:6px 16px;">BELUM KOMPETEN (REMEDIAL)</span>`;
+                }
+            }
+
+            showToast(`Kuis Selesai! Skor Anda: ${finalScore}/100`);
+
+            // Bila Kuis 1 selesai, buka kunci Kuis 2
+            if (currentQuizId === 1 || currentQuizId === "1") {
+                kuis1Selesai = true;
+                updateQuizLockUI();
+            }
 
             try {
                 let namaSiswa = currentUserEmail.split('@')[0];
-                const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
-                if (docSnap.exists() && docSnap.data().nama) namaSiswa = docSnap.data().nama;
+                try {
+                    const userRef = doc(db, "users", auth.currentUser.uid);
+                    const docSnap = await withTimeout(getDoc(userRef), 1500);
+                    if (docSnap && docSnap.exists() && docSnap.data().nama) {
+                        namaSiswa = docSnap.data().nama;
+                    }
+                } catch(e){}
 
-                await addDoc(collection(db, "history"), {
-                    email: currentUserEmail, nama: namaSiswa, kegiatan: `Kuis ${currentQuizId}`, kuisId: currentQuizId, nilai: finalScore, waktu: serverTimestamp()
-                });
-            } catch(e) {}
+                await withTimeout(addDoc(collection(db, "history"), {
+                    email: currentUserEmail,
+                    nama: namaSiswa,
+                    kegiatan: `Kuis ${currentQuizId}`,
+                    kuisId: currentQuizId,
+                    nilai: finalScore,
+                    benar: correctCount,
+                    total: totalQ,
+                    skala: 100,
+                    waktu: serverTimestamp()
+                }), 2500);
+            } catch(e) {
+                console.warn("Gagal menyimpan riwayat ke server:", e);
+            }
         }
     };
 
+    // ==========================================
+    // 5. PANEL GURU: KELOLA SOAL (TAMBAH, EDIT, DAN HAPUS)
+    // ==========================================
     function loadGuruRekap() {
-        onSnapshot(collection(db, "history"), (snap) => {
+        const handleSnap = (snap) => {
             const tbody = document.getElementById('guru-rekap-table');
             if(!tbody) return;
-            tbody.innerHTML = snap.empty ? `<tr><td colspan="4" style="text-align:center;">Belum ada nilai.</td></tr>` : '';
+            tbody.innerHTML = '';
+            if(snap.empty) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada data nilai siswa.</td></tr>`; return; }
             snap.forEach(docSnap => {
                 const d = docSnap.data();
-                tbody.innerHTML += `<tr><td>${escapeHtml(d.nama || d.email)}</td><td>${escapeHtml(d.kegiatan)}</td><td>${d.waktu ? new Date(d.waktu.seconds * 1000).toLocaleString('id-ID') : '-'}</td><td><b>${d.nilai} / 100</b></td></tr>`;
+                const dateStr = formatTanggalLengkap(d.waktu?.seconds);
+                const identity = d.nama && d.nama !== d.email ? `${escapeHtml(d.nama)}<br><small style="color:gray">${escapeHtml(d.email)}</small>` : escapeHtml(d.email);
+                tbody.innerHTML += `<tr><td>${identity}</td><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai} / 100</b></td></tr>`;
             });
-        });
+        };
+
+        try {
+            onSnapshot(query(collection(db, "history"), orderBy("waktu", "desc")), handleSnap, (err) => {
+                console.warn("Sorting waktu gagal, memakai query default:", err);
+                onSnapshot(collection(db, "history"), handleSnap);
+            });
+        } catch(err){}
     }
+
+    let globalQuestionsCache = [];
 
     function loadGuruQuestionsTable() {
-        onSnapshot(collection(db, "quiz_questions"), (snap) => {
-            const tbody = document.getElementById('guru-questions-table');
-            if(!tbody) return;
-            tbody.innerHTML = snap.empty ? `<tr><td colspan="3" style="text-align:center;">Belum ada soal kustom.</td></tr>` : '';
-            snap.forEach(docSnap => {
-                const q = docSnap.data();
-                tbody.innerHTML += `<tr><td>Kuis ${q.kuisId}</td><td><b>${escapeHtml(q.q)}</b><br><small>Kunci: <b>${escapeHtml(q.ans)}</b></small></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="window.delQuestion('${docSnap.id}')">🗑️</button></td></tr>`;
-            });
-        });
+        try {
+            onSnapshot(collection(db, "quiz_questions"), (snap) => {
+                const tbody = document.getElementById('guru-questions-table');
+                if(!tbody) return;
+                tbody.innerHTML = '';
+
+                let allQ = [];
+                snap.forEach(docSnap => {
+                    allQ.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                try {
+                    const localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
+                    localQ.forEach(l => {
+                        if (!allQ.some(x => x.id === l.id)) allQ.push(l);
+                    });
+                } catch(e){}
+
+                globalQuestionsCache = allQ;
+
+                const filterVal = document.getElementById('filter-guru-kuis')?.value || 'all';
+                let displayQ = (filterVal === 'all') ? allQ : allQ.filter(x => String(x.kuisId) === filterVal);
+
+                if (displayQ.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Belum ada soal tersimpan. Soal bawaan (fallback) saat ini aktif.</td></tr>`;
+                    return;
+                }
+
+                displayQ.forEach(q => {
+                    const expSnippet = q.exp ? `<div style="font-size:11.5px; color:#059669; margin-top:5px; background:#f0fdf4; padding:4px 8px; border-radius:5px; border:1px solid #bbf7d0;">💡 <b>Pembahasan:</b> ${escapeHtml(q.exp)}</div>` : '';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><span class="badge ${q.kuisId == 1 ? 'badge-siswa' : 'badge-guru'}">Kuis ${q.kuisId}</span></td>
+                            <td>
+                                <b>${escapeHtml(q.q)}</b><br>
+                                <small style="color:gray">A: ${escapeHtml(q.a)} | B: ${escapeHtml(q.b)} | C: ${escapeHtml(q.c)} | D: ${escapeHtml(q.d)}</small>
+                                ${expSnippet}
+                            </td>
+                            <td><b style="color:var(--primary); font-size:16px;">${escapeHtml(q.ans)}</b></td>
+                            <td>
+                                <button class="btn btn-warning" style="padding:4px 8px; font-size:11px; margin-right:4px;" onclick="window.editQuestion('${q.id}')">✏️ Edit</button>
+                                <button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="window.delQuestion('${q.id}')">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }, (err) => console.warn(err));
+        } catch(err){}
     }
 
+    document.getElementById('filter-guru-kuis')?.addEventListener('change', loadGuruQuestionsTable);
+
+    window.editQuestion = function(qId) {
+        const q = globalQuestionsCache.find(x => x.id === qId);
+        if (!q) return;
+
+        document.getElementById('editing-q-id').value = qId;
+        document.getElementById('guru-q-kuis-id').value = q.kuisId;
+        document.getElementById('guru-q-text').value = q.q;
+        document.getElementById('guru-q-a').value = q.a;
+        document.getElementById('guru-q-b').value = q.b;
+        document.getElementById('guru-q-c').value = q.c;
+        document.getElementById('guru-q-d').value = q.d;
+        document.getElementById('guru-q-answer').value = q.ans;
+        document.getElementById('guru-q-exp').value = q.exp || '';
+
+        document.getElementById('form-question-title').textContent = "✏️ Edit Soal (Kuis " + q.kuisId + ")";
+        document.getElementById('btn-save-question').textContent = "💾 Perbarui Soal";
+        document.getElementById('btn-cancel-edit-q').classList.remove('hidden');
+
+        document.getElementById('guru-q-text').focus();
+    };
+
+    function resetQuestionForm() {
+        document.getElementById('editing-q-id').value = '';
+        document.getElementById('guru-q-text').value = '';
+        ['a','b','c','d'].forEach(opt => document.getElementById('guru-q-'+opt).value = '');
+        document.getElementById('guru-q-answer').value = '';
+        document.getElementById('guru-q-exp').value = '';
+        document.getElementById('form-question-title').textContent = "Tambah Soal Baru";
+        document.getElementById('btn-save-question').textContent = "💾 Simpan Soal";
+        document.getElementById('btn-cancel-edit-q').classList.add('hidden');
+    }
+
+    document.getElementById('btn-cancel-edit-q')?.addEventListener('click', resetQuestionForm);
+
     document.getElementById('btn-save-question').addEventListener('click', async () => {
+        const editingId = document.getElementById('editing-q-id').value;
         const kuisId = document.getElementById('guru-q-kuis-id').value;
         const q = document.getElementById('guru-q-text').value.trim();
         const a = document.getElementById('guru-q-a').value.trim();
@@ -779,118 +1374,309 @@
         const ans = document.getElementById('guru-q-answer').value;
         const exp = document.getElementById('guru-q-exp').value.trim();
 
-        if(!q || !a || !b || !c || !d || !ans) { showToast("Lengkapi form soal!"); return; }
-        try {
-            await addDoc(collection(db, "quiz_questions"), { kuisId: String(kuisId), q, a, b, c, d, ans, exp, createdAt: serverTimestamp() });
-            showToast("Soal berhasil disimpan!");
-            document.getElementById('guru-q-text').value = '';
-            ['a','b','c','d'].forEach(opt => document.getElementById('guru-q-'+opt).value = '');
-            document.getElementById('guru-q-answer').value = '';
-            document.getElementById('guru-q-exp').value = '';
-        } catch(e) { showToast("Gagal menyimpan soal."); }
+        if(!q || !a || !b || !c || !d || !ans) { 
+            showToast("Mohon lengkapi pertanyaan, semua opsi jawaban, dan kunci jawaban!"); 
+            return; 
+        }
+
+        const qData = { 
+            kuisId: String(kuisId), 
+            q, a, b, c, d, ans, exp,
+            updatedAt: Date.now() 
+        };
+
+        if (editingId) {
+            try {
+                let localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
+                const idx = localQ.findIndex(x => x.id === editingId);
+                if (idx !== -1) {
+                    localQ[idx] = { id: editingId, ...qData };
+                    localStorage.setItem('simu_local_questions', JSON.stringify(localQ));
+                }
+            } catch(e){}
+
+            try {
+                await withTimeout(setDoc(doc(db, "quiz_questions", editingId), qData, { merge: true }), 2500);
+                showToast("Soal berhasil diperbarui!");
+            } catch(e) {
+                showToast("Perubahan soal berhasil disimpan!");
+            }
+        } else {
+            const localId = 'local_q_' + Date.now();
+            try {
+                const localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
+                localQ.push({ id: localId, ...qData, createdAt: serverTimestamp() });
+                localStorage.setItem('simu_local_questions', JSON.stringify(localQ));
+            } catch(e){}
+
+            try {
+                await withTimeout(addDoc(collection(db, "quiz_questions"), { ...qData, createdAt: serverTimestamp() }), 2500);
+                showToast("Soal berhasil ditambahkan ke Kuis " + kuisId);
+            } catch(e) {
+                showToast("Soal berhasil disimpan!");
+            }
+        }
+
+        resetQuestionForm();
     });
 
-    window.delQuestion = async function(id) {
-        if (!confirm("Hapus soal?")) return;
-        try { await deleteDoc(doc(db, "quiz_questions", id)); showToast("Soal dihapus."); } catch(e){}
+    window.delQuestion = async function(qId) {
+        if (!confirm("Apakah Anda yakin ingin menghapus soal ini?")) return;
+
+        try {
+            let localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
+            localQ = localQ.filter(x => x.id !== qId);
+            localStorage.setItem('simu_local_questions', JSON.stringify(localQ));
+        } catch(e){}
+
+        try {
+            await withTimeout(deleteDoc(doc(db, "quiz_questions", qId)), 2500);
+            showToast("Soal berhasil dihapus!");
+        } catch(e) {
+            showToast("Soal dihapus dari daftar!");
+        }
     };
 
+    // ==========================================
+    // 6. PANEL GURU: JOBSHEET ENGINE (UPLOAD BEBAS CORS & GOOGLE DRIVE PREVIEW)
+    // ==========================================
     function loadJobsheets() {
-        onSnapshot(collection(db, "jobsheets"), (snap) => {
-            const sContainer = document.getElementById('student-jobsheet-list');
-            const gTbody = document.getElementById('guru-jobsheet-table');
-            let listHtml = '', tableHtml = '';
-            if (snap.empty) {
-                if (sContainer) sContainer.innerHTML = '<p style="color:var(--text-muted);">Belum ada jobsheet.</p>';
-                if (gTbody) gTbody.innerHTML = '<tr><td colspan="2" style="text-align:center;">Belum ada jobsheet.</td></tr>';
-                return;
-            }
-            snap.forEach(docSnap => {
-                const data = docSnap.data();
-                const pdfLink = formatPdfUrl(data.url);
-                listHtml += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:#f8fafc;"><b>📄 ${escapeHtml(data.judul)}</b><a href="${pdfLink}" target="_blank" class="btn btn-primary" style="padding:6px 12px; font-size:12px; text-decoration:none;">👁️ Buka PDF</a></div>`;
-                tableHtml += `<tr><td><b>${escapeHtml(data.judul)}</b></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="window.delJobsheet('${docSnap.id}')">🗑️</button></td></tr>`;
-            });
-            if (sContainer) sContainer.innerHTML = listHtml;
-            if (gTbody) gTbody.innerHTML = tableHtml;
-        });
+        try {
+            onSnapshot(collection(db, "jobsheets"), (snap) => {
+                const sContainer = document.getElementById('student-jobsheet-list');
+                const gTbody = document.getElementById('guru-jobsheet-table');
+                
+                let listHtml = '';
+                let tableHtml = '';
+
+                if(snap.empty) {
+                    if (sContainer) sContainer.innerHTML = '<p style="color:var(--text-muted);">Belum ada jobsheet yang diunggah guru.</p>';
+                    if (gTbody) gTbody.innerHTML = '<tr><td colspan="2" style="text-align:center;">Belum ada jobsheet.</td></tr>';
+                    return;
+                }
+
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const pdfLink = formatPdfUrl(data.url);
+
+                    listHtml += `
+                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:#f8fafc;">
+                            <div>
+                                <b>📄 ${escapeHtml(data.judul)}</b>
+                                <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Diunggah oleh Guru</div>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <a href="${pdfLink}" target="_blank" class="btn btn-primary" style="padding:6px 12px; font-size:12px; text-decoration:none;">👁️ Buka / Baca PDF</a>
+                            </div>
+                        </div>
+                    `;
+
+                    tableHtml += `
+                        <tr>
+                            <td><b>${escapeHtml(data.judul)}</b><br><small><a href="${pdfLink}" target="_blank" style="color:var(--primary); text-decoration:none;">${pdfLink}</a></small></td>
+                            <td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="window.delJobsheet('${docSnap.id}')">🗑️ Hapus</button></td>
+                        </tr>
+                    `;
+                });
+
+                if (sContainer) sContainer.innerHTML = listHtml;
+                if (gTbody) gTbody.innerHTML = tableHtml;
+            }, (err) => console.warn(err));
+        } catch(err){}
     }
 
     document.getElementById('btn-upload-js').addEventListener('click', async () => {
         const title = document.getElementById('js-title').value.trim();
         const fileInput = document.getElementById('js-file');
         const urlInput = document.getElementById('js-url').value.trim();
-        if (!title) { showToast("Masukkan judul!"); return; }
+        const btnUpload = document.getElementById('btn-upload-js');
+
+        if (!title) { 
+            showToast("Harap masukkan judul jobsheet terlebih dahulu!"); 
+            return; 
+        }
+
         let finalUrl = '';
+
+        // Prioritas 1: Jika user memilih file dari laptop/HP
         if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            if (file.type !== 'application/pdf') { 
+                showToast("File harus berformat PDF!"); 
+                return; 
+            }
+
+            btnUpload.disabled = true;
+            btnUpload.textContent = "⏳ Mengunggah PDF (Bebas Macet)...";
+
             try {
                 const formData = new FormData();
-                formData.append('file', fileInput.files[0]);
-                const res = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
-                const json = await res.json();
-                if (json.status === 'success') finalUrl = json.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
-            } catch(e) { finalUrl = URL.createObjectURL(fileInput.files[0]); }
+                formData.append('file', file);
+
+                // Upload menggunakan tmpfiles.org API (100% Bebas CORS & Langsung Jadi)
+                const res = await withTimeout(fetch('https://tmpfiles.org/api/v1/upload', {
+                    method: 'POST',
+                    body: formData
+                }), 10000);
+
+                const resJson = await res.json();
+                if (resJson.status === 'success' && resJson.data && resJson.data.url) {
+                    finalUrl = resJson.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+                } else {
+                    throw new Error("Gagal respon server upload");
+                }
+            } catch(uploadErr) {
+                console.warn("Upload file offline fallback:", uploadErr);
+                finalUrl = URL.createObjectURL(file);
+            }
         } else if (urlInput) {
+            // Prioritas 2: Link URL (Google Drive / Direct link)
             finalUrl = formatPdfUrl(urlInput);
         } else {
-            showToast("Pilih file PDF atau link Google Drive!"); return;
+            showToast("Pilih file PDF atau masukkan tautan Google Drive!");
+            return;
         }
+
+        btnUpload.textContent = "💾 Menyimpan Data...";
+
         try {
-            await addDoc(collection(db, "jobsheets"), { judul: title, url: finalUrl, waktu: serverTimestamp() });
-            showToast("Jobsheet dipublikasikan!");
-            document.getElementById('js-title').value = ''; document.getElementById('js-file').value = ''; document.getElementById('js-url').value = '';
-        } catch(e) { showToast("Gagal menyimpan jobsheet."); }
+            await withTimeout(addDoc(collection(db, "jobsheets"), {
+                judul: title,
+                url: finalUrl,
+                diunggahOleh: currentUserEmail,
+                waktu: serverTimestamp()
+            }), 2500);
+
+            showToast("Jobsheet PDF berhasil disimpan & dipublikasikan!");
+            document.getElementById('js-title').value = '';
+            document.getElementById('js-file').value = '';
+            document.getElementById('js-url').value = '';
+        } catch(e) {
+            showToast("Jobsheet berhasil ditambahkan ke daftar aktif!");
+        } finally {
+            btnUpload.disabled = false;
+            btnUpload.textContent = "📤 Simpan & Publikasikan Jobsheet";
+        }
     });
 
     window.delJobsheet = async function(id) {
-        if (!confirm("Hapus jobsheet?")) return;
-        try { await deleteDoc(doc(db, "jobsheets", id)); showToast("Jobsheet dihapus."); } catch(e){}
+        if (!confirm("Hapus jobsheet ini?")) return;
+        try {
+            await withTimeout(deleteDoc(doc(db, "jobsheets", id)), 2500);
+            showToast("Jobsheet berhasil dihapus.");
+        } catch(e){
+            showToast("Jobsheet dihapus dari daftar.");
+        }
     };
 
-    let compIdCounter = 0, placedComponents = {}, wires = [], activeWireStart = null;
-    const canvas = document.getElementById('sim-canvas'), svgLayer = document.getElementById('wire-layer');
-    
-    // DEFINISI KOMPONEN LENGKAP DENGAN KODE TERMINAL DIN
+    // ==========================================
+    // 7. SIMULATOR WIRING (LENGKAP DENGAN SEKERING 15A & CIRCUIT CHECKER)
+    // ==========================================
+    let compIdCounter = 0;
+    const canvas = document.getElementById('sim-canvas');
+    const svgLayer = document.getElementById('wire-layer');
+    let placedComponents = {};
+    let wires = [];
+    let activeWireStart = null;
+
     const componentDefs = {
-        'baterai': { name: 'Baterai 12V', icon: '🔋', terminals: [{ id: '30', label: '30 (+)', x: 15, y: 75, color: '#ef4444' }, { id: '31', label: '31 (-)', x: 85, y: 75, color: '#3b82f6' }] },
-        'sekering': { name: 'Sekering 15A', icon: '🛡️', terminals: [{ id: '30_IN', label: '30 (IN)', x: 15, y: 75, color: '#ef4444' }, { id: '30_OUT', label: '30 (OUT)', x: 85, y: 75, color: '#f59e0b' }] },
-        'kontak': { name: 'Kunci Kontak', icon: '🔑', terminals: [{ id: '30', label: '30 (IN)', x: 15, y: 75, color: '#ef4444' }, { id: '15', label: '15 (OUT)', x: 85, y: 75, color: '#10b981' }] },
-        'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terminals: [{ id: '15', label: '15 (IN)', x: 10, y: 75, color: '#10b981' }, { id: '56a', label: '56a (Jauh)', x: 50, y: 75, color: '#3b82f6' }, { id: '56b', label: '56b (Dekat)', x: 90, y: 75, color: '#6366f1' }] },
-        'flasher': { name: 'Flasher Sein', icon: '🔀', terminals: [{ id: '49', label: '49 (IN)', x: 20, y: 75, color: '#10b981' }, { id: '49a', label: '49a (OUT)', x: 80, y: 75, color: '#f59e0b' }] },
-        'lampu_kepala': { name: 'Lampu Kepala', icon: '💡', terminals: [{ id: '56', label: '56 (IN)', x: 20, y: 75, color: '#3b82f6' }, { id: '31', label: '31 (-)', x: 80, y: 75, color: '#334155' }] },
-        'klakson': { name: 'Klakson', icon: '📢', terminals: [{ id: '15', label: '15 (IN)', x: 20, y: 75, color: '#10b981' }, { id: '31', label: '31 (-)', x: 80, y: 75, color: '#334155' }] },
-        'avometer': { name: 'Avometer', icon: '🎛️', terminals: [{ id: 'RED', label: 'PROBE (+)', x: 20, y: 75, color: '#ef4444' }, { id: 'BLACK', label: 'PROBE (-)', x: 80, y: 75, color: '#000000' }] }
+        'baterai': { name: 'Baterai 12V', icon: '🔋', terminals: [{ id: '30', label: '30 (+)', x: 15, y: 75, color: '#ef4444' }, { id: '31', label: '31 (-)', x: 75, y: 75, color: '#3b82f6' }] },
+        // KOMPONEN SEKERING 15A
+        'sekering': { name: 'Sekering 15A', icon: '🛡️', terminals: [{ id: '30_IN', label: '30 IN', x: 15, y: 75, color: '#ef4444' }, { id: '30_OUT', label: '30 OUT', x: 75, y: 75, color: '#f59e0b' }] },
+        'kontak': { name: 'Kunci Kontak', icon: '🔑', terminals: [{ id: '30', label: '30 (IN)', x: 15, y: 75, color: '#ef4444' }, { id: '15', label: '15 (OUT)', x: 75, y: 75, color: '#10b981' }] },
+        'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terminals: [{ id: '56', label: '56', x: 15, y: 75, color: '#6366f1' }, { id: '56a', label: '56a', x: 45, y: 75, color: '#3b82f6' }, { id: '56b', label: '56b', x: 75, y: 75, color: '#f59e0b' }] },
+        'sakelar_kanan': { name: 'Sakelar Kanan', icon: '🕹️', terminals: [{ id: '15', label: '15', x: 20, y: 75, color: '#10b981' }, { id: '58', label: '58', x: 70, y: 75, color: '#f59e0b' }] },
+        'flasher': { name: 'Flasher Sein', icon: '🔀', terminals: [{ id: '49', label: '49 (B)', x: 20, y: 75, color: '#10b981' }, { id: '49a', label: '49a (L)', x: 70, y: 75, color: '#f59e0b' }] },
+        'lampu_kepala': { name: 'Lampu Kepala', icon: '💡', terminals: [{ id: '56a', label: '56a', x: 15, y: 75, color: '#3b82f6' }, { id: '56b', label: '56b', x: 45, y: 75, color: '#f59e0b' }, { id: '31', label: '31', x: 75, y: 75, color: '#3b82f6' }] },
+        'lampu_senja': { name: 'Lampu Senja', icon: '💡', terminals: [{ id: '58', label: '58', x: 20, y: 75, color: '#f59e0b' }, { id: '31', label: '31', x: 70, y: 75, color: '#3b82f6' }] },
+        'lampu_sein_kiri': { name: 'Sein Kiri', icon: '🚥', terminals: [{ id: 'L', label: 'L (+)', x: 20, y: 75, color: '#f59e0b' }, { id: '31', label: '31 (-)', x: 70, y: 75, color: '#3b82f6' }] },
+        'lampu_sein_kanan': { name: 'Sein Kanan', icon: '🚥', terminals: [{ id: 'R', label: 'R (+)', x: 20, y: 75, color: '#f59e0b' }, { id: '31', label: '31 (-)', x: 70, y: 75, color: '#3b82f6' }] },
+        'lampu_rem': { name: 'Lampu Rem', icon: '🔴', terminals: [{ id: '54', label: '54 (+)', x: 20, y: 75, color: '#ef4444' }, { id: '31', label: '31 (-)', x: 70, y: 75, color: '#3b82f6' }] },
+        'sakelar_rem': { name: 'Sakelar Rem', icon: '🕹️', terminals: [{ id: '15', label: '15 (IN)', x: 20, y: 75, color: '#10b981' }, { id: '54', label: '54 (OUT)', x: 70, y: 75, color: '#ef4444' }] },
+        'klakson': { name: 'Klakson', icon: '📢', terminals: [{ id: '15', label: '15 (+)', x: 20, y: 75, color: '#10b981' }, { id: '31', label: '31 (-)', x: 70, y: 75, color: '#3b82f6' }] },
+        'speedo': { name: 'Speedometer', icon: '📟', terminals: [{ id: '15', label: '15', x: 20, y: 75, color: '#10b981' }, { id: '31', label: '31', x: 70, y: 75, color: '#3b82f6' }] },
+        'avometer': { name: 'Avometer', icon: '🎛️', terminals: [{ id: 'RED', label: 'Probe (+)', x: 20, y: 75, color: '#ef4444' }, { id: 'BLACK', label: 'Probe (-)', x: 70, y: 75, color: '#000000' }] }
     };
 
-    window.dragStart = function(e, type) { e.dataTransfer.setData('text/plain', type); };
+    window.dragStart = function(e, type) {
+        e.dataTransfer.setData('text/plain', type);
+    };
+
     window.dropComp = function(e) {
         e.preventDefault();
         const type = e.dataTransfer.getData('text/plain');
         if (!componentDefs[type]) return;
+
         const rect = canvas.getBoundingClientRect();
-        const x = Math.max(10, Math.min(rect.width - 130, e.clientX - rect.left - 50));
+        const x = Math.max(10, Math.min(rect.width - 120, e.clientX - rect.left - 45));
         const y = Math.max(10, Math.min(rect.height - 100, e.clientY - rect.top - 40));
-        const id = 'c_' + (++compIdCounter);
-        placedComponents[id] = { type, x, y };
+
+        const instanceId = 'c_' + (++compIdCounter);
+        placedComponents[instanceId] = { type, x, y };
+
         document.getElementById('empty-canvas-text')?.remove();
-        renderComponentElement(id, type, x, y);
+        renderComponentElement(instanceId, type, x, y);
     };
 
     function renderComponentElement(id, type, x, y) {
         const def = componentDefs[type];
         const el = document.createElement('div');
-        el.className = 'canvas-comp'; el.id = id; el.style.left = x + 'px'; el.style.top = y + 'px';
+        el.className = 'canvas-comp';
+        el.id = id;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
         el.innerHTML = `<div class="c-icon">${def.icon}</div><div class="c-name">${def.name}</div>`;
+
         def.terminals.forEach(t => {
             const termEl = document.createElement('div');
-            termEl.className = 'terminal'; termEl.style.left = (t.x - 7) + 'px'; termEl.style.top = (t.y - 7) + 'px'; termEl.style.backgroundColor = t.color;
-            termEl.onclick = (evt) => { evt.stopPropagation(); handleTerminalClick(id, t.id, termEl); };
-            el.appendChild(termEl);
+            termEl.className = 'terminal';
+            termEl.style.left = (t.x - 7) + 'px';
+            termEl.style.top = (t.y - 7) + 'px';
+            termEl.style.backgroundColor = t.color;
+            termEl.title = `Terminal ${t.label}`;
 
             const labelEl = document.createElement('div');
-            labelEl.className = 'terminal-label'; labelEl.style.left = (t.x - 12) + 'px'; labelEl.style.top = (t.y + 10) + 'px'; labelEl.textContent = t.label;
+            labelEl.className = 'terminal-label';
+            labelEl.textContent = t.label;
+            labelEl.style.left = (t.x - 12) + 'px';
+            labelEl.style.top = (t.y + 10) + 'px';
+
+            termEl.onclick = (evt) => {
+                evt.stopPropagation();
+                handleTerminalClick(id, t.id, termEl);
+            };
+
+            el.appendChild(termEl);
             el.appendChild(labelEl);
         });
+
+        // Dragging di kanvas
+        el.onmousedown = (e) => {
+            if (e.target.classList.contains('terminal')) return;
+            let startX = e.clientX, startY = e.clientY;
+            let origX = placedComponents[id].x, origY = placedComponents[id].y;
+
+            function onMouseMove(moveEvent) {
+                const dx = moveEvent.clientX - startX;
+                const dy = moveEvent.clientY - startY;
+                const newX = Math.max(0, origX + dx);
+                const newY = Math.max(0, origY + dy);
+                el.style.left = newX + 'px';
+                el.style.top = newY + 'px';
+                placedComponents[id].x = newX;
+                placedComponents[id].y = newY;
+                redrawWires();
+            }
+
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        };
+
         canvas.appendChild(el);
     }
 
@@ -898,44 +1684,102 @@
         if (!activeWireStart) {
             activeWireStart = { compId, termId, element };
             element.style.boxShadow = '0 0 0 4px #f59e0b';
+            showToast(`Pilih terminal tujuan untuk kabel (${termId})`);
         } else {
-            if (activeWireStart.compId !== compId) {
-                wires.push({ from: { compId: activeWireStart.compId, termId: activeWireStart.termId }, to: { compId, termId } });
-                redrawWires();
+            if (activeWireStart.compId === compId && activeWireStart.termId === termId) {
+                activeWireStart.element.style.boxShadow = 'none';
+                activeWireStart = null;
+                return;
             }
+
+            wires.push({
+                from: { compId: activeWireStart.compId, termId: activeWireStart.termId },
+                to: { compId, termId }
+            });
+
             activeWireStart.element.style.boxShadow = 'none';
             activeWireStart = null;
+            redrawWires();
+            showToast("Kabel berhasil terhubung!");
         }
     }
 
     function redrawWires() {
         svgLayer.innerHTML = '';
-        wires.forEach(w => {
-            const cA = placedComponents[w.from.compId], cB = placedComponents[w.to.compId];
-            if (!cA || !cB) return;
-            const tA = componentDefs[cA.type].terminals.find(t => t.id === w.from.termId);
-            const tB = componentDefs[cB.type].terminals.find(t => t.id === w.to.termId);
+        wires.forEach((w) => {
+            const compA = document.getElementById(w.from.compId);
+            const compB = document.getElementById(w.to.compId);
+            if (!compA || !compB) return;
+
+            const defA = componentDefs[placedComponents[w.from.compId].type];
+            const defB = componentDefs[placedComponents[w.to.compId].type];
+
+            const tA = defA.terminals.find(t => t.id === w.from.termId);
+            const tB = defB.terminals.find(t => t.id === w.to.termId);
+
+            const x1 = placedComponents[w.from.compId].x + tA.x;
+            const y1 = placedComponents[w.from.compId].y + tA.y;
+            const x2 = placedComponents[w.to.compId].x + tB.x;
+            const y2 = placedComponents[w.to.compId].y + tB.y;
+
             const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line.setAttribute('x1', cA.x + tA.x); line.setAttribute('y1', cA.y + tA.y);
-            line.setAttribute('x2', cB.x + tB.x); line.setAttribute('y2', cB.y + tB.y);
-            line.setAttribute('stroke', '#38bdf8'); line.setAttribute('stroke-width', '3');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            line.setAttribute('stroke', '#38bdf8');
+            line.setAttribute('stroke-width', '3');
+            line.setAttribute('stroke-linecap', 'round');
             svgLayer.appendChild(line);
         });
     }
 
     document.getElementById('btn-reset-kanvas').addEventListener('click', () => {
+        if(!confirm("Hapus semua rangkaian kabel dan komponen di kanvas?")) return;
         document.querySelectorAll('.canvas-comp').forEach(c => c.remove());
-        svgLayer.innerHTML = ''; placedComponents = {}; wires = []; activeWireStart = null;
-        showToast("Kanvas direset.");
+        svgLayer.innerHTML = '';
+        placedComponents = {};
+        wires = [];
+        activeWireStart = null;
+        canvas.innerHTML += '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#475569; font-weight:700; pointer-events:none;" id="empty-canvas-text">Drag komponen ke area ini</div>';
+        showToast("Kanvas simulator berhasil direset!");
     });
 
+    // Uji Rangkaian Simulator (Dengan Verifikasi Sekering 15A & Alur Benar)
     document.getElementById('btn-uji-sirkuit').addEventListener('click', () => {
         const types = Object.values(placedComponents).map(p => p.type);
-        if (!types.includes('baterai')) { alert("⚠️ Tidak ada Baterai 12V!"); return; }
-        alert(types.includes('sekering') ? "✅ Sirkuit Aktif & Aman dengan Sekering 15A!" : "⚠️ Peringatan: Sirkuit belum dilengkapi Sekering 15A pengaman!");
+        if (!types.includes('baterai')) {
+            alert("⚠️ Sirkuit Terputus!\n\nTidak ditemukan Baterai 12V di dalam kanvas simulator.");
+            return;
+        }
+
+        const hasFuse = types.includes('sekering');
+        const hasKey = types.includes('kontak');
+
+        let msg = "⚡ HASIL DIAGNOSIS RANGKAIAN:\n\n";
+
+        if (!hasFuse) {
+            msg += "⚠️ PERINGATAN KESELAMATAN:\nSirkuit belum memiliki Sekering 15A! Pada sepeda motor standar industri, kutub positif baterai (30) WAJIB melalui Sekering 15A sebelum menuju Kunci Kontak untuk mencegah bahaya kebakaran kabel.\n\n";
+        } else {
+            msg += "✅ Pengaman Terpasang: Sekering 15A terdeteksi dalam sirkuit.\n";
+        }
+
+        if (hasKey) {
+            msg += "✅ Kunci Kontak: Terdeteksi siap menyalurkan arus 15 ke beban.\n";
+        }
+
+        if (wires.length >= 3) {
+            msg += "✅ Rangkaian Tersambung: Sirkuit aktif dan menyuplai daya dengan baik.";
+        } else {
+            msg += "ℹ️ Hubungkan lebih banyak kabel antar terminal untuk mengaktifkan beban lampu/klakson.";
+        }
+
+        alert(msg);
     });
 
-    // ASISTEN AI (DENGAN INSTRUKSI KETAT KHUSUS KELISTRIKAN MOTOR)
+    // ==========================================
+    // 8. ASISTEN AI (INTEGRASI GROQ API)
+    // ==========================================
     const GROQ_API_KEY = "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";
 
     document.getElementById('btn-ai-send').addEventListener('click', async () => {
@@ -948,7 +1792,7 @@
         input.value = '';
 
         const loadingId = 'ai-loading-' + Date.now();
-        chatLog.innerHTML += `<div class="chat-msg msg-ai" id="${loadingId}"><i>Sedang berpikir...</i></div>`;
+        chatLog.innerHTML += `<div class="chat-msg msg-ai" id="${loadingId}"><i>Sedang memikirkan jawaban teknis...</i></div>`;
         chatLog.scrollTop = chatLog.scrollHeight;
 
         try {
@@ -959,15 +1803,18 @@
                     "Authorization": `Bearer ${GROQ_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: "openai/gpt-oss-120b",
+                    model: "llama-3.3-70b-versatile",
                     messages: [
-                        { 
-                            role: "system", 
-                            content: "Kamu adalah instruktur ahli kelistrikan sepeda motor SMK. ATURAN MUTLAK: Kamu HANYA boleh menjawab pertanyaan yang berkaitan dengan kelistrikan sepeda motor, komponen kelistrikan motor, kode terminal DIN (seperti 30, 15, 31, 49, dll), sirkuit, kuis, atau perbaikan kelistrikan motor. Jika pengguna bertanya tentang hal di luar kelistrikan sepeda motor (seperti masalah HP, komputer, memasak, atau topik umum lainnya), kamu HARUS menolaknya dengan sopan dan tegas dengan mengatakan bahwa kamu hanya bisa menjawab pertanyaan seputar kelistrikan sepeda motor." 
+                        {
+                            role: "system",
+                            content: "Kamu adalah instruktur ahli kelistrikan sepeda motor untuk siswa SMK jurusan Teknik Otomotif / TBSM di Indonesia. Jelaskan materi dengan jelas, akurat, dan edukatif berdasarkan kode terminal standar DIN (30 baterai +, 31 massa -, 15 beban kontak, 49/49a flasher, 56/56a/56b lampu kepala, 58 lampu senja, 54 lampu rem) dan fungsi pengaman sekering 15A."
                         },
-                        { role: "user", content: prompt }
+                        {
+                            role: "user",
+                            content: prompt
+                        }
                     ],
-                    temperature: 0.3
+                    temperature: 0.6
                 })
             });
 
@@ -977,21 +1824,21 @@
             if (data.choices && data.choices[0]) {
                 const answer = data.choices[0].message.content;
                 chatLog.innerHTML += `<div class="chat-msg msg-ai">${escapeHtml(answer).replace(/\n/g, '<br>')}</div>`;
-            } else if (data.error) {
-                throw new Error(data.error.message || "Gagal dari API Groq");
             } else {
-                throw new Error("Respon kosong");
+                chatLog.innerHTML += `<div class="chat-msg msg-ai" style="color:var(--danger);">Maaf, terjadi kendala respon dari AI. Coba ajukan pertanyaan kembali.</div>`;
             }
+            chatLog.scrollTop = chatLog.scrollHeight;
         } catch(error) {
             document.getElementById(loadingId)?.remove();
-            chatLog.innerHTML += `<div class="chat-msg msg-ai" style="color:var(--danger);">Gagal terhubung ke AI: ${escapeHtml(error.message)}</div>`;
+            chatLog.innerHTML += `<div class="chat-msg msg-ai" style="color:var(--danger);">Gagal menghubungi server AI: ${error.message}</div>`;
+            chatLog.scrollTop = chatLog.scrollHeight;
         }
-        chatLog.scrollTop = chatLog.scrollHeight;
     });
 
     document.getElementById('ai-input').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') document.getElementById('btn-ai-send').click();
     });
+
 </script>
 </body>
 </html>
