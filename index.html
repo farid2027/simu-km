@@ -142,7 +142,8 @@
                 <!-- DASHBOARD -->
                 <div id="view-dashboard" class="view-section">
                     <div class="card" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color:white; border:none;">
-                        <h2 id="greet-name">Selamat Datang!</h2>
+                        <!-- Sapaan Interaktif yang Diminta -->
+                        <h2 id="greet-name">HALO! 👋</h2>
                         <p id="greet-desc" style="font-size:14px; opacity:0.9;">Pantau riwayat pengerjaan dan nilai kamu di sini.</p>
                     </div>
                     
@@ -166,6 +167,7 @@
                             <div style="flex:1;">
                                 <label style="font-size:12px; font-weight:600;">URL Foto Profil</label>
                                 <input type="text" id="prof-foto" class="form-input" placeholder="https://contoh.com/foto.jpg">
+                                <p style="font-size:11px; color:var(--text-muted); margin-top:-8px; margin-bottom:8px;">Gunakan <b>Copy image address</b> (Salin alamat gambar) dari browser.</p>
                             </div>
                         </div>
                         
@@ -407,7 +409,7 @@
         if (user) {
             currentUserEmail = user.email.toLowerCase().trim();
             // PERBAIKAN DETEKSI GURU (Super Ketat)
-            isGuru = currentUserEmail.includes('guru.smk.belajar.id');
+            isGuru = currentUserEmail.includes('@guru.smk.belajar.id');
             
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-layout').classList.remove('hidden');
@@ -426,7 +428,9 @@
             
             document.getElementById('sb-name').textContent = pNama;
             document.getElementById('sb-email').textContent = user.email;
-            document.getElementById('greet-name').textContent = `Selamat Datang, ${pNama}!`;
+            
+            // SAPAAN INTERAKTIF: Mengubah jadi huruf kapital "HALO, [NAMA]! 👋"
+            document.getElementById('greet-name').textContent = `HALO, ${pNama.toUpperCase()}! 👋`;
             
             document.getElementById('prof-nama').value = pNama;
             document.getElementById('prof-foto').value = docSnap.exists() && docSnap.data().foto ? docSnap.data().foto : '';
@@ -488,12 +492,16 @@
 
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-    // UPDATE PREVIEW GAMBAR SAAT LINK DITEMPEL
+    // UPDATE PREVIEW GAMBAR SAAT LINK DITEMPEL DENGAN PERINGATAN LINK GOOGLE
     document.getElementById('prof-foto').addEventListener('input', (e) => {
-        document.getElementById('profile-img-preview').src = e.target.value || 'https://via.placeholder.com/80';
+        const val = e.target.value.trim();
+        if(val.includes('google.com/imgres')) {
+            showToast("⚠️ Itu link pencarian Google! Klik Kanan di gambarnya lalu pilih 'Copy image address' (Salin alamat gambar).");
+        }
+        document.getElementById('profile-img-preview').src = val || 'https://via.placeholder.com/80';
     });
 
-    // SIMPAN PROFIL DENGAN TRY-CATCH
+    // SIMPAN PROFIL DENGAN TRY-CATCH & SAPAAN UPDATE
     document.getElementById('btn-save-profile').addEventListener('click', async () => {
         const foto = document.getElementById('prof-foto').value.trim();
         const nama = document.getElementById('prof-nama').value.trim();
@@ -506,8 +514,12 @@
             }, { merge: true });
             
             showToast("Profil berhasil disimpan!");
-            document.getElementById('sb-name').textContent = nama || auth.currentUser.email.split('@')[0];
-            document.getElementById('greet-name').textContent = `Selamat Datang, ${nama || auth.currentUser.email.split('@')[0]}!`;
+            const finalName = nama || auth.currentUser.email.split('@')[0];
+            document.getElementById('sb-name').textContent = finalName;
+            
+            // SAPAAN IKUT BERUBAH
+            document.getElementById('greet-name').textContent = `HALO, ${finalName.toUpperCase()}! 👋`;
+            
             if(foto) document.getElementById('profile-img-preview').src = foto;
         } catch(error) {
             showToast("Gagal menyimpan profil: Pastikan koneksi lancar.");
