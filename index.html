@@ -26,7 +26,7 @@
         
         /* Layout */
         .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5, #0f172a); padding:20px; }
-        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .app-layout { display: flex; min-height: 100vh; }
         .sidebar { width: var(--sidebar-width); background: #0f172a; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; }
         .sidebar-menu { padding: 10px; flex: 1; overflow-y: auto; }
@@ -78,8 +78,8 @@
     <div class="login-page" id="login-screen">
         <div class="login-card">
             <h2 style="text-align:center; color:var(--primary); margin-bottom: 5px;">⚡ Simu-KM</h2>
-            <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-bottom:24px; line-height:1.5;">
-                Simu-KM (Simulasi Kelistrikan Motor) Merupakan Sebuah Media Pembelajaran Kelistrikan Sepeda Motor Untuk Siswa SMK Jurusan Teknik Sepeda Motor.
+            <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-bottom:24px;">
+                Trainer Digital Kelistrikan Sepeda Motor
             </p>
             
             <label style="font-size:12px; font-weight:600;">Email Akun Sekolah</label>
@@ -91,7 +91,6 @@
             <button class="btn btn-primary btn-full" id="btn-login" style="margin-bottom:10px;">Masuk Aplikasi</button>
             <button class="btn btn-success btn-full" id="btn-register">Daftar Akun Baru</button>
             
-            <!-- Link Lupa Sandi -->
             <a href="#" id="btn-forgot" style="display:block; text-align:center; margin-top:16px; font-size:12px; font-weight:600; color:var(--warning);">Lupa Sandi? Hubungi Admin</a>
         </div>
     </div>
@@ -110,8 +109,6 @@
             </div>
             <div class="sidebar-menu" id="nav-menu">
                 <div class="nav-item active" data-target="view-dashboard">🏠 Dashboard</div>
-                
-                <!-- Profil Dipindah ke Atas -->
                 <div class="nav-item" data-target="view-profile">👤 Profil Saya</div>
                 
                 <!-- Menu Umum (Siswa & Guru) -->
@@ -134,7 +131,7 @@
         </aside>
 
         <div class="main-content">
-            <!-- TOPBAR (Dengan Waktu Realtime) -->
+            <!-- TOPBAR -->
             <div class="topbar">
                 <h3 id="topbar-title" style="margin:0;">Dashboard</h3>
                 <div style="font-size:13px; font-weight:700; color:var(--text-muted);" id="clock">Memuat Waktu...</div>
@@ -149,7 +146,6 @@
                         <p id="greet-desc" style="font-size:14px; opacity:0.9;">Pantau riwayat pengerjaan dan nilai kamu di sini.</p>
                     </div>
                     
-                    <!-- Tabel History (Hanya Muncul Untuk Siswa) -->
                     <div class="card" id="student-history-card">
                         <h3 style="margin-bottom:16px;">📊 Riwayat Pengerjaan Kamu</h3>
                         <table>
@@ -206,7 +202,6 @@
                 <div id="view-kuis" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📝 Kuis Interaktif</h2>
                     <div id="quiz-list-container">
-                        <!-- Kuis 1 -->
                         <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
                             <div>
                                 <h4>Kuis 1: Dasar Terminal DIN</h4>
@@ -214,7 +209,6 @@
                             </div>
                             <button class="btn btn-primary" onclick="openQuiz(1)" id="btn-kuis-1">Mulai Kuis 1</button>
                         </div>
-                        <!-- Kuis 2 (Terkunci Otomatis) -->
                         <div class="card" style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
                             <div>
                                 <h4>Kuis 2: Rangkaian Penerangan & Sinyal</h4>
@@ -224,7 +218,6 @@
                         </div>
                     </div>
 
-                    <!-- AREA PENGERJAAN KUIS -->
                     <div id="quiz-execution-area" class="hidden">
                         <div class="card">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -241,7 +234,7 @@
                     </div>
                 </div>
 
-                <!-- SIMULATOR WIRING (Full Dinamis Standar DIN 72552) -->
+                <!-- SIMULATOR WIRING -->
                 <div id="view-simulator" class="view-section hidden">
                     <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                         <div>
@@ -255,13 +248,11 @@
                     </div>
                     
                     <div class="simulator-layout">
-                        <!-- CANVAS -->
                         <div id="sim-canvas" ondrop="window.dropComp(event)" ondragover="event.preventDefault()">
                             <svg id="wire-layer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:5;"></svg>
                             <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#475569; font-weight:700;" id="empty-canvas-text">Drag komponen ke area ini</div>
                         </div>
 
-                        <!-- SIDEBAR TOOLS (KOMPONEN) -->
                         <div class="card" style="padding:16px; height: 550px; overflow-y: auto;">
                             <h4 style="font-size:14px; margin-bottom:12px;">📦 Gudang Komponen</h4>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'baterai')">🔋 Baterai 12V (30, 31)</div>
@@ -297,10 +288,9 @@
                 </div>
 
                 <!-- ===================================== -->
-                <!-- PANEL GURU (HANYA MUNCUL JIKA GURU) -->
+                <!-- PANEL GURU -->
                 <!-- ===================================== -->
 
-                <!-- REKAP NILAI (GURU) -->
                 <div id="view-guru-rekap" class="view-section hidden nav-guru">
                     <h2 style="margin-bottom:20px;">📊 Rekap Nilai Seluruh Siswa</h2>
                     <div class="card">
@@ -313,7 +303,6 @@
                     </div>
                 </div>
 
-                <!-- KELOLA JOBSHEET (GURU) -->
                 <div id="view-guru-jobsheet" class="view-section hidden nav-guru">
                     <h2 style="margin-bottom:20px;">📁 Kelola Jobsheet PDF</h2>
                     <div class="card" style="margin-bottom:20px; background:#f8fafc;">
@@ -331,7 +320,6 @@
                     </div>
                 </div>
 
-                <!-- KELOLA KUIS (GURU) -->
                 <div id="view-guru-kuis" class="view-section hidden nav-guru">
                     <h2 style="margin-bottom:20px;">📝 Kelola Soal Kuis</h2>
                     <div class="card">
@@ -387,9 +375,6 @@
     let isGuru = false;
     let currentUserEmail = "";
 
-    // ==========================================
-    // 2. UTILITIES & NAVIGATION
-    // ==========================================
     function showToast(msg) {
         const c = document.getElementById('toast-container');
         const t = document.createElement('div');
@@ -398,7 +383,6 @@
         setTimeout(() => t.remove(), 4000);
     }
 
-    // Waktu Realtime dengan Hari & Tanggal Lengkap
     setInterval(() => {
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -415,9 +399,6 @@
         });
     });
 
-    // ==========================================
-    // 3. AUTHENTICATION (DOMAIN SEKOLAH & CUSTOM ERROR)
-    // ==========================================
     function checkValidDomain(email) {
         return email.endsWith('@smk.belajar.id') || email.endsWith('@guru.smk.belajar.id');
     }
@@ -425,13 +406,12 @@
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUserEmail = user.email.toLowerCase().trim();
-            // PERBAIKAN DETEKSI GURU (Cek keberadaan '@guru.smk.belajar.id')
-            isGuru = currentUserEmail.includes('@guru.smk.belajar.id');
+            // DIPERKUAT: Hanya yang berakhiran @guru.smk.belajar.id yang jadi guru
+            isGuru = currentUserEmail.endsWith('@guru.smk.belajar.id');
             
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-layout').classList.remove('hidden');
             
-            // Muat Data Profil dari Firestore
             const userRef = doc(db, "users", user.uid);
             const docSnap = await getDoc(userRef);
             let pNama = user.email.split('@')[0], pFoto = 'https://via.placeholder.com/80', pTtl = '', pWa = '';
@@ -444,12 +424,10 @@
                 pWa = data.wa || pWa;
             }
             
-            // Terapkan ke UI Sidebar & Dashboard
             document.getElementById('sb-name').textContent = pNama;
             document.getElementById('sb-email').textContent = user.email;
             document.getElementById('greet-name').textContent = `Selamat Datang, ${pNama}!`;
             
-            // Terapkan ke Form Edit Profil
             document.getElementById('prof-nama').value = pNama;
             document.getElementById('prof-foto').value = docSnap.exists() && docSnap.data().foto ? docSnap.data().foto : '';
             document.getElementById('profile-img-preview').src = pFoto;
@@ -457,23 +435,22 @@
             document.getElementById('prof-wa').value = pWa;
             document.getElementById('prof-email').value = user.email;
 
-            // Logika Visibilitas Role
             if (isGuru) {
                 document.getElementById('sb-role').textContent = 'Guru';
                 document.getElementById('sb-role').className = 'badge badge-guru';
                 document.getElementById('greet-desc').textContent = "Anda masuk sebagai Guru. Gunakan panel di sebelah kiri untuk mengelola kelas.";
-                document.getElementById('student-history-card').classList.add('hidden'); // Sembunyikan history siswa di dashboard guru
+                document.getElementById('student-history-card').classList.add('hidden'); 
                 document.querySelectorAll('.nav-guru').forEach(el => el.classList.remove('hidden'));
                 loadGuruRekap();
             } else {
                 document.getElementById('sb-role').textContent = 'Siswa';
                 document.getElementById('sb-role').className = 'badge badge-siswa';
                 document.getElementById('greet-desc').textContent = "Pantau riwayat pengerjaan dan nilai kamu di sini.";
-                document.getElementById('student-history-card').classList.remove('hidden'); // Tampilkan history siswa
+                document.getElementById('student-history-card').classList.remove('hidden'); 
                 document.querySelectorAll('.nav-guru').forEach(el => el.classList.add('hidden'));
                 loadStudentHistory();
             }
-            loadJobsheets(); // Keduanya butuh lihat jobsheet
+            loadJobsheets(); 
         } else {
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('app-layout').classList.add('hidden');
@@ -487,7 +464,6 @@
         signInWithEmailAndPassword(auth, email, document.getElementById('password-input').value)
             .then(() => showToast("Login Berhasil!"))
             .catch(e => {
-                // PESAN EROR PERSIS SEPERTI REQUEST
                 if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
                     showToast("Akun tidak dapat ditemukan, silahkan daftar akun atau masukan kembali sandi yang benar!");
                 } else {
@@ -505,7 +481,6 @@
             .catch(e => showToast("Gagal Daftar: " + e.message));
     });
 
-    // Lupa Sandi Kembali Muncul
     document.getElementById('btn-forgot').addEventListener('click', (e) => {
         e.preventDefault();
         alert("INFORMASI ADMIN SIMU-KM\n\nJika Anda lupa kata sandi, silakan hubungi admin di bawah ini:\n\nEmail: rifqi.miftah.2405346@students.um.ac.id\nWhatsApp: 089635894135");
@@ -513,9 +488,7 @@
 
     document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-    // ==========================================
-    // 4. SIMPAN PROFIL
-    // ==========================================
+    // SIMPAN PROFIL
     document.getElementById('btn-save-profile').addEventListener('click', async () => {
         const foto = document.getElementById('prof-foto').value.trim();
         const nama = document.getElementById('prof-nama').value.trim();
@@ -532,9 +505,7 @@
         if(foto) document.getElementById('profile-img-preview').src = foto;
     });
 
-    // ==========================================
-    // 5. STUDENT HISTORY & QUIZ LOCK LOGIC
-    // ==========================================
+    // HISTORY SISWA
     let kuis1Selesai = false;
 
     function formatTanggalLengkap(seconds) {
@@ -557,8 +528,6 @@
                     const d = doc.data();
                     const dateStr = formatTanggalLengkap(d.waktu?.seconds);
                     tbody.innerHTML += `<tr><td>${d.kegiatan}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
-                    
-                    // Unlock logic for Quiz 2
                     if (d.kuisId === 1 && parseInt(d.nilai) >= 0) kuis1Selesai = true; 
                 });
             }
@@ -580,16 +549,13 @@
         }
     }
 
-    // ==========================================
-    // 6. QUIZ ENGINE (Execution)
-    // ==========================================
+    // KUIS
     let currentQuizId = 1;
     let currentQuestions = [];
     let currentQIndex = 0;
     let score = 0;
     let selectedAnswer = "";
 
-    // Default Fallback Questions if Firestore is empty
     const fallbackQ1 = [
         { q: "Berapa kode terminal untuk positif Baterai sesuai standar DIN?", a: "30", b: "31", c: "15", d: "58", ans: "A" },
         { q: "Kode terminal 31 digunakan untuk?", a: "Kunci Kontak", b: "Massa / Ground", c: "Flasher", d: "Lampu Jauh", ans: "B" }
@@ -605,16 +571,12 @@
         document.getElementById('quiz-execution-area').classList.remove('hidden');
         document.getElementById('active-quiz-title').textContent = `Mengerjakan Kuis ${quizId}`;
         
-        // Load questions from Firestore
         currentQuestions = [];
         const qRef = query(collection(db, "quiz_questions"), where("kuisId", "==", quizId.toString()));
         const snap = await getDocs(qRef);
         snap.forEach(doc => currentQuestions.push(doc.data()));
 
-        // Use fallback if no custom questions exist
-        if (currentQuestions.length === 0) {
-            currentQuestions = quizId === 1 ? fallbackQ1 : fallbackQ2;
-        }
+        if (currentQuestions.length === 0) currentQuestions = quizId === 1 ? fallbackQ1 : fallbackQ2;
 
         currentQIndex = 0;
         score = 0;
@@ -662,10 +624,7 @@
             currentQIndex++;
             renderQuestion();
         } else {
-            // Finish Quiz
             const finalScore = Math.round((score / currentQuestions.length) * 100);
-            
-            // Ambil nama user untuk disimpan di riwayat
             const userRef = doc(db, "users", auth.currentUser.uid);
             const docSnap = await getDoc(userRef);
             const namaSiswa = docSnap.exists() && docSnap.data().nama ? docSnap.data().nama : currentUserEmail;
@@ -683,10 +642,7 @@
         }
     }
 
-    // ==========================================
-    // 7. GURU PANEL LOGIC
-    // ==========================================
-    
+    // PANEL GURU
     function loadGuruRekap() {
         onSnapshot(query(collection(db, "history"), orderBy("waktu", "desc")), (snap) => {
             const tbody = document.getElementById('guru-rekap-table');
@@ -747,7 +703,6 @@
                         </div>
                     `;
                 }
-
                 if (isGuru && guruTable) {
                     guruTable.innerHTML += `
                         <tr>
@@ -794,9 +749,7 @@
         showToast("Jobsheet berhasil dihapus.");
     }
 
-    // ==========================================
-    // 8. SIMULATOR WIRING (DIN STANDARDS - NO STARTER)
-    // ==========================================
+    // SIMULATOR WIRING
     let compIdCounter = 0;
     const canvas = document.getElementById('sim-canvas');
     const wireLayer = document.getElementById('wire-layer');
@@ -806,7 +759,7 @@
     const compLibrary = {
         'baterai': { name: 'Baterai 12V', icon: '🔋', terms: [{code:'30', pos:'top:10%;left:-8px'}, {code:'31', pos:'bottom:10%;left:-8px'}] },
         'kontak': { name: 'Kunci Kontak', icon: '🔑', terms: [{code:'30', pos:'top:-8px;left:20%'}, {code:'15', pos:'top:-8px;right:20%'}] },
-        'sakelar_kanan': { name: 'Sakelar Kanan (Lampu)', icon: '🕹️', terms: [{code:'15', pos:'left:-8px;top:20%'}, {code:'58', pos:'right:-8px;top:50%'}, {code:'56', pos:'bottom:-8px;left:50%'}] },
+        'sakelar_kanan': { name: 'Sakelar Kanan', icon: '🕹️', terms: [{code:'15', pos:'left:-8px;top:20%'}, {code:'58', pos:'right:-8px;top:50%'}, {code:'56', pos:'bottom:-8px;left:50%'}] },
         'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terms: [{code:'56', pos:'top:-8px;left:20%'}, {code:'56a', pos:'right:-8px;top:20%'}, {code:'56b', pos:'right:-8px;top:40%'}, {code:'49a', pos:'left:-8px;bottom:20%'}, {code:'L', pos:'bottom:-8px;left:20%'}, {code:'R', pos:'bottom:-8px;right:20%'}, {code:'Ho', pos:'right:-8px;bottom:10%'}] },
         'flasher': { name: 'Flasher', icon: '🔀', terms: [{code:'49', pos:'left:-8px;top:40%'}, {code:'49a', pos:'right:-8px;top:40%'}] },
         'lampu_kepala': { name: 'Lampu Kepala', icon: '💡', terms: [{code:'56a', pos:'left:-8px;top:20%'}, {code:'56b', pos:'left:-8px;top:50%'}, {code:'31', pos:'right:-8px;bottom:20%'}] },
@@ -955,9 +908,7 @@
         else showToast("Gagal: Rangkaian putus, massa kurang, atau sakelar belum terhubung.");
     });
 
-    // ==========================================
-    // 9. AI GROQ ASSISTANT
-    // ==========================================
+    // AI GROQ ASSISTANT
     const GROQ_API_KEY = "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";
     document.getElementById('btn-ai-send').addEventListener('click', async () => {
         const text = document.getElementById('ai-input').value.trim();
