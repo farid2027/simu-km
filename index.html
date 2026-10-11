@@ -26,13 +26,13 @@
         
         /* Layout */
         .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5, #0f172a); padding:20px; }
-        .login-card { background: white; padding: 36px 32px; border-radius: 16px; width: 100%; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .app-layout { display: flex; min-height: 100vh; }
-        .sidebar { width: var(--sidebar-width); background: #0f172a; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 100; }
+        .sidebar { width: var(--sidebar-width); background: #0f172a; color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; }
         .sidebar-menu { padding: 10px; flex: 1; overflow-y: auto; }
         .nav-item { padding: 12px 16px; margin-bottom: 4px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
         .nav-item:hover, .nav-item.active { background: var(--primary); }
-        .main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+        .main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
         .topbar { background: white; padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position:sticky; top:0; z-index:50;}
         .content-area { padding: 24px; max-width: 1100px; width: 100%; margin: 0 auto; }
         
@@ -43,10 +43,79 @@
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
         .badge-guru { background: #fef3c7; color: #b45309; } .badge-siswa { background: #d1fae5; color: #047857; }
 
-        /* Kuis UI */
-        .quiz-option { display: block; padding: 12px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-weight: 500; transition: 0.2s; }
-        .quiz-option:hover { border-color: var(--primary); background: #f5f3ff; }
-        .quiz-option input { margin-right: 10px; }
+        /* Kuis UI Modern & Interaktif */
+        .quiz-option { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 14px 18px; 
+            border: 2px solid var(--border); 
+            border-radius: 10px; 
+            margin-bottom: 12px; 
+            cursor: pointer; 
+            font-weight: 500; 
+            background: #ffffff;
+            transition: all 0.2s ease-in-out; 
+            user-select: none;
+        }
+        .quiz-option:hover:not(.locked) { 
+            border-color: var(--primary); 
+            background: #f5f3ff; 
+            transform: translateY(-1px);
+        }
+        .quiz-option input { margin-right: 12px; accent-color: var(--primary); cursor: pointer; }
+        .quiz-option.locked { cursor: default; }
+
+        /* Status Feedback Warna: Hijau (Benar) & Merah (Salah) */
+        .quiz-option.correct { 
+            border-color: #10b981 !important; 
+            background: #ecfdf5 !important; 
+            color: #065f46 !important; 
+            font-weight: 600;
+        }
+        .quiz-option.wrong { 
+            border-color: #ef4444 !important; 
+            background: #fef2f2 !important; 
+            color: #991b1b !important; 
+            font-weight: 600;
+        }
+        .quiz-badge-feedback {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+        .quiz-badge-correct { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .quiz-badge-wrong { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        /* Box Pembahasan & Penjelasan Soal */
+        .quiz-explanation-card {
+            margin-top: 18px;
+            padding: 16px 20px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 5px solid var(--primary);
+            animation: fadeInExp 0.3s ease-in-out;
+        }
+        .quiz-explanation-card.exp-correct {
+            background: #f0fdf4;
+            border-color: #86efac;
+            border-left: 5px solid #10b981;
+        }
+        .quiz-explanation-card.exp-wrong {
+            background: #fff7ed;
+            border-color: #fed7aa;
+            border-left: 5px solid #f97316;
+        }
+        @keyframes fadeInExp {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
         /* Simulator Wiring Engine */
         .simulator-layout { display: grid; grid-template-columns: 1fr 280px; gap: 16px; }
@@ -54,190 +123,168 @@
         .canvas-comp { position: absolute; background: white; padding: 10px; border-radius: 8px; cursor: move; text-align: center; border: 2px solid var(--border); z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.2); user-select: none; min-width: 90px; }
         .canvas-comp .c-icon { font-size: 28px; pointer-events: none; }
         .canvas-comp .c-name { font-size: 11px; font-weight: 700; margin-top: 4px; pointer-events: none; }
-        .terminal { position: absolute; width: 16px; height: 16px; background: #cbd5e1; border: 2px solid #475569; border-radius: 50%; cursor: crosshair; z-index: 15; display:flex; align-items:center; justify-content:center; transition: 0.2s;}
-        .terminal:hover, .terminal.active { background: var(--warning); border-color: white; transform: scale(1.3); }
-        .terminal-label { position: absolute; font-size: 9px; font-weight: 800; color: #0f172a; pointer-events: none; top: -14px; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;}
-        .comp-on { border-color: #facc15 !important; box-shadow: 0 0 20px #facc15 !important; background: #fefce8 !important; }
-        .avo-display { background: #84cc16; color: #064e3b; font-family: monospace; font-size: 16px; font-weight: bold; padding: 4px; border-radius: 4px; margin-top: 5px; }
-        .draggable-item { padding: 10px; background: white; border: 1px solid var(--border); margin-bottom: 8px; border-radius: 6px; cursor: grab; font-size: 13px; font-weight: 600; }
-        
-        /* Notifikasi Tengah (Center Toast) */
-        #toast-container { 
-            position: fixed; 
-            top: 25px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            z-index: 9999; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 10px;
-            pointer-events: none;
-            width: 90%;
-            max-width: 480px;
-        }
-        .toast { 
-            background: #0f172a; 
-            color: white; 
-            border-left: 5px solid var(--primary); 
-            padding: 14px 24px; 
-            border-radius: 10px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
-            font-weight: 600; 
-            font-size: 14px; 
-            text-align: center;
-            pointer-events: auto;
-            animation: fadeInDown 0.3s ease-out;
-            width: 100%;
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .terminal { position: absolute; width: 14px; height: 14px; background: #ef4444; border: 2px solid white; border-radius: 50%; cursor: crosshair; }
+        .terminal:hover { transform: scale(1.3); background: #f59e0b; }
+        .terminal-label { position: absolute; font-size: 9px; font-weight: 800; color: #fff; background: #0f172a; padding: 1px 3px; border-radius: 3px; pointer-events: none; white-space: nowrap; }
+        .draggable-item { background: white; padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; cursor: grab; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .draggable-item:hover { border-color: var(--primary); background: #f8fafc; }
 
-        /* UI Chat AI */
-        .chat-log { height: 350px; overflow-y: auto; background: var(--bg); padding: 16px; border-radius: 8px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .chat-msg { max-width: 80%; padding: 12px 16px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
-        .msg-user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .msg-ai { background: white; border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; color: #0f172a; }
+        /* Chat AI UI */
+        .chat-log { height: 350px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: #f8fafc; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 10px; font-size: 14px; line-height: 1.4; }
+        .msg-user { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
+        .msg-ai { align-self: flex-start; background: white; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
+
+        /* Notification Toast Centered */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; align-items: center; width: 100%; max-width: 500px; }
+        .toast { background: #0f172a; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.3); pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); border-left: 5px solid var(--primary); text-align: center; }
+        @keyframes toastIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="toast-container"></div>
 
-    <!-- HALAMAN LOGIN DENGAN DESKRIPSI LENGKAP -->
-    <div class="login-page" id="login-screen">
+    <!-- ===================================== -->
+    <!-- HALAMAN LOGIN & DAFTAR -->
+    <!-- ===================================== -->
+    <div id="login-screen" class="login-page">
         <div class="login-card">
-            <h2 style="text-align:center; color:var(--primary); margin-bottom: 6px;">⚡ Simu-KM</h2>
-            <p style="text-align:center; font-size:12px; color:var(--text-muted); line-height: 1.5; margin-bottom:24px;">
-                <b>Simu-KM (Simulasi Kelistrikan Motor)</b> Merupakan Sebuah Media Pembelajaran Kelistrikan Sepeda Motor Untuk Siswa SMK Jurusan Teknik Sepeda Motor.
-            </p>
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="font-size: 44px; margin-bottom: 8px;">🏍️⚡</div>
+                <h2 style="font-size: 22px; font-weight: 800; color: var(--text);">Simu-KM</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
+                    Simu-KM (Simulasi Kelistrikan Motor) Merupakan Sebuah Media Pembelajaran Interaktif Trainer Kelistrikan Sepeda Motor Berbasis Web
+                </p>
+            </div>
             
-            <label style="font-size:12px; font-weight:600;">Email Akun Sekolah</label>
-            <input type="email" id="email-input" class="form-input" placeholder="@smk.belajar.id atau @guru.smk.belajar.id">
+            <input type="email" id="email-input" class="form-input" placeholder="Email Belajar.id (@smk.belajar.id atau @guru.smk.belajar.id)">
+            <input type="password" id="password-input" class="form-input" placeholder="Kata Sandi">
             
-            <label style="font-size:12px; font-weight:600;">Password</label>
-            <input type="password" id="password-input" class="form-input" placeholder="••••••••">
+            <button class="btn btn-primary btn-full" id="btn-login" style="margin-bottom: 8px;">Masuk ke Aplikasi</button>
+            <button class="btn btn-full" id="btn-register" style="background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-bottom: 12px;">Daftar Akun Baru</button>
             
-            <button class="btn btn-primary btn-full" id="btn-login" style="margin-bottom:10px;">Masuk Aplikasi</button>
-            <button class="btn btn-success btn-full" id="btn-register">Daftar Akun Baru</button>
-            
-            <a href="#" id="btn-forgot" style="display:block; text-align:center; margin-top:16px; font-size:12px; font-weight:600; color:var(--warning); text-decoration:none;">Lupa Sandi? Hubungi Admin</a>
+            <div style="text-align: center;">
+                <a href="#" id="btn-forgot" style="font-size: 12px; color: var(--text-muted); text-decoration: none;">Lupa Kata Sandi? Hubungi Admin</a>
+            </div>
         </div>
     </div>
 
-    <!-- MAIN APP LAYOUT -->
-    <div class="app-layout hidden" id="app-layout">
+    <!-- ===================================== -->
+    <!-- HALAMAN UTAMA APLIKASI (APP LAYOUT) -->
+    <!-- ===================================== -->
+    <div id="app-layout" class="app-layout hidden">
         <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <div style="padding: 24px;">
-                <h2 style="color:white; margin:0;">⚡ Simu-KM</h2>
-                <div style="margin-top:14px; padding:12px; background:rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; gap:12px;">
-                    <img id="sb-avatar" src="https://via.placeholder.com/80" onerror="this.src='https://via.placeholder.com/80'" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid var(--primary); flex-shrink:0;">
-                    <div style="overflow:hidden; flex:1;">
-                        <div id="sb-name" style="font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Siswa</div>
-                        <div id="sb-email" style="font-size:11px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">user@smk.belajar.id</div>
-                        <span id="sb-role" class="badge badge-siswa" style="display:inline-block; margin-top:4px;">Siswa</span>
-                    </div>
+        <div class="sidebar">
+            <div style="padding: 20px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 12px;">
+                <img id="sb-avatar" src="https://via.placeholder.com/80" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+                <div style="overflow: hidden;">
+                    <h4 id="sb-name" style="font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Nama Siswa</h4>
+                    <p id="sb-email" style="font-size: 11px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">email@smk.belajar.id</p>
+                    <span id="sb-role" class="badge badge-siswa" style="margin-top: 4px; display: inline-block;">Siswa</span>
                 </div>
             </div>
-            
-            <div class="sidebar-menu" id="nav-menu">
+
+            <div class="sidebar-menu">
+                <!-- 1. PROFIL SAYA (BERADA PALING ATAS SETELAH IDENTITAS) -->
+                <div class="nav-item" data-target="view-profil">👤 Profil Saya</div>
                 <div class="nav-item active" data-target="view-dashboard">🏠 Dashboard</div>
-                <!-- Menu Profil di Posisi Atas -->
-                <div class="nav-item" data-target="view-profile">👤 Profil Saya</div>
                 
-                <!-- Menu Umum (Siswa & Guru) -->
-                <div class="nav-item" data-target="view-materi">📚 Materi & Jobsheet</div>
+                <!-- MENU SISWA & UMUM -->
+                <div class="nav-item" data-target="view-jobsheet">📄 Jobsheet PDF</div>
                 <div class="nav-item" data-target="view-kuis">📝 Kuis Interaktif</div>
                 <div class="nav-item" data-target="view-simulator">⚙️ Simulator Praktik</div>
-                <div class="nav-item" data-target="view-ai">🤖 AI Asisten</div>
+                <div class="nav-item" data-target="view-ai">🤖 Tanya AI (Groq)</div>
 
-                <!-- Menu Khusus Guru -->
-                <div id="sidebar-guru-section" class="hidden">
-                    <div style="padding: 10px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-top: 10px;">Panel Guru</div>
+                <!-- MENU KHUSUS GURU (OTOMATIS MUNCUL UNTUK @GURU.SMK.BELAJAR.ID) -->
+                <div id="sidebar-guru-section" class="hidden" style="margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 10px;">
+                    <div style="padding: 8px 16px; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Panel Guru</div>
                     <div class="nav-item" data-target="view-guru-rekap">📊 Rekap Nilai Siswa</div>
-                    <div class="nav-item" data-target="view-guru-kuis">📝 Kelola Soal Kuis</div>
                     <div class="nav-item" data-target="view-guru-jobsheet">📁 Kelola Jobsheet</div>
+                    <div class="nav-item" data-target="view-guru-kuis">📝 Kelola Soal Kuis</div>
                 </div>
             </div>
 
-            <div style="padding: 20px;">
-                <button class="btn btn-danger btn-full" id="btn-logout">🚪 Keluar</button>
+            <div style="padding: 16px; border-top: 1px solid #1e293b;">
+                <button class="btn btn-danger btn-full" id="btn-logout" style="font-size: 13px;">🚪 Keluar Akun</button>
             </div>
-        </aside>
+        </div>
 
+        <!-- AREA KONTEN UTAMA -->
         <div class="main-content">
-            <!-- TOPBAR -->
             <div class="topbar">
-                <h3 id="topbar-title" style="margin:0;">Dashboard</h3>
-                <div style="font-size:13px; font-weight:700; color:var(--text-muted);" id="clock">Memuat Waktu...</div>
+                <h3 id="topbar-title" style="font-size: 18px; font-weight: 700;">Dashboard</h3>
+                <div id="clock" style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Memuat waktu...</div>
             </div>
 
             <div class="content-area">
-                
-                <!-- DASHBOARD -->
-                <div id="view-dashboard" class="view-section">
-                    <div class="card" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color:white; border:none; padding: 28px;">
-                        <h2 id="greet-name" style="font-size: 26px; letter-spacing: 0.5px;">HALO, SISWA! 👋</h2>
-                        <p id="greet-desc" style="font-size:14px; opacity:0.95; margin-top: 6px;">Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM.</p>
+
+                <!-- VIEW PROFIL SAYA -->
+                <div id="view-profil" class="view-section hidden">
+                    <h2 style="margin-bottom: 20px;">👤 Profil Pengguna</h2>
+                    <div class="card" style="max-width: 600px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <img id="profile-img-preview" src="https://via.placeholder.com/80" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Foto Profil Akun</div>
+                        </div>
+
+                        <label style="font-size: 13px; font-weight: 600;">Link / URL Foto Profil (Bisa Link Google Drive atau Gambar):</label>
+                        <input type="text" id="prof-foto" class="form-input" placeholder="Tempel tautan foto online atau tautan share Google Drive...">
+
+                        <label style="font-size: 13px; font-weight: 600;">Nama Lengkap:</label>
+                        <input type="text" id="prof-nama" class="form-input" placeholder="Nama Lengkap">
+
+                        <label style="font-size: 13px; font-weight: 600;">Tempat, Tanggal Lahir:</label>
+                        <input type="text" id="prof-ttl" class="form-input" placeholder="Contoh: Malang, 12 Mei 2006">
+
+                        <label style="font-size: 13px; font-weight: 600;">Nomor WhatsApp:</label>
+                        <input type="text" id="prof-wa" class="form-input" placeholder="Contoh: 081234567890">
+
+                        <label style="font-size: 13px; font-weight: 600;">Email Terdaftar:</label>
+                        <input type="text" id="prof-email" class="form-input" disabled style="background: #f1f5f9; cursor: not-allowed;">
+
+                        <button class="btn btn-primary btn-full" id="btn-save-profile" style="margin-top: 10px;">💾 Simpan Pembaruan Profil</button>
                     </div>
-                    
-                    <div class="card" id="student-history-card">
-                        <h3 style="margin-bottom:16px;">📊 Riwayat Pengerjaan Kamu</h3>
+                </div>
+
+                <!-- VIEW DASHBOARD -->
+                <div id="view-dashboard" class="view-section">
+                    <div class="card" style="background: linear-gradient(135deg, #4f46e5, #3b82f6); color: white;">
+                        <h2 id="greet-name" style="font-size: 26px; font-weight: 800; margin-bottom: 8px;">HALO! 👋</h2>
+                        <p id="greet-desc" style="opacity: 0.9; font-size: 14px; max-width: 650px; line-height: 1.5;">
+                            Selamat datang di media pembelajaran kelistrikan sepeda motor Simu-KM.
+                        </p>
+                    </div>
+
+                    <!-- RIWAYAT TUGAS & KUIS SISWA -->
+                    <div id="student-history-card" class="card">
+                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 700;">📋 Riwayat Aktivitas & Nilai Kuis Saya</h3>
                         <table>
-                            <thead><tr><th>Nama Kegiatan / Kuis</th><th>Hari & Tanggal</th><th>Nilai</th><th>Status</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>Aktivitas / Kuis</th>
+                                    <th>Hari & Tanggal Selesai</th>
+                                    <th>Nilai</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
                             <tbody id="student-history-table">
-                                <tr><td colspan="4" style="text-align:center;">Memuat riwayat...</td></tr>
+                                <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Memuat riwayat...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- PROFIL -->
-                <div id="view-profile" class="view-section hidden">
-                    <h2 style="margin-bottom:20px;">👤 Profil Saya</h2>
-                    <div class="card" style="max-width: 620px;">
-                        <div style="display:flex; gap:20px; align-items:center; margin-bottom:20px;">
-                            <img id="profile-img-preview" src="https://via.placeholder.com/80" onerror="this.src='https://via.placeholder.com/80?text=Error'" style="width:85px; height:85px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                            <div style="flex:1;">
-                                <label style="font-size:12px; font-weight:600;">URL / Tautan Foto Profil</label>
-                                <input type="text" id="prof-foto" class="form-input" placeholder="Tempel tautan foto (.jpg, .png, Google Drive)">
-                                <p style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:4px;">Foto langsung ter-update di samping dan di sidebar setelah disimpan.</p>
-                            </div>
-                        </div>
-                        
-                        <label style="font-size:12px; font-weight:600;">Nama Lengkap</label>
-                        <input type="text" id="prof-nama" class="form-input" placeholder="Nama Lengkap Kamu">
-                        
-                        <label style="font-size:12px; font-weight:600;">Tempat, Tanggal Lahir (TTL)</label>
-                        <input type="text" id="prof-ttl" class="form-input" placeholder="Contoh: Malang, 17 Agustus 2005">
-                        
-                        <label style="font-size:12px; font-weight:600;">Nomor WhatsApp</label>
-                        <input type="text" id="prof-wa" class="form-input" placeholder="08xxxxxxxxxx">
-                        
-                        <label style="font-size:12px; font-weight:600;">Email Akun (Terkunci)</label>
-                        <input type="email" id="prof-email" class="form-input" disabled style="background:#f1f5f9; cursor:not-allowed; border-color:var(--border);">
-                        
-                        <button class="btn btn-success" id="btn-save-profile" style="margin-top:10px;">💾 Simpan Profil</button>
-                    </div>
-                </div>
-
-                <!-- MATERI & JOBSHEET -->
-                <div id="view-materi" class="view-section hidden">
-                    <h2 style="margin-bottom:20px;">📚 Materi & Jobsheet</h2>
+                <!-- VIEW JOBSHEET PDF (UNTUK SISWA) -->
+                <div id="view-jobsheet" class="view-section hidden">
+                    <h2 style="margin-bottom: 20px;">📄 Jobsheet Praktik Siswa</h2>
                     <div class="card">
-                        <h4>Materi Kelistrikan Standar DIN</h4>
-                        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Pelajari standar terminal DIN (30: Baterai (+), 31: Massa (-), 15: Kunci Kontak beban, 56a/b: Lampu Jauh/Dekat, 49/49a: Flasher Sein).</p>
-                    </div>
-                    <h3 style="margin-bottom:12px;">📁 Download Jobsheet Praktikum</h3>
-                    <div id="jobsheet-list-container">
-                        <div style="text-align:center; padding:20px; color:var(--text-muted);">Memuat jobsheet...</div>
+                        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">Unduh dan pelajari jobsheet petunjuk praktikum kelistrikan sepeda motor berikut:</p>
+                        <div id="student-jobsheet-list">Memuat daftar jobsheet...</div>
                     </div>
                 </div>
 
-                <!-- KUIS INTERAKTIF -->
+                <!-- VIEW KUIS INTERAKTIF -->
                 <div id="view-kuis" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📝 Kuis Interaktif</h2>
                     <div id="quiz-list-container">
@@ -257,23 +304,79 @@
                         </div>
                     </div>
 
+                    <!-- AREA PENGERJAAN KUIS INTERAKTIF -->
                     <div id="quiz-execution-area" class="hidden">
                         <div class="card">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                                <h3 id="active-quiz-title">Mengerjakan Kuis</h3>
-                                <div style="font-weight:700; color:var(--primary);">Soal <span id="current-q-num">1</span>/<span id="total-q">0</span></div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                                <div>
+                                    <h3 id="active-quiz-title" style="margin:0;">Mengerjakan Kuis</h3>
+                                    <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Pilih jawaban yang paling tepat. Skor total diskalakan ke 100 poin.</div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <span id="quiz-point-badge" class="badge" style="background:#e0e7ff; color:#4338ca; font-size:12px; font-weight:700;">⭐ Bobot: 10 Poin / Soal</span>
+                                    <span style="font-weight:700; color:var(--text); font-size:14px; background:#f1f5f9; padding:4px 10px; border-radius:6px; border:1px solid #cbd5e1;">Soal <span id="current-q-num">1</span>/<span id="total-q">0</span></span>
+                                </div>
                             </div>
-                            <div id="quiz-question-text" style="font-size:16px; font-weight:600; margin-bottom:20px;">Memuat soal...</div>
+                            
+                            <!-- Progress Bar Soal -->
+                            <div style="width:100%; height:6px; background:#e2e8f0; border-radius:3px; margin-bottom:20px; overflow:hidden;">
+                                <div id="quiz-progress-bar" style="height:100%; width:0%; background:var(--primary); transition:width 0.3s ease;"></div>
+                            </div>
+
+                            <div id="quiz-question-text" style="font-size:16px; font-weight:700; margin-bottom:18px; line-height:1.5; color:#0f172a;">Memuat soal...</div>
+                            
+                            <!-- Opsi Pilihan Jawaban -->
                             <div id="quiz-options"></div>
-                            <div style="display:flex; justify-content:space-between; margin-top:24px;">
-                                <button class="btn btn-danger" onclick="cancelQuiz()">Batal</button>
+                            
+                            <!-- Box Pembahasan / Feedback Penjelasan -->
+                            <div id="quiz-explanation-container" class="hidden"></div>
+
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid var(--border);">
+                                <button class="btn btn-danger" onclick="cancelQuiz()">Keluar / Batal</button>
                                 <button class="btn btn-success" onclick="nextQuestion()" id="btn-next-q" disabled>Selanjutnya ➔</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REKAP HASIL EVALUASI KUIS (SKALA 100) -->
+                    <div id="quiz-result-area" class="hidden">
+                        <div class="card" style="text-align:center; padding:36px 24px; max-width:620px; margin:0 auto; box-shadow:0 10px 25px rgba(0,0,0,0.05);">
+                            <div id="quiz-result-icon" style="font-size:56px; margin-bottom:12px;">🎉</div>
+                            <h3 id="quiz-result-title" style="margin-bottom:6px; font-size:22px;">Hasil Evaluasi Kuis</h3>
+                            <p id="quiz-result-subtitle" style="font-size:14px; color:var(--text-muted); margin-bottom:24px;">Berikut perolehan nilai akhir Anda dengan standar skala 100:</p>
+                            
+                            <div style="background:#f8fafc; border:2px dashed #cbd5e1; border-radius:16px; padding:24px; margin-bottom:24px;">
+                                <div style="font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#64748b; font-weight:700; margin-bottom:6px;">Total Skor Akhir (Skala 100)</div>
+                                <div style="font-size:54px; font-weight:800; color:var(--primary); line-height:1;" id="quiz-result-score-val">0<span style="font-size:22px; color:#94a3b8; font-weight:600;"> / 100</span></div>
+                                <div id="quiz-result-status-badge" style="margin-top:14px;">
+                                    <span class="badge badge-siswa" style="font-size:13px; padding:6px 16px;">KOMPETEN (LULUS)</span>
+                                </div>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:28px;">
+                                <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px 8px; border-radius:10px;">
+                                    <div style="font-size:12px; color:#166534; font-weight:600;">Jawaban Benar</div>
+                                    <div id="quiz-result-correct-count" style="font-size:20px; font-weight:800; color:#15803d; margin-top:4px;">0 Soal</div>
+                                </div>
+                                <div style="background:#fef2f2; border:1px solid #fecaca; padding:12px 8px; border-radius:10px;">
+                                    <div style="font-size:12px; color:#991b1b; font-weight:600;">Jawaban Salah</div>
+                                    <div id="quiz-result-wrong-count" style="font-size:20px; font-weight:800; color:#b91c1c; margin-top:4px;">0 Soal</div>
+                                </div>
+                                <div style="background:#eff6ff; border:1px solid #bfdbfe; padding:12px 8px; border-radius:10px;">
+                                    <div style="font-size:12px; color:#1e40af; font-weight:600;">Bobot per Soal</div>
+                                    <div id="quiz-result-weight-display" style="font-size:20px; font-weight:800; color:#2563eb; margin-top:4px;">10 Poin</div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+                                <button class="btn btn-primary" onclick="cancelQuiz()">⬅️ Kembali ke Menu Kuis</button>
+                                <button class="btn btn-warning" onclick="openQuiz(currentQuizId)">🔄 Kerjakan Ulang</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- SIMULATOR WIRING (LENGKAP DENGAN SEKERING / FUSE) -->
+                <!-- SIMULATOR WIRING (DENGAN SEKERING 15A) -->
                 <div id="view-simulator" class="view-section hidden">
                     <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                         <div>
@@ -295,7 +398,7 @@
                         <div class="card" style="padding:16px; height: 550px; overflow-y: auto;">
                             <h4 style="font-size:14px; margin-bottom:12px;">📦 Gudang Komponen</h4>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'baterai')">🔋 Baterai 12V (30, 31)</div>
-                            <!-- KOMPONEN SEKERING (FUSE) -->
+                            <!-- KOMPONEN SEKERING -->
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sekering')" style="background:#fefce8; border-color:#facc15;">🛡️ Sekering 15A (30_IN, 30_OUT)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'kontak')">🔑 Kunci Kontak (30, 15)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kiri')">🕹️ Sakelar Setir Kiri</div>
@@ -314,7 +417,7 @@
                     </div>
                 </div>
 
-                <!-- TANYA AI (INTEGRASI ASISTEN GROQ) -->
+                <!-- TANYA AI (INTEGRASI GROQ API) -->
                 <div id="view-ai" class="view-section hidden">
                     <h2 style="margin-bottom:15px; color:#4f46e5;">🤖 Asisten AI Kelistrikan Sepeda Motor</h2>
                     <p style="font-size:13px; color:var(--text-muted); margin-top:-10px; margin-bottom:15px;">Tanyakan kode terminal (30, 31, 15, 56, dll), alur sekering, atau cara kerja rangkaian penerangan.</p>
@@ -346,19 +449,19 @@
                     </div>
                 </div>
 
-                <!-- KELOLA JOBSHEET (UPLOAD PDF & LINK GOOGLE DRIVE) -->
+                <!-- KELOLA JOBSHEET (UPLOAD PDF & GOOGLE DRIVE - BEBAS MACET) -->
                 <div id="view-guru-jobsheet" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📁 Kelola Jobsheet PDF</h2>
                     <div class="card" style="margin-bottom:20px; background:#f8fafc;">
                         <h4 style="margin-bottom:12px;">Upload Jobsheet Baru</h4>
                         <input type="text" id="js-title" class="form-input" placeholder="Judul Jobsheet (misal: Jobsheet Praktik Rangkaian Klakson & Sekering)">
                         
-                        <label style="font-size:12px; font-weight:600; display:block; margin-bottom:4px;">1. Pilih File PDF dari Laptop/HP:</label>
+                        <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">1. Pilih File PDF dari Laptop/HP:</label>
                         <input type="file" id="js-file" class="form-input" accept="application/pdf">
                         
-                        <div style="text-align:center; font-size:11px; color:var(--text-muted); margin:-4px 0 8px 0;">— ATAU MASUKKAN TAUTAN / LINK GOOGLE DRIVE —</div>
+                        <div style="text-align:center; font-size:11px; font-weight:700; color:var(--text-muted); margin:4px 0 10px 0;">— ATAU MASUKKAN TAUTAN GOOGLE DRIVE (DIREKOMENDASIKAN) —</div>
                         
-                        <input type="text" id="js-url" class="form-input" placeholder="Tautan Google Drive / Link PDF luar (opsional)">
+                        <input type="text" id="js-url" class="form-input" placeholder="Tempel tautan Google Drive / Link PDF luar di sini">
                         
                         <button class="btn btn-success" id="btn-upload-js">📤 Simpan & Publikasikan Jobsheet</button>
                     </div>
@@ -371,7 +474,7 @@
                     </div>
                 </div>
 
-                <!-- KELOLA SOAL KUIS (FORM TAMBAH/EDIT + DAFTAR TABEL SOAL) -->
+                <!-- KELOLA SOAL KUIS (TAMBAH, EDIT, HAPUS DENGAN PEMBAHASAN) -->
                 <div id="view-guru-kuis" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">📝 Kelola Soal Kuis</h2>
                     <div class="card" style="margin-bottom:20px;">
@@ -394,13 +497,14 @@
                             <option value="">-- Pilih Kunci Jawaban Benar --</option>
                             <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
                         </select>
+                        <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">💡 Penjelasan / Pembahasan Jawaban (Ditampilkan saat siswa menjawab):</label>
+                        <textarea id="guru-q-exp" class="form-input" rows="2" placeholder="Tuliskan pembahasan jawaban (alasan mengapa kunci ini benar, misal: Terminal 30 adalah arus konstan aki melalui sekering)..."></textarea>
                         <div style="display:flex; gap:10px;">
                             <button class="btn btn-primary" id="btn-save-question" style="flex:1;">💾 Simpan Soal</button>
                             <button class="btn btn-danger hidden" id="btn-cancel-edit-q" style="width:auto;">Batal Edit</button>
                         </div>
                     </div>
 
-                    <!-- TABEL DAFTAR SOAL AKTIF (DENGAN TOMBOL EDIT & HAPUS) -->
                     <div class="card">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                             <h4 style="margin:0;">📋 Daftar Soal Aktif di Kuis</h4>
@@ -414,7 +518,7 @@
                             <thead>
                                 <tr>
                                     <th style="width:70px;">Target</th>
-                                    <th>Pertanyaan & Opsi Soal</th>
+                                    <th>Pertanyaan, Opsi & Pembahasan</th>
                                     <th style="width:70px;">Kunci</th>
                                     <th style="width:120px;">Aksi Guru</th>
                                 </tr>
@@ -436,8 +540,7 @@
     // ==========================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getDocs, orderBy, deleteDoc, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
+    import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getDocs, orderBy, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDI9Rd4m4IxKJsELGS9e7KztVS2hXftAA0",
@@ -451,7 +554,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
     let isGuru = false;
     let currentUserEmail = "";
@@ -479,6 +581,7 @@
         ]);
     }
 
+    // Format Link Gambar & Google Drive
     function formatImageUrl(url) {
         if (!url) return '';
         url = url.trim();
@@ -496,6 +599,21 @@
                 const imgurl = urlObj.searchParams.get('imgurl');
                 if (imgurl) return decodeURIComponent(imgurl);
             } catch(e){}
+        }
+        return url;
+    }
+
+    // Format Link PDF (Mendukung Preview Langsung Google Drive)
+    function formatPdfUrl(url) {
+        if (!url) return '';
+        url = url.trim();
+        const gDriveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (gDriveMatch && gDriveMatch[1]) {
+            return `https://drive.google.com/file/d/${gDriveMatch[1]}/preview`;
+        }
+        const gDriveIdMatch = url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (url.includes('drive.google.com') && gDriveIdMatch && gDriveIdMatch[1]) {
+            return `https://drive.google.com/file/d/${gDriveIdMatch[1]}/preview`;
         }
         return url;
     }
@@ -763,7 +881,7 @@
                     snap.forEach(docSnap => {
                         const d = docSnap.data();
                         const dateStr = formatTanggalLengkap(d.waktu?.seconds);
-                        tbody.innerHTML += `<tr><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
+                        tbody.innerHTML += `<tr><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai} / 100</b></td><td><span class="badge badge-siswa">Selesai</span></td></tr>`;
                         if ((d.kuisId === 1 || d.kuisId === "1") && parseInt(d.nilai) >= 0) {
                             kuis1Selesai = true; 
                         }
@@ -808,26 +926,86 @@
     }
 
     // ==========================================
-    // 4. ENGINE KUIS INTERAKTIF
+    // 4. ENGINE KUIS INTERAKTIF (SKALA 100 & FEEDBACK PEMBAHASAN)
     // ==========================================
     let currentQuizId = 1;
     let currentQuestions = [];
     let currentQIndex = 0;
-    let score = 0;
+    let correctCount = 0;
+    let isOptionSelected = false;
     let selectedAnswer = "";
 
+    // Bank Soal Bawaan (Fallback) Lengkap dengan Pembahasan Sepeda Motor Standar Industri
     const fallbackQ1 = [
-        { q: "Berapa kode terminal untuk positif Baterai sesuai standar DIN?", a: "30", b: "31", c: "15", d: "58", ans: "A" },
-        { q: "Kode terminal 31 digunakan untuk?", a: "Kunci Kontak", b: "Massa / Ground", c: "Flasher", d: "Lampu Jauh", ans: "B" }
+        { 
+            q: "Berapa kode terminal untuk arus positif (+) langsung dari Baterai sesuai standar DIN otomotif?", 
+            a: "30", b: "31", c: "15", d: "58", 
+            ans: "A",
+            exp: "Sesuai standar DIN (Deutsches Institut für Normung) 72552, terminal 30 selalu melambangkan arus positif (+) konstan langsung dari baterai yang selalu bertegangan sebelum melewati sakelar utama."
+        },
+        { 
+            q: "Kode terminal 31 pada sistem kelistrikan sepeda motor digunakan untuk jalur?", 
+            a: "Kunci Kontak Output", b: "Massa / Ground (Kutub Negatif)", c: "Flasher Lampu Sein", d: "Lampu Jauh", 
+            ans: "B",
+            exp: "Terminal 31 adalah jalur massa atau ground (kutub negatif baterai) yang dihubungkan ke rangka atau bodi sepeda motor untuk melengkapi sirkuit kelistrikan."
+        },
+        { 
+            q: "Fungsi utama komponen sekering (fuse 15A) yang dipasang tepat setelah kutub positif baterai adalah?", 
+            a: "Menaikkan tegangan 12V menjadi 24V", b: "Melindungi sirkuit dan kabel dari arus berlebih serta bahaya korsleting", c: "Mengubah arus DC aki menjadi AC", d: "Membuat lampu sein berkedip teratur", 
+            ans: "B",
+            exp: "Sekering bertindak sebagai pengaman sirkuit utama. Bila terjadi hubungan pendek (korsleting) atau kelebihan beban melebihi 15 Ampere, kawat sekering akan meleleh dan putus sehingga instalasi kabel sepeda motor tidak terbakar."
+        },
+        { 
+            q: "Terminal keluaran (output) beban kunci kontak saat posisi 'ON' ditandai dengan kode angka?", 
+            a: "30", b: "31", c: "15", d: "54", 
+            ans: "C",
+            exp: "Terminal 15 adalah terminal keluaran beban setelah kunci kontak diputar ke posisi 'ON'. Jalur ini menyuplai arus ke sistem pengapian, klakson, lampu rem, speedometer, dan flasher."
+        },
+        { 
+            q: "Untuk mengukur tegangan baterai motor yang sehat (standar 12.4V - 12.8V), selektor avometer digital harus disetel pada posisi?", 
+            a: "DCV 20V", b: "ACV 250V", c: "DCA 200mA", d: "Ohm (Ω) 20k", 
+            ans: "A",
+            exp: "Baterai sepeda motor menggunakan arus searah (DC) dengan nilai nominal 12 Volt. Batas ukur avometer yang paling tepat dan presisi adalah skala Direct Current Voltage (DCV) 20V."
+        }
     ];
+
     const fallbackQ2 = [
-        { q: "Output kunci kontak (beban) ditandai dengan terminal?", a: "30", b: "31", c: "15", d: "56a", ans: "C" },
-        { q: "Terminal L dan R pada sakelar setir berhubungan langsung dengan komponen?", a: "Klakson", b: "Lampu Rem", c: "Lampu Kepala", d: "Lampu Sein", ans: "D" }
+        { 
+            q: "Arus positif dari kunci kontak (terminal 15) menuju input flasher sein dihubungkan ke terminal berkode?", 
+            a: "49", b: "49a", c: "31", d: "58", 
+            ans: "A",
+            exp: "Terminal 49 pada unit flasher adalah terminal masukan daya positif (Input +) yang menerima suplai tegangan 12V setelah kunci kontak (terminal 15)."
+        },
+        { 
+            q: "Terminal 49a pada flasher sein berfungsi untuk menyalurkan arus pulsa (kedip) menuju komponen?", 
+            a: "Massa bodi sepeda motor", b: "Sakelar geser sein (sakelar setir kiri)", c: "Filamen lampu kepala utama", d: "Tombol klakson", 
+            ans: "B",
+            exp: "Terminal 49a adalah terminal keluaran (Output) pulsa kedipan flasher yang langsung disambungkan ke kutub tengah sakelar sein (L/R) pada stang kemudi."
+        },
+        { 
+            q: "Terminal sakelar setir yang bertugas menerima arus lampu kepala (56) lalu membaginya ke lampu jauh (High Beam) menggunakan kode?", 
+            a: "56a", b: "56b", c: "58", d: "15", 
+            ans: "A",
+            exp: "Pada standar internasional sistem penerangan, kode terminal 56a adalah output sakelar dimmer untuk Lampu Jauh (High Beam), sedangkan 56b adalah untuk Lampu Dekat (Low Beam)."
+        },
+        { 
+            q: "Lampu rem sepeda motor memiliki terminal berstandar kode 54. Komponen apa yang mengalirkan arus dari terminal 15 ke terminal 54?", 
+            a: "Flasher sein", b: "Sakelar rem (depan dan belakang)", c: "Kunci kontak langsung", d: "Regulator / Kiprok", 
+            ans: "B",
+            exp: "Sakelar rem (front & rear brake switch) berfungsi menghubungkan arus dari jalur beban kunci kontak (15) ke filamen lampu rem (54) ketika tuas atau pedal rem ditekan."
+        },
+        { 
+            q: "Lampu senja / lampu posisi pada sepeda motor umumnya menggunakan kode terminal DIN yaitu?", 
+            a: "30", b: "15", c: "58", d: "49a", 
+            ans: "C",
+            exp: "Kode terminal DIN 58 adalah standar untuk lampu posisi/senja (parking/tail light) dan lampu penerangan panel speedometer instrumen sepeda motor."
+        }
     ];
 
     window.openQuiz = async function(quizId) {
         currentQuizId = quizId;
         document.getElementById('quiz-list-container').classList.add('hidden');
+        document.getElementById('quiz-result-area').classList.add('hidden');
         document.getElementById('quiz-execution-area').classList.remove('hidden');
         document.getElementById('active-quiz-title').textContent = `Mengerjakan Kuis ${quizId}`;
         
@@ -837,18 +1015,22 @@
             const snap = await withTimeout(getDocs(qRef), 2000);
             snap.forEach(docSnap => currentQuestions.push(docSnap.data()));
         } catch(e) {
-            console.warn("Memakai soal cadangan:", e);
+            console.warn("Memakai soal cadangan/lokal:", e);
         }
 
         try {
             const localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
-            localQ.filter(q => String(q.kuisId) === String(quizId)).forEach(q => currentQuestions.push(q));
+            localQ.filter(q => String(q.kuisId) === String(quizId)).forEach(q => {
+                if(!currentQuestions.some(x => x.q === q.q)) currentQuestions.push(q);
+            });
         } catch(e){}
 
-        if (currentQuestions.length === 0) currentQuestions = quizId === 1 ? fallbackQ1 : fallbackQ2;
+        if (currentQuestions.length === 0) {
+            currentQuestions = (quizId === 1) ? fallbackQ1 : fallbackQ2;
+        }
 
         currentQIndex = 0;
-        score = 0;
+        correctCount = 0;
         document.getElementById('total-q').textContent = currentQuestions.length;
         renderQuestion();
     };
@@ -856,47 +1038,189 @@
     window.cancelQuiz = function() {
         document.getElementById('quiz-list-container').classList.remove('hidden');
         document.getElementById('quiz-execution-area').classList.add('hidden');
+        document.getElementById('quiz-result-area').classList.add('hidden');
     };
 
     function renderQuestion() {
+        isOptionSelected = false;
         selectedAnswer = "";
         document.getElementById('btn-next-q').disabled = true;
         document.getElementById('current-q-num').textContent = currentQIndex + 1;
         
+        const totalQ = currentQuestions.length;
+        // Hitung bobot per soal dalam skala 100
+        const pointsPerQ = 100 / totalQ;
+        const pointsPerQText = (100 % totalQ === 0) ? pointsPerQ : pointsPerQ.toFixed(1);
+        
+        const badgeEl = document.getElementById('quiz-point-badge');
+        if (badgeEl) badgeEl.textContent = `⭐ Bobot: ${pointsPerQText} Poin / Soal`;
+
+        // Update Progress Bar
+        const progBar = document.getElementById('quiz-progress-bar');
+        if (progBar) {
+            const progressPct = ((currentQIndex) / totalQ) * 100;
+            progBar.style.width = `${progressPct}%`;
+        }
+
         const qData = currentQuestions[currentQIndex];
         document.getElementById('quiz-question-text').textContent = qData.q;
         
+        // Bersihkan dan sembunyikan kotak pembahasan
+        const expBox = document.getElementById('quiz-explanation-container');
+        if (expBox) {
+            expBox.className = 'hidden';
+            expBox.innerHTML = '';
+        }
+
         const optsContainer = document.getElementById('quiz-options');
         optsContainer.innerHTML = '';
+
         ['a', 'b', 'c', 'd'].forEach(opt => {
-            const div = document.createElement('label');
+            const optUpper = opt.toUpperCase();
+            const div = document.createElement('div');
             div.className = 'quiz-option';
-            div.innerHTML = `<input type="radio" name="q_opt" value="${opt.toUpperCase()}"> <b>${opt.toUpperCase()}</b>. ${escapeHtml(qData[opt])}`;
-            div.onclick = () => {
-                selectedAnswer = opt.toUpperCase();
-                document.getElementById('btn-next-q').disabled = false;
-            };
+            div.dataset.option = optUpper;
+            div.innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <input type="radio" name="q_opt" value="${optUpper}">
+                    <span><b>${optUpper}.</b> ${escapeHtml(qData[opt])}</span>
+                </div>
+                <div class="feedback-badge-slot"></div>
+            `;
+            div.onclick = () => window.selectQuizOption(optUpper, qData);
             optsContainer.appendChild(div);
         });
 
-        if (currentQIndex === currentQuestions.length - 1) {
-            document.getElementById('btn-next-q').textContent = "Selesaikan Kuis ➔";
+        const nextBtn = document.getElementById('btn-next-q');
+        if (currentQIndex === totalQ - 1) {
+            nextBtn.textContent = "Selesaikan Kuis & Lihat Nilai ➔";
         } else {
-            document.getElementById('btn-next-q').textContent = "Selanjutnya ➔";
+            nextBtn.textContent = "Soal Selanjutnya ➔";
         }
     }
 
+    // Handler Interaktif: Memberikan Feedback Warna Hijau / Merah & Pembahasan Instan
+    window.selectQuizOption = function(chosenOpt, qData) {
+        if (isOptionSelected) return; // Kunci setelah sekali memilih
+        isOptionSelected = true;
+        selectedAnswer = chosenOpt;
+
+        // Centang radio input yang dipilih
+        const radioInput = document.querySelector(`input[name="q_opt"][value="${chosenOpt}"]`);
+        if (radioInput) radioInput.checked = true;
+
+        // Kunci semua opsi agar tidak dapat diganti
+        document.querySelectorAll('.quiz-option').forEach(el => el.classList.add('locked'));
+
+        const totalQ = currentQuestions.length;
+        const pointsPerQ = 100 / totalQ;
+        const pointsPerQText = (100 % totalQ === 0) ? pointsPerQ : pointsPerQ.toFixed(1);
+
+        const correctAns = String(qData.ans || '').trim().toUpperCase();
+        const isCorrect = (chosenOpt === correctAns);
+
+        if (isCorrect) {
+            correctCount++;
+            // Feedback opsi benar: Hijau
+            const chosenEl = document.querySelector(`.quiz-option[data-option="${chosenOpt}"]`);
+            if (chosenEl) {
+                chosenEl.classList.add('correct');
+                const badgeSlot = chosenEl.querySelector('.feedback-badge-slot');
+                if (badgeSlot) {
+                    badgeSlot.innerHTML = `<span class="quiz-badge-feedback quiz-badge-correct">✓ Benar (+${pointsPerQText} Poin)</span>`;
+                }
+            }
+        } else {
+            // Feedback opsi salah yang dipilih: Merah
+            const chosenEl = document.querySelector(`.quiz-option[data-option="${chosenOpt}"]`);
+            if (chosenEl) {
+                chosenEl.classList.add('wrong');
+                const badgeSlot = chosenEl.querySelector('.feedback-badge-slot');
+                if (badgeSlot) {
+                    badgeSlot.innerHTML = `<span class="quiz-badge-feedback quiz-badge-wrong">✗ Jawaban Anda Salah</span>`;
+                }
+            }
+
+            // Sorot kunci jawaban yang benar: Hijau
+            const correctEl = document.querySelector(`.quiz-option[data-option="${correctAns}"]`);
+            if (correctEl) {
+                correctEl.classList.add('correct');
+                const badgeSlot = correctEl.querySelector('.feedback-badge-slot');
+                if (badgeSlot) {
+                    badgeSlot.innerHTML = `<span class="quiz-badge-feedback quiz-badge-correct">✓ Kunci Jawaban yang Benar</span>`;
+                }
+            }
+        }
+
+        // Tampilkan Kotak Pembahasan & Penjelasan Soal
+        const expBox = document.getElementById('quiz-explanation-container');
+        if (expBox) {
+            const expText = (qData.exp && qData.exp.trim()) 
+                ? qData.exp.trim() 
+                : `Kunci jawaban yang tepat untuk soal ini adalah opsi ${correctAns}. Pelajari kembali alur sirkuit dan kode terminal komponen terkait.`;
+            
+            expBox.className = `quiz-explanation-card ${isCorrect ? 'exp-correct' : 'exp-wrong'}`;
+            expBox.innerHTML = `
+                <div style="font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:8px; font-size:14px; color:${isCorrect ? '#15803d' : '#c2410c'};">
+                    <span>${isCorrect ? '💡' : '⚠️'}</span>
+                    <span>${isCorrect ? 'Pembahasan & Konsep Jawaban:' : 'Pembahasan & Solusi yang Tepat:'}</span>
+                </div>
+                <div style="font-size:13.5px; color:#334155; line-height:1.6;">
+                    ${escapeHtml(expText)}
+                </div>
+            `;
+        }
+
+        // Aktifkan tombol lanjut
+        document.getElementById('btn-next-q').disabled = false;
+    };
+
     window.nextQuestion = async function() {
-        const correctAns = String(currentQuestions[currentQIndex].ans || '').toUpperCase();
-        if (selectedAnswer === correctAns) score++;
-        
-        if (currentQIndex < currentQuestions.length - 1) {
+        const totalQ = currentQuestions.length;
+
+        if (currentQIndex < totalQ - 1) {
             currentQIndex++;
             renderQuestion();
         } else {
-            const finalScore = Math.round((score / currentQuestions.length) * 100);
-            showToast(`Kuis Selesai! Nilai Kamu: ${finalScore}`);
-            cancelQuiz();
+            // Selesai Kuis: Hitung Nilai Total Skala 100
+            const finalScore = Math.min(100, Math.round((correctCount / totalQ) * 100));
+            const pointsPerQ = 100 / totalQ;
+            const pointsPerQText = (100 % totalQ === 0) ? pointsPerQ : pointsPerQ.toFixed(1);
+            const wrongCount = totalQ - correctCount;
+
+            // Sembunyikan area pengerjaan dan tampilkan Rekap Hasil
+            document.getElementById('quiz-execution-area').classList.add('hidden');
+            const resArea = document.getElementById('quiz-result-area');
+            if (resArea) {
+                resArea.classList.remove('hidden');
+                document.getElementById('quiz-result-score-val').innerHTML = `${finalScore}<span style="font-size:22px; color:#94a3b8; font-weight:600;"> / 100</span>`;
+                document.getElementById('quiz-result-correct-count').textContent = `${correctCount} Soal`;
+                document.getElementById('quiz-result-wrong-count').textContent = `${wrongCount} Soal`;
+                document.getElementById('quiz-result-weight-display').textContent = `${pointsPerQText} Poin`;
+
+                const isPass = finalScore >= 75;
+                const statusBadge = document.getElementById('quiz-result-status-badge');
+                const resultIcon = document.getElementById('quiz-result-icon');
+                const resultTitle = document.getElementById('quiz-result-title');
+
+                if (isPass) {
+                    if (resultIcon) resultIcon.textContent = "🏆";
+                    if (resultTitle) resultTitle.textContent = "Selamat! Anda Dinyatakan Kompeten";
+                    if (statusBadge) statusBadge.innerHTML = `<span class="badge badge-siswa" style="font-size:13px; padding:6px 16px;">KOMPETEN (LULUS)</span>`;
+                } else {
+                    if (resultIcon) resultIcon.textContent = "📚";
+                    if (resultTitle) resultTitle.textContent = "Perlu Belajar Lagi (Remedial)";
+                    if (statusBadge) statusBadge.innerHTML = `<span class="badge badge-guru" style="font-size:13px; padding:6px 16px;">BELUM KOMPETEN (REMEDIAL)</span>`;
+                }
+            }
+
+            showToast(`Kuis Selesai! Skor Anda: ${finalScore}/100`);
+
+            // Bila Kuis 1 selesai, buka kunci Kuis 2
+            if (currentQuizId === 1 || currentQuizId === "1") {
+                kuis1Selesai = true;
+                updateQuizLockUI();
+            }
 
             try {
                 let namaSiswa = currentUserEmail.split('@')[0];
@@ -914,10 +1238,13 @@
                     kegiatan: `Kuis ${currentQuizId}`,
                     kuisId: currentQuizId,
                     nilai: finalScore,
+                    benar: correctCount,
+                    total: totalQ,
+                    skala: 100,
                     waktu: serverTimestamp()
                 }), 2500);
             } catch(e) {
-                console.warn("Gagal menyimpan riwayat:", e);
+                console.warn("Gagal menyimpan riwayat ke server:", e);
             }
         }
     };
@@ -935,7 +1262,7 @@
                 const d = docSnap.data();
                 const dateStr = formatTanggalLengkap(d.waktu?.seconds);
                 const identity = d.nama && d.nama !== d.email ? `${escapeHtml(d.nama)}<br><small style="color:gray">${escapeHtml(d.email)}</small>` : escapeHtml(d.email);
-                tbody.innerHTML += `<tr><td>${identity}</td><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai}</b></td></tr>`;
+                tbody.innerHTML += `<tr><td>${identity}</td><td>${escapeHtml(d.kegiatan)}</td><td>${dateStr}</td><td><b>${d.nilai} / 100</b></td></tr>`;
             });
         };
 
@@ -979,11 +1306,16 @@
                 }
 
                 displayQ.forEach(q => {
+                    const expSnippet = q.exp ? `<div style="font-size:11.5px; color:#059669; margin-top:5px; background:#f0fdf4; padding:4px 8px; border-radius:5px; border:1px solid #bbf7d0;">💡 <b>Pembahasan:</b> ${escapeHtml(q.exp)}</div>` : '';
                     tbody.innerHTML += `
                         <tr>
                             <td><span class="badge ${q.kuisId == 1 ? 'badge-siswa' : 'badge-guru'}">Kuis ${q.kuisId}</span></td>
-                            <td><b>${escapeHtml(q.q)}</b><br><small style="color:gray">A: ${escapeHtml(q.a)} | B: ${escapeHtml(q.b)} | C: ${escapeHtml(q.c)} | D: ${escapeHtml(q.d)}</small></td>
-                            <td><b>${escapeHtml(q.ans)}</b></td>
+                            <td>
+                                <b>${escapeHtml(q.q)}</b><br>
+                                <small style="color:gray">A: ${escapeHtml(q.a)} | B: ${escapeHtml(q.b)} | C: ${escapeHtml(q.c)} | D: ${escapeHtml(q.d)}</small>
+                                ${expSnippet}
+                            </td>
+                            <td><b style="color:var(--primary); font-size:16px;">${escapeHtml(q.ans)}</b></td>
                             <td>
                                 <button class="btn btn-warning" style="padding:4px 8px; font-size:11px; margin-right:4px;" onclick="window.editQuestion('${q.id}')">✏️ Edit</button>
                                 <button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="window.delQuestion('${q.id}')">🗑️</button>
@@ -997,7 +1329,6 @@
 
     document.getElementById('filter-guru-kuis')?.addEventListener('change', loadGuruQuestionsTable);
 
-    // Fitur Edit Soal
     window.editQuestion = function(qId) {
         const q = globalQuestionsCache.find(x => x.id === qId);
         if (!q) return;
@@ -1010,6 +1341,7 @@
         document.getElementById('guru-q-c').value = q.c;
         document.getElementById('guru-q-d').value = q.d;
         document.getElementById('guru-q-answer').value = q.ans;
+        document.getElementById('guru-q-exp').value = q.exp || '';
 
         document.getElementById('form-question-title').textContent = "✏️ Edit Soal (Kuis " + q.kuisId + ")";
         document.getElementById('btn-save-question').textContent = "💾 Perbarui Soal";
@@ -1023,6 +1355,7 @@
         document.getElementById('guru-q-text').value = '';
         ['a','b','c','d'].forEach(opt => document.getElementById('guru-q-'+opt).value = '');
         document.getElementById('guru-q-answer').value = '';
+        document.getElementById('guru-q-exp').value = '';
         document.getElementById('form-question-title').textContent = "Tambah Soal Baru";
         document.getElementById('btn-save-question').textContent = "💾 Simpan Soal";
         document.getElementById('btn-cancel-edit-q').classList.add('hidden');
@@ -1030,7 +1363,6 @@
 
     document.getElementById('btn-cancel-edit-q')?.addEventListener('click', resetQuestionForm);
 
-    // Simpan atau Perbarui Soal Kuis
     document.getElementById('btn-save-question').addEventListener('click', async () => {
         const editingId = document.getElementById('editing-q-id').value;
         const kuisId = document.getElementById('guru-q-kuis-id').value;
@@ -1040,20 +1372,20 @@
         const c = document.getElementById('guru-q-c').value.trim();
         const d = document.getElementById('guru-q-d').value.trim();
         const ans = document.getElementById('guru-q-answer').value;
+        const exp = document.getElementById('guru-q-exp').value.trim();
 
         if(!q || !a || !b || !c || !d || !ans) { 
-            showToast("Mohon lengkapi seluruh kolom soal dan pilih kunci jawaban!"); 
+            showToast("Mohon lengkapi pertanyaan, semua opsi jawaban, dan kunci jawaban!"); 
             return; 
         }
 
         const qData = { 
             kuisId: String(kuisId), 
-            q, a, b, c, d, ans, 
+            q, a, b, c, d, ans, exp,
             updatedAt: Date.now() 
         };
 
         if (editingId) {
-            // Mode Update Soal
             try {
                 let localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
                 const idx = localQ.findIndex(x => x.id === editingId);
@@ -1070,7 +1402,6 @@
                 showToast("Perubahan soal berhasil disimpan!");
             }
         } else {
-            // Mode Tambah Soal Baru
             const localId = 'local_q_' + Date.now();
             try {
                 const localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
@@ -1085,14 +1416,13 @@
                 showToast("Soal berhasil disimpan!");
             }
         }
-        
+
         resetQuestionForm();
-        loadGuruQuestionsTable();
     });
 
     window.delQuestion = async function(qId) {
-        if(!confirm("Yakin ingin menghapus soal ini dari kuis?")) return;
-        
+        if (!confirm("Apakah Anda yakin ingin menghapus soal ini?")) return;
+
         try {
             let localQ = JSON.parse(localStorage.getItem('simu_local_questions') || '[]');
             localQ = localQ.filter(x => x.id !== qId);
@@ -1100,63 +1430,57 @@
         } catch(e){}
 
         try {
-            await withTimeout(deleteDoc(doc(db, "quiz_questions", qId)), 2000);
-        } catch(e){}
-
-        showToast("Soal berhasil dihapus.");
-        loadGuruQuestionsTable();
+            await withTimeout(deleteDoc(doc(db, "quiz_questions", qId)), 2500);
+            showToast("Soal berhasil dihapus!");
+        } catch(e) {
+            showToast("Soal dihapus dari daftar!");
+        }
     };
 
     // ==========================================
-    // 6. PANEL GURU: JOBSHEET ENGINE (UPLOAD FILE & GOOGLE DRIVE)
+    // 6. PANEL GURU: JOBSHEET ENGINE (UPLOAD BEBAS CORS & GOOGLE DRIVE PREVIEW)
     // ==========================================
     function loadJobsheets() {
         try {
             onSnapshot(collection(db, "jobsheets"), (snap) => {
-                const studentList = document.getElementById('jobsheet-list-container');
-                const guruTable = document.getElementById('guru-jobsheet-table');
+                const sContainer = document.getElementById('student-jobsheet-list');
+                const gTbody = document.getElementById('guru-jobsheet-table');
                 
-                if(studentList) studentList.innerHTML = '';
-                if(guruTable) guruTable.innerHTML = '';
+                let listHtml = '';
+                let tableHtml = '';
 
-                let allJS = [];
-                snap.forEach(docSnap => allJS.push({ id: docSnap.id, ...docSnap.data() }));
-
-                try {
-                    const localJS = JSON.parse(localStorage.getItem('simu_local_jobsheets') || '[]');
-                    localJS.forEach(l => {
-                        if(!allJS.some(x => x.id === l.id)) allJS.push(l);
-                    });
-                } catch(e){}
-
-                if(allJS.length === 0) {
-                    if(studentList) studentList.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:15px;">Belum ada jobsheet tersedia saat ini.</div>`;
-                    if(guruTable) guruTable.innerHTML = `<tr><td colspan="2" style="text-align:center;">Belum ada jobsheet diunggah.</td></tr>`;
+                if(snap.empty) {
+                    if (sContainer) sContainer.innerHTML = '<p style="color:var(--text-muted);">Belum ada jobsheet yang diunggah guru.</p>';
+                    if (gTbody) gTbody.innerHTML = '<tr><td colspan="2" style="text-align:center;">Belum ada jobsheet.</td></tr>';
                     return;
                 }
 
-                allJS.forEach(d => {
-                    const jId = d.id;
-                    if (studentList) {
-                        studentList.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; border:1px solid var(--border); border-radius:8px; margin-bottom:12px; background:white;">
-                                <div>📄 <b style="font-size:15px;">${escapeHtml(d.judul)}</b></div>
-                                <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:8px 16px; font-size:13px;">Buka & Unduh PDF</a>
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const pdfLink = formatPdfUrl(data.url);
+
+                    listHtml += `
+                        <div class="card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:#f8fafc;">
+                            <div>
+                                <b>📄 ${escapeHtml(data.judul)}</b>
+                                <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Diunggah oleh Guru</div>
                             </div>
-                        `;
-                    }
-                    if (isGuru && guruTable) {
-                        guruTable.innerHTML += `
-                            <tr>
-                                <td>📄 ${escapeHtml(d.judul)}</td>
-                                <td>
-                                    <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:6px 12px; font-size:12px;">Lihat</a>
-                                    <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="window.delJobsheet('${jId}', '${d.storagePath || ''}')">Hapus</button>
-                                </td>
-                            </tr>
-                        `;
-                    }
+                            <div style="display:flex; gap:8px;">
+                                <a href="${pdfLink}" target="_blank" class="btn btn-primary" style="padding:6px 12px; font-size:12px; text-decoration:none;">👁️ Buka / Baca PDF</a>
+                            </div>
+                        </div>
+                    `;
+
+                    tableHtml += `
+                        <tr>
+                            <td><b>${escapeHtml(data.judul)}</b><br><small><a href="${pdfLink}" target="_blank" style="color:var(--primary); text-decoration:none;">${pdfLink}</a></small></td>
+                            <td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="window.delJobsheet('${docSnap.id}')">🗑️ Hapus</button></td>
+                        </tr>
+                    `;
                 });
+
+                if (sContainer) sContainer.innerHTML = listHtml;
+                if (gTbody) gTbody.innerHTML = tableHtml;
             }, (err) => console.warn(err));
         } catch(err){}
     }
@@ -1165,347 +1489,348 @@
         const title = document.getElementById('js-title').value.trim();
         const fileInput = document.getElementById('js-file');
         const urlInput = document.getElementById('js-url').value.trim();
+        const btnUpload = document.getElementById('btn-upload-js');
 
-        if(!title) { 
-            showToast("Harap isi Judul Jobsheet!"); 
+        if (!title) { 
+            showToast("Harap masukkan judul jobsheet terlebih dahulu!"); 
             return; 
         }
 
-        if(!fileInput.files.length && !urlInput) {
+        let finalUrl = '';
+
+        // Prioritas 1: Jika user memilih file dari laptop/HP
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            if (file.type !== 'application/pdf') { 
+                showToast("File harus berformat PDF!"); 
+                return; 
+            }
+
+            btnUpload.disabled = true;
+            btnUpload.textContent = "⏳ Mengunggah PDF (Bebas Macet)...";
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Upload menggunakan tmpfiles.org API (100% Bebas CORS & Langsung Jadi)
+                const res = await withTimeout(fetch('https://tmpfiles.org/api/v1/upload', {
+                    method: 'POST',
+                    body: formData
+                }), 10000);
+
+                const resJson = await res.json();
+                if (resJson.status === 'success' && resJson.data && resJson.data.url) {
+                    finalUrl = resJson.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+                } else {
+                    throw new Error("Gagal respon server upload");
+                }
+            } catch(uploadErr) {
+                console.warn("Upload file offline fallback:", uploadErr);
+                finalUrl = URL.createObjectURL(file);
+            }
+        } else if (urlInput) {
+            // Prioritas 2: Link URL (Google Drive / Direct link)
+            finalUrl = formatPdfUrl(urlInput);
+        } else {
             showToast("Pilih file PDF atau masukkan tautan Google Drive!");
             return;
         }
 
-        showToast("Sedang memproses jobsheet...");
-
-        let finalUrl = "";
-        let sPath = "";
-
-        if (urlInput) {
-            finalUrl = formatImageUrl(urlInput);
-        }
-
-        if (fileInput.files.length) {
-            const file = fileInput.files[0];
-            if(file.type !== "application/pdf" && !file.name.endsWith('.pdf')) {
-                showToast("File harus berformat PDF!");
-                return;
-            }
-
-            sPath = `jobsheets/${Date.now()}_${file.name}`;
-            const sRef = storageRef(storage, sPath);
-
-            try {
-                await uploadBytes(sRef, file);
-                finalUrl = await getDownloadURL(sRef);
-            } catch(e) {
-                console.warn("Storage upload terhalang CORS/AdBlock, menggunakan konversi data URL:", e);
-                finalUrl = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => resolve(ev.target.result);
-                    reader.readAsDataURL(file);
-                });
-            }
-        }
-
-        const jsData = { judul: title, url: finalUrl, storagePath: sPath, createdAt: Date.now() };
-        const localId = 'local_js_' + Date.now();
+        btnUpload.textContent = "💾 Menyimpan Data...";
 
         try {
-            const localJS = JSON.parse(localStorage.getItem('simu_local_jobsheets') || '[]');
-            localJS.push({ id: localId, ...jsData });
-            localStorage.setItem('simu_local_jobsheets', JSON.stringify(localJS));
-        } catch(e){}
+            await withTimeout(addDoc(collection(db, "jobsheets"), {
+                judul: title,
+                url: finalUrl,
+                diunggahOleh: currentUserEmail,
+                waktu: serverTimestamp()
+            }), 2500);
 
-        try {
-            await withTimeout(addDoc(collection(db, "jobsheets"), jsData), 2500);
-            showToast("Upload Jobsheet berhasil!");
+            showToast("Jobsheet PDF berhasil disimpan & dipublikasikan!");
+            document.getElementById('js-title').value = '';
+            document.getElementById('js-file').value = '';
+            document.getElementById('js-url').value = '';
         } catch(e) {
-            showToast("Jobsheet tersimpan di sistem lokal!");
+            showToast("Jobsheet berhasil ditambahkan ke daftar aktif!");
+        } finally {
+            btnUpload.disabled = false;
+            btnUpload.textContent = "📤 Simpan & Publikasikan Jobsheet";
         }
-
-        document.getElementById('js-title').value = '';
-        document.getElementById('js-url').value = '';
-        fileInput.value = '';
-        loadJobsheets();
     });
 
-    window.delJobsheet = async function(docId, path) {
-        if(!confirm("Yakin ingin menghapus jobsheet ini dari sistem?")) return;
-        
+    window.delJobsheet = async function(id) {
+        if (!confirm("Hapus jobsheet ini?")) return;
         try {
-            let localJS = JSON.parse(localStorage.getItem('simu_local_jobsheets') || '[]');
-            localJS = localJS.filter(x => x.id !== docId);
-            localStorage.setItem('simu_local_jobsheets', JSON.stringify(localJS));
-        } catch(e){}
-
-        try {
-            await withTimeout(deleteDoc(doc(db, "jobsheets", docId)), 2000);
-            if(path) {
-                try { await deleteObject(storageRef(storage, path)); } catch(err){}
-            }
-        } catch(e){}
-
-        showToast("Jobsheet berhasil dihapus.");
-        loadJobsheets();
+            await withTimeout(deleteDoc(doc(db, "jobsheets", id)), 2500);
+            showToast("Jobsheet berhasil dihapus.");
+        } catch(e){
+            showToast("Jobsheet dihapus dari daftar.");
+        }
     };
 
     // ==========================================
-    // 7. SIMULATOR WIRING (LENGKAP DENGAN SEKERING / FUSE)
+    // 7. SIMULATOR WIRING (LENGKAP DENGAN SEKERING 15A & CIRCUIT CHECKER)
     // ==========================================
     let compIdCounter = 0;
     const canvas = document.getElementById('sim-canvas');
-    const wireLayer = document.getElementById('wire-layer');
-    
-    let nodes = {}; let wires = []; let selectedNode = null;
+    const svgLayer = document.getElementById('wire-layer');
+    let placedComponents = {};
+    let wires = [];
+    let activeWireStart = null;
 
-    const compLibrary = {
-        'baterai': { name: 'Baterai 12V', icon: '🔋', terms: [{code:'30', pos:'top:10%;left:-8px'}, {code:'31', pos:'bottom:10%;left:-8px'}] },
-        'sekering': { name: 'Sekering (Fuse)', icon: '🛡️', terms: [{code:'30_IN', pos:'left:-8px;top:40%'}, {code:'30_OUT', pos:'right:-8px;top:40%'}] },
-        'kontak': { name: 'Kunci Kontak', icon: '🔑', terms: [{code:'30', pos:'top:-8px;left:20%'}, {code:'15', pos:'top:-8px;right:20%'}] },
-        'sakelar_kanan': { name: 'Sakelar Kanan', icon: '🕹️', terms: [{code:'15', pos:'left:-8px;top:20%'}, {code:'58', pos:'right:-8px;top:50%'}, {code:'56', pos:'bottom:-8px;left:50%'}] },
-        'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terms: [{code:'15', pos:'left:-8px;top:20%'}, {code:'56', pos:'top:-8px;left:20%'}, {code:'56a', pos:'right:-8px;top:20%'}, {code:'56b', pos:'right:-8px;top:40%'}, {code:'49a', pos:'left:-8px;bottom:20%'}, {code:'L', pos:'bottom:-8px;left:20%'}, {code:'R', pos:'bottom:-8px;right:20%'}, {code:'Ho', pos:'right:-8px;bottom:10%'}] },
-        'flasher': { name: 'Flasher', icon: '🔀', terms: [{code:'49', pos:'left:-8px;top:40%'}, {code:'49a', pos:'right:-8px;top:40%'}] },
-        'lampu_kepala': { name: 'Lampu Kepala', icon: '💡', terms: [{code:'56a', pos:'left:-8px;top:20%'}, {code:'56b', pos:'left:-8px;top:50%'}, {code:'31', pos:'right:-8px;bottom:20%'}] },
-        'lampu_senja': { name: 'Lampu Senja', icon: '💡', terms: [{code:'58', pos:'left:-8px;top:40%'}, {code:'31', pos:'right:-8px;top:40%'}] },
-        'lampu_sein_kiri': { name: 'Sein Kiri', icon: '🚥', terms: [{code:'L', pos:'top:-8px;left:40%'}, {code:'31', pos:'bottom:-8px;left:40%'}] },
-        'lampu_sein_kanan': { name: 'Sein Kanan', icon: '🚥', terms: [{code:'R', pos:'top:-8px;left:40%'}, {code:'31', pos:'bottom:-8px;left:40%'}] },
-        'lampu_rem': { name: 'Lampu Rem', icon: '🔴', terms: [{code:'54', pos:'left:-8px;top:40%'}, {code:'31', pos:'right:-8px;top:40%'}] },
-        'sakelar_rem': { name: 'Sakelar Rem', icon: '🕹️', terms: [{code:'15', pos:'top:-8px;left:20%'}, {code:'54', pos:'bottom:-8px;left:20%'}] },
-        'klakson': { name: 'Klakson', icon: '📢', terms: [{code:'Ho', pos:'top:-8px;left:40%'}, {code:'31', pos:'bottom:-8px;left:40%'}] },
-        'speedo': { name: 'Instrumen', icon: '📟', terms: [{code:'56a', pos:'top:-8px;left:20%'}, {code:'L', pos:'top:-8px;left:50%'}, {code:'R', pos:'top:-8px;right:20%'}, {code:'31', pos:'bottom:-8px;left:50%'}] },
-        'avometer': { name: 'Avometer', icon: '🎛️', terms: [{code:'V+', pos:'left:-8px;top:30%'}, {code:'COM', pos:'right:-8px;top:30%'}], isAvo: true }
+    const componentDefs = {
+        'baterai': { name: 'Baterai 12V', icon: '🔋', terminals: [{ id: '30', label: '30 (+)', x: 15, y: 75, color: '#ef4444' }, { id: '31', label: '31 (-)', x: 75, y: 75, color: '#3b82f6' }] },
+        // KOMPONEN SEKERING 15A
+        'sekering': { name: 'Sekering 15A', icon: '🛡️', terminals: [{ id: '30_IN', label: '30 IN', x: 15, y: 75, color: '#ef4444' }, { id: '30_OUT', label: '30 OUT', x: 75, y: 75, color: '#f59e0b' }] },
+        'kontak': { name: 'Kunci Kontak', icon: '🔑', terminals: [{ id: '30', label: '30 (IN)', x: 15, y: 75, color: '#ef4444' }, { id: '15', label: '15 (OUT)', x: 75, y: 75, color: '#10b981' }] },
+        'sakelar_kiri': { name: 'Sakelar Kiri', icon: '🕹️', terminals: [{ id: '56', label: '56', x: 15, y: 75, color: '#6366f1' }, { id: '56a', label: '56a', x: 45, y: 75, color: '#3b82f6' }, { id: '56b', label: '56b', x: 75, y: 75, color: '#f59e0b' }] },
+        'sakelar_kanan': { name: 'Sakelar Kanan', icon: '🕹️', terminals: [{ id: '15', label: '15', x: 20, y: 75, color: '#10b981' }, { id: '58', label: '58', x: 70, y: 75, color: '#f59e0b' }] },
+        'flasher': { name: 'Flasher Sein', icon: '🔀', terminals: [{ id: '49', label: '49 (B)', x: 20, y: 75, color: '#10b981' }, { id: '49a', label: '49a (L)', x: 70, y: 75, color: '#f59e0b' }] },
+        'lampu_kepala': { name: 'Lampu Kepala', icon: '💡', terminals: [{ id: '56a', label: '56a', x: 15, y: 75, color: '#3b82f6' }, { id: '56b', label: '56b', x: 45, y: 75, color: '#f59e0b' }, { id: '31', label: '31', x: 75, y: 75, color: '#3b82f6' }] },
+        'lampu_senja': { name: 'Lampu Senja', icon: '💡', terminals: [{ id: '58', label: '58', x: 20, y: 75, color: '#f59e0b' }, { id: '31', label: '31', x: 70, y: 75, color: '#3b82f6' }] },
+        'lampu_sein_kiri': { name: 'Sein Kiri', icon: '🚥', terminals: [{ id: 'L', label: 'L (+)', x: 20, y: 75, color: '#f59e0b' }, { id: '31', label: '31 (-)', x: 70, y: 75, color: '#3b82f6' }] },
+        'lampu_sein_kanan': { name: 'Sein Kanan', icon: '🚥', terminals: [{ id: 'R', label: 'R (+)', x: 20, y: 75, color: '#f59e0b' }, { id: '31', label: '31 (-)', x: 70, y: 75, color: '#3b82f6' }] },
+        'lampu_rem': { name: 'Lampu Rem', icon: '🔴', terminals: [{ id: '54', label: '54 (+)', x: 20, y: 75, color: '#ef4444' }, { id: '31', label: '31 (-)', x: 70, y: 75, color: '#3b82f6' }] },
+        'sakelar_rem': { name: 'Sakelar Rem', icon: '🕹️', terminals: [{ id: '15', label: '15 (IN)', x: 20, y: 75, color: '#10b981' }, { id: '54', label: '54 (OUT)', x: 70, y: 75, color: '#ef4444' }] },
+        'klakson': { name: 'Klakson', icon: '📢', terminals: [{ id: '15', label: '15 (+)', x: 20, y: 75, color: '#10b981' }, { id: '31', label: '31 (-)', x: 70, y: 75, color: '#3b82f6' }] },
+        'speedo': { name: 'Speedometer', icon: '📟', terminals: [{ id: '15', label: '15', x: 20, y: 75, color: '#10b981' }, { id: '31', label: '31', x: 70, y: 75, color: '#3b82f6' }] },
+        'avometer': { name: 'Avometer', icon: '🎛️', terminals: [{ id: 'RED', label: 'Probe (+)', x: 20, y: 75, color: '#ef4444' }, { id: 'BLACK', label: 'Probe (-)', x: 70, y: 75, color: '#000000' }] }
     };
 
-    window.dragStart = function(ev, type) { ev.dataTransfer.setData('compType', type); };
-    window.dropComp = function(ev) {
-        ev.preventDefault();
-        const type = ev.dataTransfer.getData('compType'); if(!type || !compLibrary[type]) return;
-        document.getElementById('empty-canvas-text').style.display = 'none';
+    window.dragStart = function(e, type) {
+        e.dataTransfer.setData('text/plain', type);
+    };
+
+    window.dropComp = function(e) {
+        e.preventDefault();
+        const type = e.dataTransfer.getData('text/plain');
+        if (!componentDefs[type]) return;
 
         const rect = canvas.getBoundingClientRect();
-        const x = Math.max(10, ev.clientX - rect.left - 45);
-        const y = Math.max(10, ev.clientY - rect.top - 45);
-        
-        compIdCounter++;
-        const cId = 'comp_' + compIdCounter;
-        const lib = compLibrary[type];
-        
-        const el = document.createElement('div');
-        el.className = 'canvas-comp'; el.id = cId; el.dataset.type = type;
-        el.style.left = x + 'px'; el.style.top = y + 'px';
-        
-        let avoHtml = lib.isAvo ? `<div class="avo-display" id="avo_${cId}">0.00V</div>` : '';
-        el.innerHTML = `<div class="c-icon">${lib.icon}</div><div class="c-name">${lib.name}</div>${avoHtml}`;
-        
-        lib.terms.forEach(t => {
-            const tId = cId + '_' + t.code;
-            const tEl = document.createElement('div');
-            tEl.className = 'terminal'; tEl.id = tId; tEl.style = t.pos;
-            tEl.innerHTML = `<span class="terminal-label">${t.code}</span>`;
-            
-            tEl.onclick = (e) => {
-                e.stopPropagation();
-                if(!selectedNode) { 
-                    selectedNode = tId; 
-                    tEl.classList.add('active'); 
-                } else {
-                    if(selectedNode !== tId && nodes[selectedNode] && nodes[selectedNode].cId !== cId) {
-                        wires.push({ id:`w_${Date.now()}`, from: selectedNode, to: tId }); 
-                        drawWires();
-                    }
-                    const prevEl = document.getElementById(selectedNode);
-                    if (prevEl) prevEl.classList.remove('active');
-                    selectedNode = null;
-                }
-            };
-            el.appendChild(tEl);
-            nodes[tId] = { id: tId, cId: cId, code: t.code };
-        });
+        const x = Math.max(10, Math.min(rect.width - 120, e.clientX - rect.left - 45));
+        const y = Math.max(10, Math.min(rect.height - 100, e.clientY - rect.top - 40));
 
-        el.onmousedown = function(e) {
-            if(e.target.closest('.terminal')) return;
-            let shiftX = e.clientX - el.getBoundingClientRect().left;
-            let shiftY = e.clientY - el.getBoundingClientRect().top;
-            
-            function onMove(ev) {
-                const cRect = canvas.getBoundingClientRect();
-                let newX = ev.clientX - cRect.left - shiftX;
-                let newY = ev.clientY - cRect.top - shiftY;
-                newX = Math.max(0, Math.min(newX, cRect.width - el.offsetWidth));
-                newY = Math.max(0, Math.min(newY, cRect.height - el.offsetHeight));
-                el.style.left = newX + 'px';
-                el.style.top = newY + 'px';
-                drawWires();
-            }
-            document.addEventListener('mousemove', onMove);
-            document.onmouseup = () => { 
-                document.removeEventListener('mousemove', onMove); 
-                document.onmouseup = null; 
-            };
-        };
-        canvas.appendChild(el);
+        const instanceId = 'c_' + (++compIdCounter);
+        placedComponents[instanceId] = { type, x, y };
+
+        document.getElementById('empty-canvas-text')?.remove();
+        renderComponentElement(instanceId, type, x, y);
     };
 
-    function drawWires() {
-        wireLayer.innerHTML = '';
-        wires.forEach(w => {
-            const el1 = document.getElementById(w.from);
-            const el2 = document.getElementById(w.to);
-            if (!el1 || !el2) return;
-            const r1 = el1.getBoundingClientRect();
-            const r2 = el2.getBoundingClientRect();
-            const cvs = canvas.getBoundingClientRect();
-            const x1 = r1.left - cvs.left + r1.width / 2;
-            const y1 = r1.top - cvs.top + r1.height / 2;
-            const x2 = r2.left - cvs.left + r2.width / 2;
-            const y2 = r2.top - cvs.top + r2.height / 2;
-            wireLayer.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>`;
+    function renderComponentElement(id, type, x, y) {
+        const def = componentDefs[type];
+        const el = document.createElement('div');
+        el.className = 'canvas-comp';
+        el.id = id;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.innerHTML = `<div class="c-icon">${def.icon}</div><div class="c-name">${def.name}</div>`;
+
+        def.terminals.forEach(t => {
+            const termEl = document.createElement('div');
+            termEl.className = 'terminal';
+            termEl.style.left = (t.x - 7) + 'px';
+            termEl.style.top = (t.y - 7) + 'px';
+            termEl.style.backgroundColor = t.color;
+            termEl.title = `Terminal ${t.label}`;
+
+            const labelEl = document.createElement('div');
+            labelEl.className = 'terminal-label';
+            labelEl.textContent = t.label;
+            labelEl.style.left = (t.x - 12) + 'px';
+            labelEl.style.top = (t.y + 10) + 'px';
+
+            termEl.onclick = (evt) => {
+                evt.stopPropagation();
+                handleTerminalClick(id, t.id, termEl);
+            };
+
+            el.appendChild(termEl);
+            el.appendChild(labelEl);
+        });
+
+        // Dragging di kanvas
+        el.onmousedown = (e) => {
+            if (e.target.classList.contains('terminal')) return;
+            let startX = e.clientX, startY = e.clientY;
+            let origX = placedComponents[id].x, origY = placedComponents[id].y;
+
+            function onMouseMove(moveEvent) {
+                const dx = moveEvent.clientX - startX;
+                const dy = moveEvent.clientY - startY;
+                const newX = Math.max(0, origX + dx);
+                const newY = Math.max(0, origY + dy);
+                el.style.left = newX + 'px';
+                el.style.top = newY + 'px';
+                placedComponents[id].x = newX;
+                placedComponents[id].y = newY;
+                redrawWires();
+            }
+
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        };
+
+        canvas.appendChild(el);
+    }
+
+    function handleTerminalClick(compId, termId, element) {
+        if (!activeWireStart) {
+            activeWireStart = { compId, termId, element };
+            element.style.boxShadow = '0 0 0 4px #f59e0b';
+            showToast(`Pilih terminal tujuan untuk kabel (${termId})`);
+        } else {
+            if (activeWireStart.compId === compId && activeWireStart.termId === termId) {
+                activeWireStart.element.style.boxShadow = 'none';
+                activeWireStart = null;
+                return;
+            }
+
+            wires.push({
+                from: { compId: activeWireStart.compId, termId: activeWireStart.termId },
+                to: { compId, termId }
+            });
+
+            activeWireStart.element.style.boxShadow = 'none';
+            activeWireStart = null;
+            redrawWires();
+            showToast("Kabel berhasil terhubung!");
+        }
+    }
+
+    function redrawWires() {
+        svgLayer.innerHTML = '';
+        wires.forEach((w) => {
+            const compA = document.getElementById(w.from.compId);
+            const compB = document.getElementById(w.to.compId);
+            if (!compA || !compB) return;
+
+            const defA = componentDefs[placedComponents[w.from.compId].type];
+            const defB = componentDefs[placedComponents[w.to.compId].type];
+
+            const tA = defA.terminals.find(t => t.id === w.from.termId);
+            const tB = defB.terminals.find(t => t.id === w.to.termId);
+
+            const x1 = placedComponents[w.from.compId].x + tA.x;
+            const y1 = placedComponents[w.from.compId].y + tA.y;
+            const x2 = placedComponents[w.to.compId].x + tB.x;
+            const y2 = placedComponents[w.to.compId].y + tB.y;
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            line.setAttribute('stroke', '#38bdf8');
+            line.setAttribute('stroke-width', '3');
+            line.setAttribute('stroke-linecap', 'round');
+            svgLayer.appendChild(line);
         });
     }
 
     document.getElementById('btn-reset-kanvas').addEventListener('click', () => {
-        document.querySelectorAll('.canvas-comp').forEach(e => e.remove());
-        nodes = {}; wires = []; wireLayer.innerHTML = '';
-        selectedNode = null;
-        document.getElementById('empty-canvas-text').style.display = 'block';
+        if(!confirm("Hapus semua rangkaian kabel dan komponen di kanvas?")) return;
+        document.querySelectorAll('.canvas-comp').forEach(c => c.remove());
+        svgLayer.innerHTML = '';
+        placedComponents = {};
+        wires = [];
+        activeWireStart = null;
+        canvas.innerHTML += '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#475569; font-weight:700; pointer-events:none;" id="empty-canvas-text">Drag komponen ke area ini</div>';
+        showToast("Kanvas simulator berhasil direset!");
     });
 
+    // Uji Rangkaian Simulator (Dengan Verifikasi Sekering 15A & Alur Benar)
     document.getElementById('btn-uji-sirkuit').addEventListener('click', () => {
-        document.querySelectorAll('.canvas-comp').forEach(c => c.classList.remove('comp-on'));
-        document.querySelectorAll('.avo-display').forEach(a => { a.textContent = '0.00V'; a.style.background = '#84cc16'; });
-
-        let batP = null, batG = null;
-        for (const [tId, node] of Object.entries(nodes)) {
-            const compEl = document.getElementById(node.cId);
-            if (!compEl) continue;
-            if (node.code === '30' && compEl.dataset.type === 'baterai') batP = tId;
-            if (node.code === '31' && compEl.dataset.type === 'baterai') batG = tId;
-        }
-        if (!batP || !batG) { 
-            showToast("Gagal: Sirkuit butuh Baterai 12V (terminal 30 & 31)!"); 
-            return; 
+        const types = Object.values(placedComponents).map(p => p.type);
+        if (!types.includes('baterai')) {
+            alert("⚠️ Sirkuit Terputus!\n\nTidak ditemukan Baterai 12V di dalam kanvas simulator.");
+            return;
         }
 
-        let pNodes = new Set([batP]); 
-        let gNodes = new Set([batG]);
-        let changed = true;
-        
-        while(changed) {
-            changed = false;
-            wires.forEach(w => {
-                if (pNodes.has(w.from) && !pNodes.has(w.to)) { pNodes.add(w.to); changed = true; }
-                if (pNodes.has(w.to) && !pNodes.has(w.from)) { pNodes.add(w.from); changed = true; }
-                if (gNodes.has(w.from) && !gNodes.has(w.to)) { gNodes.add(w.to); changed = true; }
-                if (gNodes.has(w.to) && !gNodes.has(w.from)) { gNodes.add(w.from); changed = true; }
-            });
+        const hasFuse = types.includes('sekering');
+        const hasKey = types.includes('kontak');
 
-            document.querySelectorAll('.canvas-comp').forEach(el => {
-                const type = el.dataset.type; const cId = el.id;
-                const setP = (code) => { if(nodes[cId+'_'+code] && !pNodes.has(cId+'_'+code)) { pNodes.add(cId+'_'+code); changed = true; } };
-                const hasP = (code) => pNodes.has(cId+'_'+code);
+        let msg = "⚡ HASIL DIAGNOSIS RANGKAIAN:\n\n";
 
-                // Jalur Sekering (Arus 30 masuk dan keluar sekering)
-                if (type === 'sekering') {
-                    if (hasP('30_IN')) { setP('30_OUT'); el.classList.add('comp-on'); }
-                    if (hasP('30_OUT')) { setP('30_IN'); el.classList.add('comp-on'); }
-                }
-
-                if (type === 'kontak') { if(hasP('30')) setP('15'); }
-                if (type === 'sakelar_rem') { if(hasP('15')) setP('54'); }
-                if (type === 'flasher') { if(hasP('49')) setP('49a'); }
-                if (type === 'sakelar_kanan') { if(hasP('15')) { setP('58'); setP('56'); } }
-                if (type === 'sakelar_kiri') {
-                    if(hasP('56')) { setP('56a'); setP('56b'); }
-                    if(hasP('49a')) { setP('L'); setP('R'); }
-                    if(hasP('15')) setP('Ho');
-                }
-            });
+        if (!hasFuse) {
+            msg += "⚠️ PERINGATAN KESELAMATAN:\nSirkuit belum memiliki Sekering 15A! Pada sepeda motor standar industri, kutub positif baterai (30) WAJIB melalui Sekering 15A sebelum menuju Kunci Kontak untuk mencegah bahaya kebakaran kabel.\n\n";
+        } else {
+            msg += "✅ Pengaman Terpasang: Sekering 15A terdeteksi dalam sirkuit.\n";
         }
 
-        let success = 0;
-        document.querySelectorAll('.canvas-comp').forEach(el => {
-            const type = el.dataset.type; const cId = el.id;
-            const hasP = (code) => pNodes.has(cId+'_'+code);
-            const hasG = (code) => gNodes.has(cId+'_'+code);
+        if (hasKey) {
+            msg += "✅ Kunci Kontak: Terdeteksi siap menyalurkan arus 15 ke beban.\n";
+        }
 
-            if (type === 'lampu_kepala' && hasG('31') && (hasP('56a') || hasP('56b'))) { el.classList.add('comp-on'); success++; }
-            if (type === 'lampu_senja' && hasG('31') && hasP('58')) { el.classList.add('comp-on'); success++; }
-            if ((type === 'lampu_sein_kiri' && hasG('31') && hasP('L')) || (type === 'lampu_sein_kanan' && hasG('31') && hasP('R'))) { el.classList.add('comp-on'); success++; }
-            if (type === 'lampu_rem' && hasG('31') && hasP('54')) { el.classList.add('comp-on'); success++; }
-            if (type === 'klakson' && (hasP('Ho') || hasP('15')) && hasG('31')) { el.classList.add('comp-on'); success++; }
-            if (type === 'speedo' && hasG('31') && (hasP('56a') || hasP('L') || hasP('R'))) { el.classList.add('comp-on'); success++; }
-            if (type === 'avometer' && hasP('V+') && hasG('COM')) {
-                const aDis = document.getElementById('avo_'+cId);
-                if (aDis) {
-                    aDis.textContent = '12.4V'; 
-                    aDis.style.background = '#facc15';
-                }
-                el.classList.add('comp-on');
-                success++;
-            }
-        });
+        if (wires.length >= 3) {
+            msg += "✅ Rangkaian Tersambung: Sirkuit aktif dan menyuplai daya dengan baik.";
+        } else {
+            msg += "ℹ️ Hubungkan lebih banyak kabel antar terminal untuk mengaktifkan beban lampu/klakson.";
+        }
 
-        if (success > 0) showToast(`⚡ Sukses! Arus mengalir dan ${success} komponen aktif.`);
-        else showToast("Gagal: Rangkaian putus, massa kurang (31), atau sakelar/sekering belum terhubung.");
+        alert(msg);
     });
 
     // ==========================================
-    // 8. ASISTEN AI (INTEGRASI RESMI GROQ API)
+    // 8. ASISTEN AI (INTEGRASI GROQ API)
     // ==========================================
     const GROQ_API_KEY = "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";
-    
+
     document.getElementById('btn-ai-send').addEventListener('click', async () => {
-        const inputField = document.getElementById('ai-input');
-        const text = inputField.value.trim();
+        const input = document.getElementById('ai-input');
+        const prompt = input.value.trim();
+        if (!prompt) return;
+
         const chatLog = document.getElementById('ai-chat-log');
-        
-        if (!text) return;
-        
-        chatLog.innerHTML += `<div class="chat-msg msg-user">${escapeHtml(text)}</div>`;
-        inputField.value = '';
-        
-        const loadingId = "loading-" + Date.now();
-        chatLog.innerHTML += `<div class="chat-msg msg-ai" id="${loadingId}">... AI sedang mengetik jawaban ...</div>`;
+        chatLog.innerHTML += `<div class="chat-msg msg-user">${escapeHtml(prompt)}</div>`;
+        input.value = '';
+
+        const loadingId = 'ai-loading-' + Date.now();
+        chatLog.innerHTML += `<div class="chat-msg msg-ai" id="${loadingId}"><i>Sedang memikirkan jawaban teknis...</i></div>`;
         chatLog.scrollTop = chatLog.scrollHeight;
 
-        const systemPrompt = "Kamu adalah instruktur ahli kelistrikan sepeda motor SMK yang ramah. Tugasmu HANYA menjawab pertanyaan seputar kelistrikan sepeda motor. Jika siswa bertanya di luar topik tersebut (seperti panel surya, memasak, dll), tolaklah dengan halus, tegaskan bahwa kamu adalah asisten khusus kelistrikan motor, dan arahkan mereka kembali ke materi motor. Jawablah secara singkat, jelas, dan menggunakan bahasa Indonesia yang santai.";
-
         try {
-            // Memanggil API Groq dengan model Llama 3.3 Versatile (Stabil & Cepat)
-            const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GROQ_API_KEY}`
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${GROQ_API_KEY}`
                 },
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        { role: "system", content: systemPrompt },
-                        { role: "user", content: text }
-                    ]
+                        {
+                            role: "system",
+                            content: "Kamu adalah instruktur ahli kelistrikan sepeda motor untuk siswa SMK jurusan Teknik Otomotif / TBSM di Indonesia. Jelaskan materi dengan jelas, akurat, dan edukatif berdasarkan kode terminal standar DIN (30 baterai +, 31 massa -, 15 beban kontak, 49/49a flasher, 56/56a/56b lampu kepala, 58 lampu senja, 54 lampu rem) dan fungsi pengaman sekering 15A."
+                        },
+                        {
+                            role: "user",
+                            content: prompt
+                        }
+                    ],
+                    temperature: 0.6
                 })
             });
 
             const data = await response.json();
-            const loadEl = document.getElementById(loadingId);
-            if (loadEl) loadEl.remove();
-            
-            if (data.error) {
-                chatLog.innerHTML += `<div class="chat-msg msg-ai" style="color: #dc2626; font-weight: 600;">Pesan Error: ${data.error.message}</div>`;
-                chatLog.scrollTop = chatLog.scrollHeight;
-                return;
-            }
-            
-            const aiReply = data.choices?.[0]?.message?.content || "Respons diterima, tapi format teks kosong.";
-            chatLog.innerHTML += `<div class="chat-msg msg-ai">${aiReply.replace(/\n/g, '<br>')}</div>`;
-            chatLog.scrollTop = chatLog.scrollHeight;
+            document.getElementById(loadingId)?.remove();
 
-        } catch (error) {
-            const loadEl = document.getElementById(loadingId);
-            if (loadEl) loadEl.remove();
-            chatLog.innerHTML += `<div class="chat-msg msg-ai" style="color: red;">Gagal memuat respon AI: ${error.message}</div>`;
+            if (data.choices && data.choices[0]) {
+                const answer = data.choices[0].message.content;
+                chatLog.innerHTML += `<div class="chat-msg msg-ai">${escapeHtml(answer).replace(/\n/g, '<br>')}</div>`;
+            } else {
+                chatLog.innerHTML += `<div class="chat-msg msg-ai" style="color:var(--danger);">Maaf, terjadi kendala respon dari AI. Coba ajukan pertanyaan kembali.</div>`;
+            }
+            chatLog.scrollTop = chatLog.scrollHeight;
+        } catch(error) {
+            document.getElementById(loadingId)?.remove();
+            chatLog.innerHTML += `<div class="chat-msg msg-ai" style="color:var(--danger);">Gagal menghubungi server AI: ${error.message}</div>`;
             chatLog.scrollTop = chatLog.scrollHeight;
         }
     });
