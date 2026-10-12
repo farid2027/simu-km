@@ -208,6 +208,28 @@
 .canvas-comp:hover .c-del, .c-del:hover { opacity: 1; }
 .terminal { z-index: 4; }
 
+/* ===== MATERI DASAR ===== */
+.mat-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; transition: box-shadow .2s, border-color .2s; }
+.mat-card:hover { border-color: #f1b4b4; }
+.mat-card[open] { border-color: var(--primary); box-shadow: 0 6px 18px rgba(220,38,38,.12); }
+.mat-head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; font-weight: 700; font-size: 15px; cursor: pointer; list-style: none; user-select: none; }
+.mat-head::-webkit-details-marker { display: none; }
+.mat-head::after { content: '▾'; margin-left: auto; color: var(--text-muted); transition: transform .2s; }
+.mat-card[open] > .mat-head { background: #fef2f2; border-bottom: 1px solid var(--border); }
+.mat-card[open] > .mat-head::after { transform: rotate(180deg); color: var(--primary); }
+.mat-no { flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #dc2626, #991b1b); color: #fff; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+.mat-body { padding: 16px 20px 18px; font-size: 14px; line-height: 1.7; }
+.mat-body > * + * { margin-top: 12px; }
+.mat-body ul, .mat-body ol { padding-left: 22px; }
+.mat-body li + li { margin-top: 4px; }
+.mat-body table { margin-top: 4px; }
+.mat-body td:first-child, .mat-body th:first-child { width: 110px; white-space: nowrap; }
+.mat-formula { background: #1c0a0a; color: #fde68a; border-left: 4px solid #fbbf24; border-radius: 8px; padding: 10px 16px; font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: .5px; line-height: 1.8; }
+.mat-formula small { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 500; color: #d6c3c3; margin-left: 8px; }
+.mat-note { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 10px 14px; }
+.mat-trouble { background: #fef2f2; border-left: 4px solid #dc2626; border-radius: 8px; padding: 10px 14px; }
+.mat-trouble ul { margin-top: 6px; }
+
 /* kabel */
 .wire-x { pointer-events: all; cursor: pointer; opacity: .4; transition: .15s; }
 .wire-x:hover { opacity: 1; }
@@ -541,15 +563,20 @@
                         <details class="mat-card" open>
                             <summary class="mat-head"><span class="mat-no">1</span> Dasar Kelistrikan Sepeda Motor</summary>
                             <div class="mat-body">
-                                <p>Sistem kelistrikan sepeda motor memakai <b>arus searah (DC) 12 Volt</b> yang bersumber dari baterai (aki) dan dibantu sistem pengisian saat mesin hidup. Kutub negatif baterai dihubungkan ke rangka (massa), sehingga kabel yang ditarik ke beban umumnya hanya satu, yaitu kabel positif.</p>
+                                <p>Sistem kelistrikan sepeda motor memakai <b>arus searah (DC) 12 Volt</b> yang bersumber dari baterai (aki) dan dibantu sistem pengisian saat mesin hidup. Kutub negatif baterai dihubungkan ke rangka (massa), sehingga ke setiap beban umumnya cukup ditarik satu kabel positif.</p>
+                                <p><b>Besaran dasar listrik:</b></p>
                                 <ul>
-                                    <li><b>Tegangan (V)</b>: dorongan listrik, satuan Volt.</li>
-                                    <li><b>Arus (I)</b>: aliran listrik, satuan Ampere.</li>
+                                    <li><b>Tegangan (V)</b>: dorongan listrik, satuan Volt (V).</li>
+                                    <li><b>Arus (I)</b>: aliran listrik, satuan Ampere (A).</li>
                                     <li><b>Hambatan (R)</b>: penghambat arus, satuan Ohm (Ω).</li>
+                                    <li><b>Daya (P)</b>: energi yang dipakai beban, satuan Watt (W).</li>
                                 </ul>
-                                <div class="mat-formula">V = I × R &nbsp;&nbsp;|&nbsp;&nbsp; P = V × I</div>
-                                <p><b>Contoh:</b> lampu 12V 35W menarik arus I = P ÷ V = 35 ÷ 12 ≈ 2,9 A. Karena itu sekering 15A cukup untuk beberapa beban sekaligus, dan akan putus bila terjadi korsleting.</p>
-                                <p><b>Syarat arus mengalir:</b> sumber → penghantar → beban → kembali ke sumber (rangkaian tertutup). Jika salah satu bagian terputus, beban tidak bekerja.</p>
+                                <div class="mat-formula">
+                                    <div>V = I × R <small>(Hukum Ohm)</small></div>
+                                    <div>P = V × I <small>(daya listrik)</small></div>
+                                </div>
+                                <p><b>Contoh:</b> lampu 12 V / 35 W menarik arus I = P ÷ V = 35 ÷ 12 ≈ 2,9 A. Karena itu sekering 15 A cukup untuk beberapa beban sekaligus, dan akan putus bila terjadi korsleting.</p>
+                                <p class="mat-note"><b>Syarat arus mengalir:</b> rangkaian harus tertutup, yaitu sumber → penghantar → beban → kembali ke sumber. Jika salah satu bagian terputus, beban tidak bekerja.</p>
                             </div>
                         </details>
 
@@ -560,16 +587,16 @@
                                 <table>
                                     <thead><tr><th>Kode</th><th>Fungsi</th></tr></thead>
                                     <tbody>
-                                        <tr><td><b>30</b></td><td>Positif (+) langsung dari baterai (selalu bertegangan)</td></tr>
+                                        <tr><td><b>30</b></td><td>Positif (+) langsung dari baterai; selalu bertegangan</td></tr>
                                         <tr><td><b>31</b></td><td>Massa / ground (−)</td></tr>
-                                        <tr><td><b>15</b></td><td>Positif setelah kunci kontak ON (beban)</td></tr>
+                                        <tr><td><b>15</b></td><td>Positif (+) setelah kunci kontak ON; jalur ke beban</td></tr>
                                         <tr><td><b>49</b></td><td>Masukan (+) flasher sein</td></tr>
-                                        <tr><td><b>49a</b></td><td>Keluaran flasher menuju sakelar sein</td></tr>
+                                        <tr><td><b>49a</b></td><td>Keluaran flasher menuju sakelar sein / hazard</td></tr>
                                         <tr><td><b>L / R</b></td><td>Lampu sein kiri / kanan</td></tr>
-                                        <tr><td><b>56</b></td><td>Masukan sakelar lampu kepala</td></tr>
+                                        <tr><td><b>56</b></td><td>Masukan sakelar lampu kepala (dimmer)</td></tr>
                                         <tr><td><b>56a</b></td><td>Lampu jauh (high beam)</td></tr>
                                         <tr><td><b>56b</b></td><td>Lampu dekat (low beam)</td></tr>
-                                        <tr><td><b>58</b></td><td>Lampu senja / lampu panel</td></tr>
+                                        <tr><td><b>58</b></td><td>Lampu senja dan lampu panel</td></tr>
                                         <tr><td><b>54</b></td><td>Lampu rem</td></tr>
                                     </tbody>
                                 </table>
@@ -579,9 +606,12 @@
                         <details class="mat-card">
                             <summary class="mat-head"><span class="mat-no">3</span> Baterai, Sekering, dan Kunci Kontak</summary>
                             <div class="mat-body">
-                                <p><b>Baterai</b> menyimpan energi listrik. Baterai sehat bertegangan sekitar <b>12,4 – 12,8 V</b> saat mesin mati.</p>
-                                <p><b>Sekering</b> adalah pengaman rangkaian. Bila arus melebihi batas (misal 15A), kawat di dalamnya putus sehingga kabel tidak terbakar. Jangan pernah mengganti sekering dengan kawat atau sekering berrating lebih besar.</p>
-                                <p><b>Kunci kontak</b> menghubungkan terminal 30 ke terminal 15. Saat kunci OFF, beban-beban seperti klakson, lampu rem, dan flasher tidak mendapat arus.</p>
+                                <ul>
+                                    <li><b>Baterai</b> menyimpan energi listrik. Baterai yang sehat bertegangan sekitar <b>12,4 – 12,8 V</b> saat mesin mati.</li>
+                                    <li><b>Sekering</b> adalah pengaman rangkaian. Bila arus melebihi batas (misalnya 15 A), kawat di dalamnya putus sehingga kabel tidak terbakar.</li>
+                                    <li><b>Kunci kontak</b> menghubungkan terminal 30 ke terminal 15. Saat kunci OFF, beban seperti klakson, lampu rem, dan flasher tidak mendapat arus.</li>
+                                </ul>
+                                <p class="mat-note"><b>Penting:</b> jangan mengganti sekering dengan kawat atau dengan sekering berrating lebih besar.</p>
                                 <p><b>Urutan jalur utama:</b> Baterai (30) → Sekering → Kunci Kontak (30 ➔ 15) → Beban → Massa (31).</p>
                             </div>
                         </details>
@@ -589,35 +619,59 @@
                         <details class="mat-card">
                             <summary class="mat-head"><span class="mat-no">4</span> Sistem Penerangan</summary>
                             <div class="mat-body">
-                                <p>Lampu kepala tipe H4 memiliki dua filamen: <b>jauh (56a)</b> dan <b>dekat (56b)</b>, dipilih lewat sakelar dimmer di setang kiri. <b>Lampu senja (58)</b> menyala bersama lampu panel melalui sakelar lampu.</p>
-                                <ul>
+                                <p>Lampu kepala tipe H4 memiliki dua filamen, yaitu <b>jauh (56a)</b> dan <b>dekat (56b)</b>, yang dipilih lewat sakelar dimmer di setang kiri. <b>Lampu senja (58)</b> menyala bersama lampu panel melalui sakelar lampu.</p>
+                                <p><b>Jalur arus:</b></p>
+                                <ol>
                                     <li>Arus dari kunci kontak (15) masuk ke sakelar dimmer (56).</li>
-                                    <li>Dari sakelar, arus menuju filamen jauh (56a) atau dekat (56b).</li>
-                                    <li>Filamen lampu tersambung ke massa (31) sehingga rangkaian tertutup.</li>
-                                </ul>
-                                <p><b>Gangguan umum:</b> lampu redup (massa buruk / soket kotor), lampu mati total (sekering putus atau filamen putus), hanya satu filamen mati (sakelar dimmer rusak).</p>
+                                    <li>Dari sakelar, arus menuju filamen jauh (56a) atau filamen dekat (56b).</li>
+                                    <li>Filamen tersambung ke massa (31) sehingga rangkaian tertutup.</li>
+                                </ol>
+                                <div class="mat-trouble">
+                                    <b>Gangguan umum</b>
+                                    <ul>
+                                        <li>Lampu redup: massa buruk atau soket kotor.</li>
+                                        <li>Lampu mati total: sekering putus atau filamen putus.</li>
+                                        <li>Hanya satu filamen yang mati: sakelar dimmer rusak.</li>
+                                    </ul>
+                                </div>
                             </div>
                         </details>
 
                         <details class="mat-card">
-                            <summary class="mat-head"><span class="mat-no">5</span> Sistem Lampu Sein (Flasher)</summary>
+                            <summary class="mat-head"><span class="mat-no">5</span> Lampu Sein dan Hazard (Flasher)</summary>
                             <div class="mat-body">
-                                <p>Flasher adalah relay pengedip yang memutus-sambung arus sehingga lampu sein berkedip.</p>
-                                <ul>
+                                <p><b>Flasher</b> adalah relay pengedip yang memutus dan menyambung arus secara bergantian sehingga lampu sein berkedip.</p>
+                                <p><b>Jalur arus lampu sein:</b></p>
+                                <ol>
                                     <li>Terminal <b>15</b> (kunci kontak) → terminal <b>49</b> flasher.</li>
                                     <li>Terminal <b>49a</b> flasher → sakelar sein.</li>
                                     <li>Sakelar sein memilih <b>L</b> (kiri) atau <b>R</b> (kanan) → lampu sein → massa (31).</li>
-                                </ul>
-                                <p><b>Gangguan umum:</b> sein tidak berkedip (flasher rusak), berkedip terlalu cepat (satu lampu sein putus atau daya lampu terlalu kecil), tidak menyala sama sekali (sekering, flasher, atau kabel).</p>
+                                </ol>
+                                <p><b>Sakelar hazard</b> menyambungkan keluaran flasher (49a) ke lampu sein kiri (L) dan kanan (R) sekaligus, sehingga semua lampu sein berkedip bersamaan sebagai tanda bahaya. Pada sebagian sepeda motor, hazard mendapat arus dari terminal 30 agar tetap bisa menyala saat kunci kontak OFF.</p>
+                                <div class="mat-trouble">
+                                    <b>Gangguan umum</b>
+                                    <ul>
+                                        <li>Sein tidak berkedip: flasher rusak.</li>
+                                        <li>Berkedip terlalu cepat: salah satu lampu sein putus atau daya lampu terlalu kecil.</li>
+                                        <li>Tidak menyala sama sekali: sekering putus, flasher rusak, atau kabel terputus.</li>
+                                        <li>Hazard tidak berfungsi: sakelar hazard rusak atau jalur 49a ke L/R terputus.</li>
+                                    </ul>
+                                </div>
                             </div>
                         </details>
 
                         <details class="mat-card">
                             <summary class="mat-head"><span class="mat-no">6</span> Klakson dan Lampu Rem</summary>
                             <div class="mat-body">
-                                <p><b>Klakson:</b> kutub positif klakson mendapat arus dari terminal 15, sedangkan kutub lainnya disambung ke massa melalui <b>tombol klakson</b>. Saat tombol ditekan, rangkaian tertutup dan klakson berbunyi.</p>
-                                <p><b>Lampu rem:</b> arus dari terminal 15 melewati <b>sakelar rem</b> (depan dan belakang, dipasang paralel) menuju lampu rem (54). Lampu menyala hanya saat tuas atau pedal rem ditekan.</p>
-                                <p><b>Gangguan umum:</b> klakson tidak bunyi (sekering, tombol, atau massa), lampu rem menyala terus (sakelar rem macet atau salah setel).</p>
+                                <p><b>Klakson:</b> kutub positif klakson mendapat arus dari terminal 15, sedangkan kutub lainnya tersambung ke massa (31). <b>Tombol klakson</b> dipasang seri dengan klakson; saat tombol ditekan, rangkaian tertutup dan klakson berbunyi.</p>
+                                <p><b>Lampu rem:</b> arus dari terminal 15 melewati <b>sakelar rem</b> (depan dan belakang, dipasang paralel) menuju lampu rem (54). Lampu hanya menyala saat tuas atau pedal rem ditekan.</p>
+                                <div class="mat-trouble">
+                                    <b>Gangguan umum</b>
+                                    <ul>
+                                        <li>Klakson tidak berbunyi: sekering putus, tombol klakson rusak, atau massa buruk.</li>
+                                        <li>Lampu rem menyala terus: sakelar rem macet atau salah setel.</li>
+                                    </ul>
+                                </div>
                             </div>
                         </details>
 
@@ -626,11 +680,11 @@
                             <div class="mat-body">
                                 <p>Avometer (multimeter) dipakai untuk mengukur tegangan, arus, dan hambatan.</p>
                                 <ul>
-                                    <li><b>DCV</b>: tegangan searah. Untuk baterai pilih skala 20V.</li>
-                                    <li><b>ACV</b>: tegangan bolak-balik (misal keluaran spul).</li>
-                                    <li><b>Ω</b>: hambatan / kontinuitas. Ukur dalam kondisi <b>tanpa arus</b>.</li>
+                                    <li><b>DCV</b>: tegangan searah. Untuk baterai, pilih skala 20 V.</li>
+                                    <li><b>ACV</b>: tegangan bolak-balik, misalnya keluaran spul.</li>
+                                    <li><b>Ω</b>: hambatan atau kontinuitas. Ukur dalam kondisi <b>tanpa arus</b>.</li>
                                 </ul>
-                                <p><b>Cara mengukur tegangan:</b> probe merah ke titik positif, probe hitam ke massa, baca nilainya. Di Simulator, avometer akan menampilkan tegangan bila kedua probe disambung ke dua titik rangkaian.</p>
+                                <p><b>Cara mengukur tegangan:</b> tempelkan probe merah ke titik positif dan probe hitam ke massa, lalu baca nilainya. Di Simulator, avometer menampilkan tegangan bila kedua probe disambung ke dua titik rangkaian.</p>
                             </div>
                         </details>
 
@@ -638,11 +692,11 @@
                             <summary class="mat-head"><span class="mat-no">8</span> Keselamatan Kerja (K3)</summary>
                             <div class="mat-body">
                                 <ul>
-                                    <li>Lepas kutub negatif (−) baterai lebih dulu sebelum membongkar kabel; pasang negatif paling akhir.</li>
+                                    <li>Lepas kutub negatif (−) baterai lebih dulu sebelum membongkar kabel; pasang kutub negatif paling akhir.</li>
                                     <li>Pastikan kunci kontak OFF saat memasang atau mengganti komponen.</li>
-                                    <li>Gunakan sekering sesuai rating; jangan dijumper.</li>
-                                    <li>Jauhkan cairan baterai dan percikan api; ruangan harus berventilasi.</li>
-                                    <li>Rapikan dan ikat kabel agar tidak tergesek atau terkena bagian panas.</li>
+                                    <li>Gunakan sekering sesuai rating dan jangan dijumper.</li>
+                                    <li>Jauhkan cairan baterai dari percikan api, dan kerjakan di ruangan yang berventilasi.</li>
+                                    <li>Rapikan dan ikat kabel agar tidak tergesek atau terkena bagian yang panas.</li>
                                 </ul>
                             </div>
                         </details>
@@ -713,7 +767,7 @@
                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
     <div>
         <h2 style="margin:0;">⚙️ Simulator Praktik Kelistrikan</h2>
-        <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik 2 terminal untuk menyambung kabel. Klik kunci kontak / sakelar untuk ON-OFF. Klik ✕ untuk hapus satu komponen atau satu kabel.</p>
+        <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik 2 terminal untuk menyambung kabel. Klik kunci kontak / sakelar untuk ON-OFF. Sakelar klakson: tekan dan tahan. Klik ✕ untuk hapus satu komponen atau satu kabel.</p>
     </div>
     <div style="display:flex; gap:12px; align-items:center;">
         <label style="font-size:13px; font-weight:600; cursor:pointer;"><input type="checkbox" id="chk-massa" checked> Massa bodi otomatis (31)</label>
@@ -740,6 +794,8 @@
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_sein_kanan')">🚥 Lampu Sein Kanan</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_rem')">🔴 Lampu Rem (54)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_rem')">🕹️ Sakelar Rem</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_hazard')">⚠️ Sakelar Hazard</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_klakson')">🔘 Sakelar Klakson (tombol)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'klakson')">📢 Klakson</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'speedo')">📟 Instrumen/Speedo</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'avometer')" style="border-color:#84cc16; background:#ecfccb;">🎛️ Avometer Digital</div>
@@ -2069,6 +2125,8 @@
         lampu_sein_kanan: D('Sein Kanan', '🚥', [['R', 'R (+)', 20, YEL], ['31', '31 (-)', 70, BLU]]),
         lampu_rem: D('Lampu Rem', '🔴', [['54', '54 (+)', 20, RED], ['31', '31 (-)', 70, BLU]]),
         sakelar_rem: D('Sakelar Rem', '🕹️', [['15', '15 (IN)', 20, GRN], ['54', '54 (OUT)', 70, RED]]),
+        sakelar_hazard: D('Sakelar Hazard', '⚠️', [['49a', '49a (IN)', 15, YEL], ['L', 'L (OUT)', 45, YEL], ['R', 'R (OUT)', 75, YEL]]),
+        sakelar_klakson: D('Sakelar Klakson', '🔘', [['15', '15 (IN)', 20, GRN], ['HRN', 'HORN (OUT)', 70, YEL]]),
         klakson: D('Klakson', '📢', [['15', '15 (+)', 20, GRN], ['31', '31 (-)', 70, BLU]]),
         speedo: D('Speedometer', '📟', [['15', '15', 20, GRN], ['31', '31', 70, BLU]]),
         avometer: D('Avometer', '🎛️', [['RED', 'Probe (+)', 20, RED], ['BLACK', 'Probe (-)', 70, '#000000']])
@@ -2081,7 +2139,10 @@
         lampu_rem: [['54', '31']], klakson: [['15', '31']], speedo: [['15', '31']]
     };
     // Komponen yang bisa diklik ON/OFF
-    const TOGGLES = { kontak: ['OFF', 'ON'], sakelar_kiri: ['DEKAT', 'JAUH'], sakelar_kanan: ['OFF', 'ON'], sakelar_rem: ['TERLEPAS', 'DITEKAN'] };
+    const TOGGLES = { kontak: ['OFF', 'ON'], sakelar_kiri: ['DEKAT', 'JAUH'], sakelar_kanan: ['OFF', 'ON'], sakelar_rem: ['TERLEPAS', 'DITEKAN'],
+        sakelar_hazard: ['OFF', 'ON'], sakelar_klakson: ['TEKAN & TAHAN', 'DITEKAN'] };
+    // Sakelar sesaat: aktif hanya selama ditekan/ditahan
+    const MOMENTARY = ['sakelar_klakson'];
 
     // Hubungan internal komponen yang sedang menghantar
     function links(c) {
@@ -2091,6 +2152,8 @@
             case 'sakelar_kiri': return [['56', c.on ? '56a' : '56b']];
             case 'sakelar_kanan': return c.on ? [['15', '58']] : [];
             case 'sakelar_rem': return c.on ? [['15', '54']] : [];
+            case 'sakelar_klakson': return c.on ? [['15', 'HRN']] : [];
+            case 'sakelar_hazard': return c.on ? [['49a', 'L'], ['49a', 'R']] : [];
             case 'flasher': return flashPhase ? [['49', '49a']] : [];
         }
         return [];
@@ -2167,6 +2230,7 @@
     function stateText(id, c) {
         if (c.type === 'sekering') return c.blown ? 'PUTUS (klik ganti)' : 'NORMAL';
         if (c.type === 'avometer') return (sim.reading[id] || 0).toFixed(2) + ' V';
+        if (MOMENTARY.includes(c.type)) return TOGGLES[c.type][c.on ? 1 : 0];
         if (TOGGLES[c.type]) return TOGGLES[c.type][c.on ? 1 : 0] + ' (klik)';
         if (c.type === 'flasher') return flashPhase ? 'KEDIP ON' : 'KEDIP OFF';
         if (LOADS[c.type]) return sim.on[id] ? (c.type === 'klakson' ? 'BUNYI 📣' : 'NYALA') : 'MATI';
@@ -2270,7 +2334,7 @@
             if (c.blown) { c.blown = false; Sfx.click(); showToast('Sekering diganti baru 🛡️'); update(); }
             return;
         }
-        if (TOGGLES[c.type]) {
+        if (TOGGLES[c.type] && !MOMENTARY.includes(c.type)) {
             c.on = !c.on;
             if (c.type === 'kontak') { c.on ? Sfx.keyOn() : Sfx.keyOff(); } else Sfx.toggle();
             update();
@@ -2312,9 +2376,13 @@
             if (e.target.closest('.terminal, .c-del')) return;
             const sx = e.clientX, sy = e.clientY, c = placedComponents[id], ox = c.x, oy = c.y;
             let moved = false;
+            const momentary = MOMENTARY.includes(c.type);
+            const release = () => { if (momentary && c.on) { c.on = false; update(); } };
+            if (momentary) { c.on = true; Sfx.toggle(); update(); }   // tekan = aktif
             const mv = (m) => {
                 const dx = m.clientX - sx, dy = m.clientY - sy;
                 if (!moved && Math.hypot(dx, dy) < 5) return;
+                if (!moved) release();   // mulai digeser -> lepas tombol
                 moved = true;
                 c.x = Math.max(0, Math.min(canvas.clientWidth - 110, ox + dx));
                 c.y = Math.max(20, Math.min(canvas.clientHeight - 100, oy + dy));
@@ -2325,10 +2393,12 @@
             const up = () => {
                 document.removeEventListener('pointermove', mv);
                 document.removeEventListener('pointerup', up);
-                if (!moved) clickComponent(id);
+                document.removeEventListener('pointercancel', up);
+                if (momentary) release(); else if (!moved) clickComponent(id);
             };
             document.addEventListener('pointermove', mv);
             document.addEventListener('pointerup', up);
+            document.addEventListener('pointercancel', up);
         });
 
         canvas.appendChild(el);
