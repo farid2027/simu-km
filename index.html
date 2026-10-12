@@ -230,6 +230,14 @@
 .mat-trouble { background: #fef2f2; border-left: 4px solid #dc2626; border-radius: 8px; padding: 10px 14px; }
 .mat-trouble ul { margin-top: 6px; }
 
+/* sakelar geser */
+.c-slider { height: 34px; display: flex; align-items: center; justify-content: center; pointer-events: auto; cursor: pointer; }
+.c-track { position: relative; width: 74px; height: 22px; border-radius: 11px; background: #1c0a0a; border: 2px solid #7f1d1d; }
+.c-track::before, .c-track::after { content: ''; position: absolute; top: 50%; width: 3px; height: 3px; margin-top: -1.5px; border-radius: 50%; background: #6b4a4a; }
+.c-track::before { left: calc(50% - 1.5px); } .c-track::after { right: 6px; }
+.c-knob { position: absolute; top: 1px; left: 1px; width: 16px; height: 16px; border-radius: 50%; background: #9ca3af; box-shadow: 0 1px 3px rgba(0,0,0,.6); transition: left .18s ease, background .18s; }
+.canvas-comp.pos-active .c-knob { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+
 /* kabel */
 .wire-x { pointer-events: all; cursor: pointer; opacity: .4; transition: .15s; }
 .wire-x:hover { opacity: 1; }
@@ -596,7 +604,7 @@
                                         <tr><td><b>56</b></td><td>Masukan sakelar lampu kepala (dimmer)</td></tr>
                                         <tr><td><b>56a</b></td><td>Lampu jauh (high beam)</td></tr>
                                         <tr><td><b>56b</b></td><td>Lampu dekat (low beam)</td></tr>
-                                        <tr><td><b>58</b></td><td>Lampu senja dan lampu panel</td></tr>
+                                        <tr><td><b>58</b></td><td>Lampu senja / lampu kota dan lampu panel</td></tr>
                                         <tr><td><b>54</b></td><td>Lampu rem</td></tr>
                                     </tbody>
                                 </table>
@@ -619,10 +627,17 @@
                         <details class="mat-card">
                             <summary class="mat-head"><span class="mat-no">4</span> Sistem Penerangan</summary>
                             <div class="mat-body">
-                                <p>Lampu kepala tipe H4 memiliki dua filamen, yaitu <b>jauh (56a)</b> dan <b>dekat (56b)</b>, yang dipilih lewat sakelar dimmer di setang kiri. <b>Lampu senja (58)</b> menyala bersama lampu panel melalui sakelar lampu.</p>
+                                <p>Lampu kepala tipe H4 memiliki dua filamen, yaitu <b>jauh (56a)</b> dan <b>dekat (56b)</b>, yang dipilih lewat sakelar dimmer di setang kiri. <b>Lampu senja / lampu kota (58)</b> menyala bersama lampu panel.</p>
+                                <p>Kedua kelompok lampu ini diatur oleh <b>sakelar lampu tipe geser</b> yang memiliki tiga posisi:</p>
+                                <ul>
+                                    <li><b>OFF</b>: semua lampu padam.</li>
+                                    <li><b>KOTA</b>: hanya lampu senja dan lampu panel (58) yang menyala.</li>
+                                    <li><b>KEPALA</b>: lampu senja (58) dan lampu kepala (56) menyala bersamaan.</li>
+                                </ul>
                                 <p><b>Jalur arus:</b></p>
                                 <ol>
-                                    <li>Arus dari kunci kontak (15) masuk ke sakelar dimmer (56).</li>
+                                    <li>Arus dari kunci kontak (15) masuk ke sakelar lampu geser, lalu keluar lewat 58 (kota) atau 56 (kepala).</li>
+                                    <li>Terminal 56 masuk ke sakelar dimmer.</li>
                                     <li>Dari sakelar, arus menuju filamen jauh (56a) atau filamen dekat (56b).</li>
                                     <li>Filamen tersambung ke massa (31) sehingga rangkaian tertutup.</li>
                                 </ol>
@@ -645,7 +660,8 @@
                                 <ol>
                                     <li>Terminal <b>15</b> (kunci kontak) → terminal <b>49</b> flasher.</li>
                                     <li>Terminal <b>49a</b> flasher → sakelar sein.</li>
-                                    <li>Sakelar sein memilih <b>L</b> (kiri) atau <b>R</b> (kanan) → lampu sein → massa (31).</li>
+                                    <li>Sakelar sein tipe geser memiliki tiga posisi: <b>OFF</b>, <b>L</b> (kiri), dan <b>R</b> (kanan).</li>
+                                    <li>Dari posisi yang dipilih, arus menuju lampu sein → massa (31).</li>
                                 </ol>
                                 <p><b>Sakelar hazard</b> menyambungkan keluaran flasher (49a) ke lampu sein kiri (L) dan kanan (R) sekaligus, sehingga semua lampu sein berkedip bersamaan sebagai tanda bahaya. Pada sebagian sepeda motor, hazard mendapat arus dari terminal 30 agar tetap bisa menyala saat kunci kontak OFF.</p>
                                 <div class="mat-trouble">
@@ -767,7 +783,7 @@
                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
     <div>
         <h2 style="margin:0;">⚙️ Simulator Praktik Kelistrikan</h2>
-        <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik 2 terminal untuk menyambung kabel. Klik kunci kontak / sakelar untuk ON-OFF. Sakelar klakson: tekan dan tahan. Klik ✕ untuk hapus satu komponen atau satu kabel.</p>
+        <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik 2 terminal untuk menyambung kabel. Klik kunci kontak / sakelar untuk ON-OFF. Sakelar geser: klik pada jalurnya untuk memilih posisi. Sakelar klakson: tekan dan tahan. Klik ✕ untuk hapus satu komponen atau satu kabel.</p>
     </div>
     <div style="display:flex; gap:12px; align-items:center;">
         <label style="font-size:13px; font-weight:600; cursor:pointer;"><input type="checkbox" id="chk-massa" checked> Massa bodi otomatis (31)</label>
@@ -786,7 +802,8 @@
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sekering')" style="background:#fefce8; border-color:#facc15;">🛡️ Sekering 15A (30_IN, 30_OUT)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'kontak')">🔑 Kunci Kontak (30, 15)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kiri')">🕹️ Sakelar Setir Kiri</div>
-                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kanan')">🕹️ Sakelar Setir Kanan</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kanan')">🎚️ Sakelar Lampu Geser (Kota / Kepala)</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_sein')">↔️ Sakelar Sein Geser (Kiri / Kanan)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'flasher')">🔀 Flasher Sein (49, 49a)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_kepala')">💡 Lampu Kepala H4</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_senja')">💡 Lampu Senja (58)</div>
@@ -2117,7 +2134,8 @@
         sekering: D('Sekering 15A', '🛡️', [['30_IN', '30 IN', 15, RED], ['30_OUT', '30 OUT', 75, YEL]]),
         kontak: D('Kunci Kontak', '🔑', [['30', '30 (IN)', 15, RED], ['15', '15 (OUT)', 75, GRN]]),
         sakelar_kiri: D('Sakelar Kiri', '🕹️', [['56', '56', 15, RED], ['56a', '56a', 45, BLU], ['56b', '56b', 75, YEL]]),
-        sakelar_kanan: D('Sakelar Kanan', '🕹️', [['15', '15', 20, GRN], ['58', '58', 70, YEL]]),
+        sakelar_kanan: D('Sakelar Lampu (Geser)', '🎚️', [['15', '15 (IN)', 15, GRN], ['58', '58 (KOTA)', 45, YEL], ['56', '56 (KEPALA)', 75, RED]]),
+        sakelar_sein: D('Sakelar Sein (Geser)', '↔️', [['49a', '49a (IN)', 15, YEL], ['L', 'L (OUT)', 45, YEL], ['R', 'R (OUT)', 75, YEL]]),
         flasher: D('Flasher Sein', '🔀', [['49', '49 (B)', 20, GRN], ['49a', '49a (L)', 70, YEL]]),
         lampu_kepala: D('Lampu Kepala', '💡', [['56a', '56a', 15, BLU], ['56b', '56b', 45, YEL], ['31', '31', 75, BLU]]),
         lampu_senja: D('Lampu Senja', '💡', [['58', '58', 20, YEL], ['31', '31', 70, BLU]]),
@@ -2139,8 +2157,10 @@
         lampu_rem: [['54', '31']], klakson: [['15', '31']], speedo: [['15', '31']]
     };
     // Komponen yang bisa diklik ON/OFF
-    const TOGGLES = { kontak: ['OFF', 'ON'], sakelar_kiri: ['DEKAT', 'JAUH'], sakelar_kanan: ['OFF', 'ON'], sakelar_rem: ['TERLEPAS', 'DITEKAN'],
+    const TOGGLES = { kontak: ['OFF', 'ON'], sakelar_kiri: ['DEKAT', 'JAUH'], sakelar_rem: ['TERLEPAS', 'DITEKAN'],
         sakelar_hazard: ['OFF', 'ON'], sakelar_klakson: ['TEKAN & TAHAN', 'DITEKAN'] };
+    // Sakelar geser (3 posisi): indeks posisi disimpan di c.pos
+    const POSITIONS = { sakelar_kanan: ['OFF', 'KOTA', 'KEPALA'], sakelar_sein: ['OFF', 'KIRI', 'KANAN'] };
     // Sakelar sesaat: aktif hanya selama ditekan/ditahan
     const MOMENTARY = ['sakelar_klakson'];
 
@@ -2150,7 +2170,8 @@
             case 'sekering': return c.blown ? [] : [['30_IN', '30_OUT']];
             case 'kontak': return c.on ? [['30', '15']] : [];
             case 'sakelar_kiri': return [['56', c.on ? '56a' : '56b']];
-            case 'sakelar_kanan': return c.on ? [['15', '58']] : [];
+            case 'sakelar_kanan': return c.pos === 1 ? [['15', '58']] : c.pos === 2 ? [['15', '58'], ['15', '56']] : [];
+            case 'sakelar_sein': return c.pos === 1 ? [['49a', 'L']] : c.pos === 2 ? [['49a', 'R']] : [];
             case 'sakelar_rem': return c.on ? [['15', '54']] : [];
             case 'sakelar_klakson': return c.on ? [['15', 'HRN']] : [];
             case 'sakelar_hazard': return c.on ? [['49a', 'L'], ['49a', 'R']] : [];
@@ -2230,6 +2251,7 @@
     function stateText(id, c) {
         if (c.type === 'sekering') return c.blown ? 'PUTUS (klik ganti)' : 'NORMAL';
         if (c.type === 'avometer') return (sim.reading[id] || 0).toFixed(2) + ' V';
+        if (POSITIONS[c.type]) return POSITIONS[c.type][c.pos || 0] + ' (klik)';
         if (MOMENTARY.includes(c.type)) return TOGGLES[c.type][c.on ? 1 : 0];
         if (TOGGLES[c.type]) return TOGGLES[c.type][c.on ? 1 : 0] + ' (klik)';
         if (c.type === 'flasher') return flashPhase ? 'KEDIP ON' : 'KEDIP OFF';
@@ -2247,6 +2269,11 @@
             if (lit && c.type === 'klakson') hornOn = true;
             el.classList.toggle('on', lit);
             el.classList.toggle('blown', !!c.blown);
+            if (POSITIONS[c.type]) {
+                const kn = el.querySelector('.c-knob');
+                if (kn) kn.style.left = (1 + (c.pos || 0) * 26) + 'px';
+                el.classList.toggle('pos-active', (c.pos || 0) > 0);
+            }
             const st = el.querySelector('.c-state');
             if (st) st.textContent = stateText(id, c);
         });
@@ -2311,7 +2338,7 @@
         const x = Math.max(10, Math.min(rect.width - 120, e.clientX - rect.left - 45));
         const y = Math.max(24, Math.min(rect.height - 100, e.clientY - rect.top - 40));
         const id = 'c_' + (++compIdCounter);
-        placedComponents[id] = { type, x, y, on: false, blown: false };
+        placedComponents[id] = { type, x, y, on: false, pos: 0, blown: false };
         document.getElementById('empty-canvas-text').classList.add('hidden');
         renderComponentElement(id, type, x, y);
         Sfx.drop();
@@ -2328,8 +2355,18 @@
         update();
     }
 
-    function clickComponent(id) {
+    function clickComponent(id, ev) {
         const c = placedComponents[id]; if (!c) return;
+        if (POSITIONS[c.type]) {
+            const sl = document.querySelector('#' + id + ' .c-track');
+            const r = sl && sl.getBoundingClientRect();
+            if (ev && r && ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top - 6 && ev.clientY <= r.bottom + 6) {
+                c.pos = Math.min(2, Math.max(0, Math.floor((ev.clientX - r.left) / r.width * 3)));   // klik langsung di posisi
+            } else {
+                c.pos = ((c.pos || 0) + 1) % 3;
+            }
+            Sfx.toggle(); update(); return;
+        }
         if (c.type === 'sekering') {
             if (c.blown) { c.blown = false; Sfx.click(); showToast('Sekering diganti baru 🛡️'); update(); }
             return;
@@ -2344,11 +2381,11 @@
     function renderComponentElement(id, type, x, y) {
         const def = componentDefs[type];
         const el = document.createElement('div');
-        el.className = 'canvas-comp' + ((TOGGLES[type] || type === 'sekering') ? ' toggle' : '');
+        el.className = 'canvas-comp' + ((TOGGLES[type] || POSITIONS[type] || type === 'sekering') ? ' toggle' : '');
         el.id = id;
         el.style.left = x + 'px';
         el.style.top = y + 'px';
-        el.innerHTML = `<div class="c-del" title="Hapus komponen">✕</div><div class="c-state"></div><div class="c-icon">${def.icon}</div><div class="c-name">${def.name}</div>`;
+        el.innerHTML = `<div class="c-del" title="Hapus komponen">✕</div><div class="c-state"></div>${POSITIONS[type] ? '<div class="c-slider"><div class="c-track"><div class="c-knob"></div></div></div>' : `<div class="c-icon">${def.icon}</div>`}<div class="c-name">${def.name}</div>`;
 
         el.querySelector('.c-del').addEventListener('pointerdown', e => e.stopPropagation());
         el.querySelector('.c-del').addEventListener('click', e => { e.stopPropagation(); deleteComponent(id); });
@@ -2390,11 +2427,11 @@
                 el.style.top = c.y + 'px';
                 redrawWires();
             };
-            const up = () => {
+            const up = (ev) => {
                 document.removeEventListener('pointermove', mv);
                 document.removeEventListener('pointerup', up);
                 document.removeEventListener('pointercancel', up);
-                if (momentary) release(); else if (!moved) clickComponent(id);
+                if (momentary) release(); else if (!moved) clickComponent(id, ev);
             };
             document.addEventListener('pointermove', mv);
             document.addEventListener('pointerup', up);
