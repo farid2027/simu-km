@@ -604,7 +604,7 @@
                                         <tr><td><b>56</b></td><td>Masukan sakelar lampu kepala (dimmer)</td></tr>
                                         <tr><td><b>56a</b></td><td>Lampu jauh (high beam)</td></tr>
                                         <tr><td><b>56b</b></td><td>Lampu dekat (low beam)</td></tr>
-                                        <tr><td><b>58</b></td><td>Lampu senja / lampu kota dan lampu panel</td></tr>
+                                        <tr><td><b>58</b></td><td>Lampu senja dan lampu panel</td></tr>
                                         <tr><td><b>54</b></td><td>Lampu rem</td></tr>
                                     </tbody>
                                 </table>
@@ -627,18 +627,18 @@
                         <details class="mat-card">
                             <summary class="mat-head"><span class="mat-no">4</span> Sistem Penerangan</summary>
                             <div class="mat-body">
-                                <p>Lampu kepala tipe H4 memiliki dua filamen, yaitu <b>jauh (56a)</b> dan <b>dekat (56b)</b>, yang dipilih lewat sakelar dimmer di setang kiri. <b>Lampu senja / lampu kota (58)</b> menyala bersama lampu panel.</p>
-                                <p>Kedua kelompok lampu ini diatur oleh <b>sakelar lampu tipe geser</b> yang memiliki tiga posisi:</p>
+                                <p>Lampu kepala tipe H4 memiliki dua filamen, yaitu <b>lampu dekat (56b)</b> dan <b>lampu jauh (56a)</b>. <b>Lampu senja (58)</b> menyala bersama lampu panel.</p>
+                                <p>Lampu diatur oleh <b>sakelar lampu tipe geser</b> yang memiliki tiga posisi:</p>
                                 <ul>
                                     <li><b>OFF</b>: semua lampu padam.</li>
-                                    <li><b>KOTA</b>: hanya lampu senja dan lampu panel (58) yang menyala.</li>
-                                    <li><b>KEPALA</b>: lampu senja (58) dan lampu kepala (56) menyala bersamaan.</li>
+                                    <li><b>DEKAT</b>: lampu senja (58) dan lampu dekat (56b) menyala.</li>
+                                    <li><b>JAUH</b>: lampu senja (58) dan lampu jauh (56a) menyala.</li>
                                 </ul>
+                                <p><b>Tombol dim</b> (passing) di setang kiri menyalakan lampu jauh (56a) selama ditekan, misalnya untuk memberi isyarat kepada pengendara lain.</p>
                                 <p><b>Jalur arus:</b></p>
                                 <ol>
-                                    <li>Arus dari kunci kontak (15) masuk ke sakelar lampu geser, lalu keluar lewat 58 (kota) atau 56 (kepala).</li>
-                                    <li>Terminal 56 masuk ke sakelar dimmer.</li>
-                                    <li>Dari sakelar, arus menuju filamen jauh (56a) atau filamen dekat (56b).</li>
+                                    <li>Arus dari kunci kontak (15) masuk ke sakelar lampu geser.</li>
+                                    <li>Dari sakelar, arus menuju lampu senja (58) dan lampu dekat (56b) atau lampu jauh (56a).</li>
                                     <li>Filamen tersambung ke massa (31) sehingga rangkaian tertutup.</li>
                                 </ol>
                                 <div class="mat-trouble">
@@ -646,7 +646,7 @@
                                     <ul>
                                         <li>Lampu redup: massa buruk atau soket kotor.</li>
                                         <li>Lampu mati total: sekering putus atau filamen putus.</li>
-                                        <li>Hanya satu filamen yang mati: sakelar dimmer rusak.</li>
+                                        <li>Hanya satu filamen yang mati: sakelar lampu atau tombol dim rusak.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -783,7 +783,7 @@
                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
     <div>
         <h2 style="margin:0;">⚙️ Simulator Praktik Kelistrikan</h2>
-        <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik 2 terminal untuk menyambung kabel. Klik kunci kontak / sakelar untuk ON-OFF. Sakelar geser: klik pada jalurnya untuk memilih posisi. Sakelar klakson: tekan dan tahan. Klik ✕ untuk hapus satu komponen atau satu kabel.</p>
+        <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik 2 terminal untuk menyambung kabel. Klik kunci kontak / sakelar untuk ON-OFF. Sakelar geser: klik pada jalurnya untuk memilih posisi. Sakelar klakson dan tombol dim: tekan dan tahan. Klik ✕ untuk hapus satu komponen atau satu kabel.</p>
     </div>
     <div style="display:flex; gap:12px; align-items:center;">
         <label style="font-size:13px; font-weight:600; cursor:pointer;"><input type="checkbox" id="chk-massa" checked> Massa bodi otomatis (31)</label>
@@ -802,7 +802,8 @@
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sekering')" style="background:#fefce8; border-color:#facc15;">🛡️ Sekering 15A (30_IN, 30_OUT)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'kontak')">🔑 Kunci Kontak (30, 15)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kiri')">🕹️ Sakelar Setir Kiri</div>
-                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kanan')">🎚️ Sakelar Lampu Geser (Kota / Kepala)</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kanan')">🎚️ Sakelar Lampu Geser (Dekat / Jauh)</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'tombol_dim')">🔦 Tombol Dim (Passing)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_sein')">↔️ Sakelar Sein Geser (Kiri / Kanan)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'flasher')">🔀 Flasher Sein (49, 49a)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'lampu_kepala')">💡 Lampu Kepala H4</div>
@@ -2134,7 +2135,8 @@
         sekering: D('Sekering 15A', '🛡️', [['30_IN', '30 IN', 15, RED], ['30_OUT', '30 OUT', 75, YEL]]),
         kontak: D('Kunci Kontak', '🔑', [['30', '30 (IN)', 15, RED], ['15', '15 (OUT)', 75, GRN]]),
         sakelar_kiri: D('Sakelar Kiri', '🕹️', [['56', '56', 15, RED], ['56a', '56a', 45, BLU], ['56b', '56b', 75, YEL]]),
-        sakelar_kanan: D('Sakelar Lampu (Geser)', '🎚️', [['15', '15 (IN)', 15, GRN], ['58', '58 (KOTA)', 45, YEL], ['56', '56 (KEPALA)', 75, RED]]),
+        sakelar_kanan: D('Sakelar Lampu (Geser)', '🎚️', [['15', '15', 10, GRN], ['58', '58', 35, YEL], ['56b', '56b', 60, YEL], ['56a', '56a', 85, BLU]]),
+        tombol_dim: D('Tombol Dim', '🔦', [['15', '15 (IN)', 20, GRN], ['56a', '56a (OUT)', 70, BLU]]),
         sakelar_sein: D('Sakelar Sein (Geser)', '↔️', [['49a', '49a (IN)', 15, YEL], ['L', 'L (OUT)', 45, YEL], ['R', 'R (OUT)', 75, YEL]]),
         flasher: D('Flasher Sein', '🔀', [['49', '49 (B)', 20, GRN], ['49a', '49a (L)', 70, YEL]]),
         lampu_kepala: D('Lampu Kepala', '💡', [['56a', '56a', 15, BLU], ['56b', '56b', 45, YEL], ['31', '31', 75, BLU]]),
@@ -2158,11 +2160,11 @@
     };
     // Komponen yang bisa diklik ON/OFF
     const TOGGLES = { kontak: ['OFF', 'ON'], sakelar_kiri: ['DEKAT', 'JAUH'], sakelar_rem: ['TERLEPAS', 'DITEKAN'],
-        sakelar_hazard: ['OFF', 'ON'], sakelar_klakson: ['TEKAN & TAHAN', 'DITEKAN'] };
+        sakelar_hazard: ['OFF', 'ON'], sakelar_klakson: ['TEKAN & TAHAN', 'DITEKAN'], tombol_dim: ['TEKAN & TAHAN', 'DITEKAN'] };
     // Sakelar geser (3 posisi): indeks posisi disimpan di c.pos
-    const POSITIONS = { sakelar_kanan: ['OFF', 'KOTA', 'KEPALA'], sakelar_sein: ['OFF', 'KIRI', 'KANAN'] };
+    const POSITIONS = { sakelar_kanan: ['OFF', 'DEKAT', 'JAUH'], sakelar_sein: ['OFF', 'KIRI', 'KANAN'] };
     // Sakelar sesaat: aktif hanya selama ditekan/ditahan
-    const MOMENTARY = ['sakelar_klakson'];
+    const MOMENTARY = ['sakelar_klakson', 'tombol_dim'];
 
     // Hubungan internal komponen yang sedang menghantar
     function links(c) {
@@ -2170,7 +2172,8 @@
             case 'sekering': return c.blown ? [] : [['30_IN', '30_OUT']];
             case 'kontak': return c.on ? [['30', '15']] : [];
             case 'sakelar_kiri': return [['56', c.on ? '56a' : '56b']];
-            case 'sakelar_kanan': return c.pos === 1 ? [['15', '58']] : c.pos === 2 ? [['15', '58'], ['15', '56']] : [];
+            case 'sakelar_kanan': return c.pos === 1 ? [['15', '58'], ['15', '56b']] : c.pos === 2 ? [['15', '58'], ['15', '56a']] : [];
+            case 'tombol_dim': return c.on ? [['15', '56a']] : [];
             case 'sakelar_sein': return c.pos === 1 ? [['49a', 'L']] : c.pos === 2 ? [['49a', 'R']] : [];
             case 'sakelar_rem': return c.on ? [['15', '54']] : [];
             case 'sakelar_klakson': return c.on ? [['15', 'HRN']] : [];
