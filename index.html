@@ -800,8 +800,8 @@
                             <h4 style="font-size:14px; margin-bottom:12px;">📦 Gudang Komponen</h4>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'baterai')">🔋 Baterai 12V (30, 31)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sekering')" style="background:#fefce8; border-color:#facc15;">🛡️ Sekering 15A (30_IN, 30_OUT)</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'relay')" style="background:#eff6ff; border-color:#60a5fa;">🧲 Relay 12V (86, 85, 30, 87)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'kontak')">🔑 Kunci Kontak (30, 15)</div>
-                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kiri')">🕹️ Sakelar Setir Kiri</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kanan')">🎚️ Sakelar Lampu Geser (Dekat / Jauh)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'tombol_dim')">🔦 Tombol Dim (Passing)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_sein')">↔️ Sakelar Sein Geser (Kiri / Kanan)</div>
@@ -2125,7 +2125,7 @@
     let activeWireStart = null;
     let flashPhase = false;
     let autoMassa = true;
-    let sim = { find: k => k, P: null, G: null, on: {}, reading: {}, dP: {}, dG: {}, short: false, anyLit: false };
+    let sim = { find: k => k, P: null, G: null, on: {}, reading: {}, dP: {}, dG: {}, short: false, anyLit: false, keyOn: false, fp: {} };
 
     const RED = '#ef4444', BLU = '#3b82f6', GRN = '#10b981', YEL = '#f59e0b';
     const D = (name, icon, terms) => ({ name, icon, terminals: terms.map(([id, label, x, color]) => ({ id, label, x, y: 75, color })) });
@@ -2133,8 +2133,8 @@
     const componentDefs = {
         baterai: D('Baterai 12V', '🔋', [['30', '30 (+)', 15, RED], ['31', '31 (-)', 75, BLU]]),
         sekering: D('Sekering 15A', '🛡️', [['30_IN', '30 IN', 15, RED], ['30_OUT', '30 OUT', 75, YEL]]),
+        relay: D('Relay 12V', '🧲', [['86', '86 (+)', 10, RED], ['85', '85 (-)', 35, BLU], ['30', '30', 60, RED], ['87', '87', 85, GRN]]),
         kontak: D('Kunci Kontak', '🔑', [['30', '30 (IN)', 15, RED], ['15', '15 (OUT)', 75, GRN]]),
-        sakelar_kiri: D('Sakelar Kiri', '🕹️', [['56', '56', 15, RED], ['56a', '56a', 45, BLU], ['56b', '56b', 75, YEL]]),
         sakelar_kanan: D('Sakelar Lampu (Geser)', '🎚️', [['15', '15', 10, GRN], ['58', '58', 35, YEL], ['56b', '56b', 60, YEL], ['56a', '56a', 85, BLU]]),
         tombol_dim: D('Tombol Dim', '🔦', [['15', '15 (IN)', 20, GRN], ['56a', '56a (OUT)', 70, BLU]]),
         sakelar_sein: D('Sakelar Sein (Geser)', '↔️', [['49a', '49a (IN)', 15, YEL], ['L', 'L (OUT)', 45, YEL], ['R', 'R (OUT)', 75, YEL]]),
@@ -2156,10 +2156,10 @@
     const LOADS = {
         lampu_kepala: [['56a', '31'], ['56b', '31']], lampu_senja: [['58', '31']],
         lampu_sein_kiri: [['L', '31']], lampu_sein_kanan: [['R', '31']],
-        lampu_rem: [['54', '31']], klakson: [['15', '31']], speedo: [['15', '31']]
+        lampu_rem: [['54', '31']], klakson: [['15', '31']], speedo: [['15', '31']], relay: [['86', '85']]
     };
     // Komponen yang bisa diklik ON/OFF
-    const TOGGLES = { kontak: ['OFF', 'ON'], sakelar_kiri: ['DEKAT', 'JAUH'], sakelar_rem: ['TERLEPAS', 'DITEKAN'],
+    const TOGGLES = { kontak: ['OFF', 'ON'], sakelar_rem: ['TERLEPAS', 'DITEKAN'],
         sakelar_hazard: ['OFF', 'ON'], sakelar_klakson: ['TEKAN & TAHAN', 'DITEKAN'], tombol_dim: ['TEKAN & TAHAN', 'DITEKAN'] };
     // Sakelar geser (3 posisi): indeks posisi disimpan di c.pos
     const POSITIONS = { sakelar_kanan: ['OFF', 'DEKAT', 'JAUH'], sakelar_sein: ['OFF', 'KIRI', 'KANAN'] };
@@ -2171,13 +2171,13 @@
         switch (c.type) {
             case 'sekering': return c.blown ? [] : [['30_IN', '30_OUT']];
             case 'kontak': return c.on ? [['30', '15']] : [];
-            case 'sakelar_kiri': return [['56', c.on ? '56a' : '56b']];
             case 'sakelar_kanan': return c.pos === 1 ? [['15', '58'], ['15', '56b']] : c.pos === 2 ? [['15', '58'], ['15', '56a']] : [];
             case 'tombol_dim': return c.on ? [['15', '56a']] : [];
             case 'sakelar_sein': return c.pos === 1 ? [['49a', 'L']] : c.pos === 2 ? [['49a', 'R']] : [];
             case 'sakelar_rem': return c.on ? [['15', '54']] : [];
             case 'sakelar_klakson': return c.on ? [['15', 'HRN']] : [];
             case 'sakelar_hazard': return c.on ? [['49a', 'L'], ['49a', 'R']] : [];
+            case 'relay': return c.energized ? [['30', '87']] : [];
             case 'flasher': return flashPhase ? [['49', '49a']] : [];
         }
         return [];
@@ -2212,11 +2212,29 @@
             if (blew) { Sfx.fuse(); showToast('⚡ Korsleting! Sekering 15A putus. Klik sekering untuk menggantinya.'); return true; }
         }
 
-        // Beban menyala jika sisi + tersambung ke 30 dan sisi - tersambung ke 31
+        // Semua beban hanya aktif bila ada kunci kontak yang sudah ON
+        const keyOn = ids.some(i => placedComponents[i].type === 'kontak' && placedComponents[i].on);
         const on = {}; let anyLit = false;
         ids.forEach(i => (LOADS[placedComponents[i].type] || []).forEach(([a, b]) => {
-            if (batt && !short && find(K(i, a)) === find(P) && find(K(i, b)) === find(G)) { (on[i] = on[i] || []).push(a); anyLit = true; }
+            if (batt && keyOn && !short && find(K(i, a)) === find(P) && find(K(i, b)) === find(G)) { (on[i] = on[i] || []).push(a); anyLit = true; }
         }));
+
+        // Relay: koil aktif -> kontak 30-87 menyambung (hitung ulang rangkaian bila berubah)
+        let relayChanged = false;
+        ids.forEach(i => {
+            const c = placedComponents[i];
+            if (c.type !== 'relay') return;
+            const e = !!on[i];
+            if (!!c.energized !== e) { c.energized = e; relayChanged = true; Sfx.relay(); }
+        });
+        if (relayChanged) return true;
+
+        // Flasher hanya berdaya jika terminal 49 tersambung + dan kunci kontak ON
+        const fp = {};
+        ids.forEach(i => {
+            if (placedComponents[i].type === 'flasher')
+                fp[i] = !!(batt && keyOn && !short && find(K(i, '49')) === find(P));
+        });
 
         // Potensial (untuk avometer)
         const pot = {};
@@ -2240,13 +2258,13 @@
             while (q.length) { const u = q.shift(); (adj[u] || []).forEach(v => { if (d[v] === undefined) { d[v] = d[u] + 1; q.push(v); } }); }
             return d; };
 
-        sim = { find, P, G, on, reading, short, anyLit, dP: bfs(P), dG: bfs(G) };
+        sim = { find, P, G, on, reading, short, anyLit, keyOn, fp, dP: bfs(P), dG: bfs(G) };
         return false;
     }
 
     function update() {
         let guard = 0;
-        while (compute() && guard++ < 3) {}
+        while (compute() && guard++ < 8) {}
         applyState();
         redrawWires();
     }
@@ -2254,10 +2272,11 @@
     function stateText(id, c) {
         if (c.type === 'sekering') return c.blown ? 'PUTUS (klik ganti)' : 'NORMAL';
         if (c.type === 'avometer') return (sim.reading[id] || 0).toFixed(2) + ' V';
+        if (c.type === 'relay') return c.energized ? 'AKTIF (30–87 NYAMBUNG)' : 'MATI';
         if (POSITIONS[c.type]) return POSITIONS[c.type][c.pos || 0] + ' (klik)';
         if (MOMENTARY.includes(c.type)) return TOGGLES[c.type][c.on ? 1 : 0];
         if (TOGGLES[c.type]) return TOGGLES[c.type][c.on ? 1 : 0] + ' (klik)';
-        if (c.type === 'flasher') return flashPhase ? 'KEDIP ON' : 'KEDIP OFF';
+        if (c.type === 'flasher') return !sim.fp[id] ? 'MATI (belum ada daya)' : (flashPhase ? 'KEDIP ON' : 'KEDIP OFF');
         if (LOADS[c.type]) return sim.on[id] ? (c.type === 'klakson' ? 'BUNYI 📣' : 'NYALA') : 'MATI';
         return '';
     }
@@ -2283,12 +2302,17 @@
         if (hornOn) Sfx.hornStart(); else Sfx.hornStop();
     }
 
-    // Flasher berkedip otomatis
+    // Flasher berkedip otomatis (hanya jika berdaya & kunci kontak ON)
     setInterval(() => {
         const ids = Object.keys(placedComponents).filter(i => placedComponents[i].type === 'flasher');
         if (!ids.length) return;
+        const powered = ids.some(i => sim.fp[i]);
+        if (!powered) {
+            if (flashPhase) { flashPhase = false; update(); }
+            return;
+        }
         flashPhase = !flashPhase;
-        if (sim.P && ids.some(i => sim.find(i + ':49') === sim.find(sim.P))) Sfx.relay();
+        Sfx.relay();
         update();
     }, 450);
 
