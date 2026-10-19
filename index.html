@@ -824,7 +824,7 @@
     // ==========================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getDocs, orderBy, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getDocs, orderBy, deleteDoc, doc, getDoc, getDocFromServer, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDI9Rd4m4IxKJsELGS9e7KztVS2hXftAA0",
@@ -933,13 +933,13 @@
         }
     });
 
-    function showToast(msg) {
+    function showToast(msg, ms = 4000) {
         const c = document.getElementById('toast-container');
         const t = document.createElement('div');
         t.className = 'toast'; 
         t.textContent = msg;
         c.appendChild(t);
-        setTimeout(() => t.remove(), 4000);
+        setTimeout(() => t.remove(), ms);
     }
 
     function escapeHtml(text) {
@@ -1884,7 +1884,7 @@
     // ----- Penyimpanan PDF PERMANEN di Firestore (dipecah per bagian) -----
     // PDF diubah ke teks base64, dipotong per ~700 KB, disimpan di koleksi "pdf_chunks".
     // Data metadata (judul dll) ada di koleksi "jobsheets" / "materi".
-    const CHUNK_SIZE = 700000;
+    const CHUNK_SIZE = 450000;
     const MAX_PDF_MB = 5;
     const byId = id => document.getElementById(id);
 
@@ -1905,21 +1905,37 @@
         await deleteDoc(doc(db, col, id));
     }
 
+    async function cleanupChunks(fileId) {
+        try {
+            const sn = await getDocs(query(collection(db, 'pdf_chunks'), where('fileId', '==', fileId)));
+            await Promise.all(sn.docs.map(d => deleteDoc(d.ref)));
+        } catch (e) { console.warn('Bersihkan potongan:', e); }
+    }
+
+    // Data baru muncul untuk siswa SETELAH semua potongan PDF terkirim, dan hanya dianggap
+    // berhasil bila terbukti ada di SERVER (bukan sekadar antrean lokal browser).
+    async function confirmOnServer(ref) {
+        const snap = await withTimeout(getDocFromServer(ref), 20000);
+        if (!snap.exists()) throw new Error('Data belum tercatat di server');
+    }
+
     async function saveDocWithPdf(col, meta, file, onProgress) {
         const b64 = await readAsBase64(file);
         const total = Math.max(1, Math.ceil(b64.length / CHUNK_SIZE));
-        const ref = await withTimeout(addDoc(collection(db, col), {
-            ...meta, tipe: 'file', namaFile: file.name, ukuran: file.size, chunks: total, waktu: serverTimestamp()
-        }), 15000);
+        const ref = doc(collection(db, col));      // ID dibuat dulu; dokumen belum tampil
         try {
             for (let i = 0; i < total; i++) {
                 await withTimeout(addDoc(collection(db, 'pdf_chunks'), {
                     fileId: ref.id, idx: i, data: b64.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE)
-                }), 20000);
+                }), 60000);
                 if (onProgress) onProgress(i + 1, total);
             }
+            await withTimeout(setDoc(ref, {
+                ...meta, tipe: 'file', namaFile: file.name, ukuran: file.size, chunks: total, waktu: serverTimestamp()
+            }), 60000);
+            await confirmOnServer(ref);
         } catch (e) {
-            await deleteWithChunks(col, ref.id).catch(() => {});
+            await cleanupChunks(ref.id);
             throw e;
         }
         return ref.id;
@@ -1955,11 +1971,12 @@
     function renderPdfDocs(snap, studentId, guruId, delFn, noun) {
         const sC = byId(studentId), gT = byId(guruId);
         const items = [];
-        snap.forEach(s => items.push({ id: s.id, ...s.data() }));
+        snap.forEach(s => items.push({ id: s.id, ...s.data(), _pending: s.metadata.hasPendingWrites }));
         items.sort((x, y) => (y.waktu?.seconds ?? Date.now() / 1000) - (x.waktu?.seconds ?? Date.now() / 1000));
 
         if (!items.length) {
-            if (sC) sC.innerHTML = `<p style="color:var(--text-muted);">Belum ada ${noun} yang diunggah guru.</p>`;
+            const off = snap.metadata.fromCache ? ' <b style="color:var(--danger);">(Belum terhubung ke server, cek internet / aturan Firestore)</b>' : '';
+            if (sC) sC.innerHTML = `<p style="color:var(--text-muted);">Belum ada ${noun} yang diunggah guru.${off}</p>`;
             if (gT) gT.innerHTML = `<tr><td colspan="2" style="text-align:center;">Belum ada ${noun}.</td></tr>`;
             return;
         }
@@ -1967,9 +1984,10 @@
         let listHtml = '', tableHtml = '';
         items.forEach(d => {
             const isFile = d.tipe === 'file';
-            const info = isFile
+            let info = isFile
                 ? `${escapeHtml(d.namaFile || 'PDF')} · ${Math.max(1, Math.round((d.ukuran || 0) / 1024))} KB · tersimpan permanen`
                 : 'Tautan PDF';
+            if (d._pending) info = '<b style="color:var(--danger);">⏳ BELUM tersimpan di server (siswa belum bisa melihat)</b>';
             if (isFile) pdfNames[d.id] = d.namaFile || 'dokumen.pdf';
             const openBtn = isFile
                 ? `<button class="btn btn-primary" style="padding:6px 12px; font-size:12px;" onclick="window.openPdf('${d.id}')">👁️ Buka / Baca</button>
@@ -2008,7 +2026,7 @@
     function loadJobsheets() {
         if (unsubJobsheets) unsubJobsheets();
         try {
-            unsubJobsheets = onSnapshot(collection(db, "jobsheets"), (snap) => {
+            unsubJobsheets = onSnapshot(collection(db, "jobsheets"), { includeMetadataChanges: true }, (snap) => {
                 if (isGuru) setStatValue(4, snap.size);
                 renderPdfDocs(snap, 'student-jobsheet-list', 'guru-jobsheet-table', 'delJobsheet', 'jobsheet');
             }, (err) => showLoadError('student-jobsheet-list', 'guru-jobsheet-table', err));
@@ -2018,7 +2036,7 @@
     function loadMateri() {
         if (unsubMateri) unsubMateri();
         try {
-            unsubMateri = onSnapshot(collection(db, "materi"), (snap) => {
+            unsubMateri = onSnapshot(collection(db, "materi"), { includeMetadataChanges: true }, (snap) => {
                 renderPdfDocs(snap, 'student-materi-list', 'guru-materi-table', 'delMateri', 'materi');
             }, (err) => showLoadError('student-materi-list', 'guru-materi-table', err));
         } catch (err) { console.warn(err); }
@@ -2050,18 +2068,24 @@
                     (i, n) => { btn.textContent = `⏳ Menyimpan PDF (${i}/${n})...`; });
             } else {
                 btn.textContent = "💾 Menyimpan Data...";
-                await withTimeout(addDoc(collection(db, cfg.col), {
+                const ref = await withTimeout(addDoc(collection(db, cfg.col), {
                     judul: title, tipe: 'link', url: formatPdfUrl(urlInput),
                     diunggahOleh: currentUserEmail, waktu: serverTimestamp()
-                }), 15000);
+                }), 30000);
+                await confirmOnServer(ref);
             }
-            showToast(`${cfg.noun[0].toUpperCase() + cfg.noun.slice(1)} PDF berhasil disimpan & dipublikasikan!`);
+            showToast(`✅ ${cfg.noun[0].toUpperCase() + cfg.noun.slice(1)} tersimpan permanen di server dan sudah bisa dilihat siswa.`, 7000);
             byId(cfg.titleId).value = '';
             fileInput.value = '';
             byId(cfg.urlId).value = '';
         } catch (e) {
             console.warn(e);
-            showToast("Gagal menyimpan: " + (e.message || 'cek koneksi / aturan Firestore'));
+            const m = (e && e.code === 'permission-denied')
+                ? 'DITOLAK aturan Firestore. Pastikan aturan sudah dipublikasikan dan login memakai email @guru.smk.belajar.id.'
+                : (e && e.message === 'Timeout/Blocked')
+                    ? 'Koneksi ke server terlalu lambat / terblokir. Coba lagi dengan internet yang lebih stabil.'
+                    : (e && e.message) || 'cek koneksi / aturan Firestore';
+            showToast('❌ TIDAK tersimpan: ' + m, 10000);
         } finally {
             btn.disabled = false;
             btn.textContent = cfg.btnLabel;
