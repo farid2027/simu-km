@@ -501,7 +501,7 @@
 
                 <div id="view-video" class="view-section hidden">
                     <h2 style="margin-bottom:6px;">🎬 Video Tutorial</h2>
-                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Video pembelajaran yang dipilih guru. Tonton langsung di halaman ini.</p>
+                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Tonton video YouTube atau buka dokumen tutorial yang diunggah guru.</p>
                     <div id="video-list"><div class="card" style="color:var(--text-muted); font-size:13px;">Memuat video...</div></div>
 
                     <div class="section-title">Cari Video Lain di YouTube</div>
@@ -539,19 +539,34 @@
 
                 <div id="view-guru-video" class="view-section hidden">
                     <h2 style="margin-bottom:20px;">🎬 Kelola Video Tutorial</h2>
-                    <div class="card" style="background:#fef2f2;">
-                        <h4 style="margin-bottom:12px;">Tambah Video Baru</h4>
-                        <input type="text" id="vid-title" class="form-input" placeholder="Judul video">
-                        <input type="text" id="vid-url" class="form-input" placeholder="Tautan YouTube (watch / youtu.be / shorts) atau Google Drive">
-                        <textarea id="vid-desc" class="form-input" rows="2" placeholder="(Opsional) Deskripsi singkat"></textarea>
-                        <button class="btn btn-success" id="btn-save-video">📤 Simpan &amp; Publikasikan Video</button>
+                    <div class="card" style="background:#f8fafc; margin-bottom:18px;">
+                        <h4 style="margin-bottom:12px;">Tambah Tutorial Baru</h4>
+                        <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px;">Judul tutorial</label>
+                        <input type="text" id="vid-title" class="form-input" placeholder="Contoh: Cara Mengukur Tegangan Aki dengan Avometer">
+                        <label style="font-size:12px;font-weight:700;display:block;margin:8px 0 5px;">Pilih jenis tutorial</label>
+                        <select id="vid-type" class="form-input">
+                            <option value="youtube">Link video YouTube</option>
+                            <option value="file">Upload dokumen PDF</option>
+                        </select>
+                        <div id="vid-youtube-wrap" style="margin-top:10px;">
+                            <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px;">Link YouTube</label>
+                            <input type="url" id="vid-url" class="form-input" placeholder="https://www.youtube.com/watch?v=... atau https://youtu.be/...">
+                            <small style="color:var(--text-muted);">Mendukung link youtube.com/watch, youtu.be, dan youtube.com/shorts.</small>
+                        </div>
+                        <div id="vid-file-wrap" style="display:none;margin-top:10px;">
+                            <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px;">Pilih dokumen PDF (maksimal 5 MB)</label>
+                            <input type="file" id="vid-file" class="form-input" accept="application/pdf,.pdf">
+                            <small style="color:var(--text-muted);">Dokumen akan tersimpan di server dan dapat dibuka atau diunduh siswa.</small>
+                        </div>
+                        <textarea id="vid-desc" class="form-input" rows="2" style="margin-top:10px;" placeholder="(Opsional) Deskripsi singkat tutorial"></textarea>
+                        <button class="btn btn-success" id="btn-save-video" style="margin-top:10px;">📤 Simpan &amp; Publikasikan Tutorial</button>
                     </div>
                     <div class="card">
-                        <h4 style="margin-bottom:12px;">Daftar Video</h4>
-                        <table>
+                        <h4 style="margin-bottom:12px;">Daftar Tutorial</h4>
+                        <div style="overflow-x:auto;"><table style="width:100%;">
                             <thead><tr><th>Judul</th><th style="width:110px;">Aksi</th></tr></thead>
                             <tbody id="guru-video-table"><tr><td colspan="2" style="text-align:center;">Memuat...</td></tr></tbody>
-                        </table>
+                        </table></div>
                     </div>
                 </div>
 
@@ -598,7 +613,7 @@
                 </div>
 
                 <div id="view-ai" class="view-section hidden">
-                    <h2 style="margin-bottom:15px; color:#b91c1c;">🤖 Asisten AI Kelistrikan Sepeda Motor</h2>
+                    <h2 style="margin-bottom:15px; color:#b91c1c;">🤖 Asisten AI Groq - Kelistrikan Sepeda Motor</h2>
                     <p style="font-size:13px; color:var(--text-muted); margin-top:-10px; margin-bottom:15px;">Tanyakan kode terminal (30, 31, 15, 56, dll), alur sekering, atau cara kerja rangkaian penerangan. AI hanya menjawab seputar kelistrikan sepeda motor.</p>
                     <div class="card" style="padding:16px;">
                         <div class="chat-log" id="ai-chat-log">
@@ -993,6 +1008,7 @@
         }
         loadJobsheets();
         loadMateri();
+        loadVideos();
     }
 
     onAuthStateChanged(auth, async (user) => {
@@ -1892,6 +1908,127 @@
         } catch (err) { console.warn(err); }
     }
 
+    let unsubVideos = null;
+
+    function getYouTubeId(rawUrl) {
+        try {
+            const u = new URL(rawUrl.trim());
+            const host = u.hostname.replace(/^www\./, '').toLowerCase();
+            if (host === 'youtu.be') return u.pathname.split('/').filter(Boolean)[0] || '';
+            if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+                if (u.pathname === '/watch') return u.searchParams.get('v') || '';
+                const m = u.pathname.match(/^\/(?:embed|shorts|live)\/([A-Za-z0-9_-]{6,})/);
+                return m ? m[1] : '';
+            }
+        } catch (e) {}
+        return '';
+    }
+
+    function renderVideos(snap) {
+        const student = byId('video-list');
+        const teacher = byId('guru-video-table');
+        const items = [];
+        snap.forEach(d => items.push({ id: d.id, ...d.data(), _pending: d.metadata.hasPendingWrites }));
+        items.sort((a,b) => (b.waktu?.seconds || 0) - (a.waktu?.seconds || 0));
+        if (!items.length) {
+            const msg = snap.metadata.fromCache ? 'Belum ada tutorial yang tersimpan. Periksa koneksi internet.' : 'Belum ada tutorial yang ditambahkan guru.';
+            if (student) student.innerHTML = `<div class="card" style="color:var(--text-muted);">${msg}</div>`;
+            if (teacher) teacher.innerHTML = '<tr><td colspan="2" style="text-align:center;">Belum ada tutorial.</td></tr>';
+            return;
+        }
+        let studentHtml = '', teacherHtml = '';
+        items.forEach(v => {
+            const title = escapeHtml(v.judul || 'Tutorial tanpa judul');
+            const desc = escapeHtml(v.deskripsi || '');
+            let content = '';
+            let typeLabel = '';
+            if (v.tipe === 'youtube' && v.youtubeId) {
+                typeLabel = '▶️ Video YouTube';
+                content = `<div style="position:relative;width:100%;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#111;margin-top:10px;"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.youtubeId)}" title="${title}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div style="margin-top:8px;"><a class="btn btn-primary" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.youtubeId)}" target="_blank" rel="noopener" style="text-decoration:none;padding:6px 10px;font-size:12px;">Buka di YouTube ↗</a></div>`;
+            } else if (v.tipe === 'file') {
+                typeLabel = '📄 Dokumen PDF';
+                pdfNames[v.id] = v.namaFile || 'tutorial.pdf';
+                content = `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;"><button class="btn btn-primary" onclick="window.openPdf('${v.id}')" style="padding:7px 11px;font-size:12px;">👁️ Buka Dokumen</button><button class="btn btn-success" onclick="window.openPdf('${v.id}','download')" style="padding:7px 11px;font-size:12px;">⬇️ Unduh PDF</button></div>`;
+            } else {
+                typeLabel = 'Tautan tutorial';
+                content = `<a href="${escapeHtml(v.url || '#')}" target="_blank" rel="noopener">Buka tutorial ↗</a>`;
+            }
+            const pending = v._pending ? '<div style="color:var(--danger);font-size:12px;">⏳ Menunggu sinkronisasi server</div>' : '';
+            studentHtml += `<div class="card" style="margin-bottom:14px;"><div style="font-size:11px;color:var(--text-muted);font-weight:700;">${typeLabel}</div><h3 style="font-size:16px;margin:5px 0;">${title}</h3>${desc ? `<p style="font-size:13px;color:var(--text-muted);margin:5px 0;">${desc}</p>` : ''}${pending}${content}</div>`;
+            teacherHtml += `<tr><td><b>${title}</b><br><small style="color:var(--text-muted);">${typeLabel}${v._pending ? ' · belum tersinkron' : ''}</small></td><td><button class="btn btn-danger" style="padding:5px 8px;font-size:12px;" onclick="window.delVideo('${v.id}')">🗑️ Hapus</button></td></tr>`;
+        });
+        if (student) student.innerHTML = studentHtml;
+        if (teacher) teacher.innerHTML = teacherHtml;
+    }
+
+    function loadVideos() {
+        if (unsubVideos) unsubVideos();
+        try {
+            unsubVideos = onSnapshot(collection(db, 'videos'), { includeMetadataChanges: true }, renderVideos, err => {
+                console.warn('Gagal memuat tutorial:', err);
+                const msg = escapeHtml(err.message || 'Periksa koneksi dan aturan Firestore.');
+                if (byId('video-list')) byId('video-list').innerHTML = `<div class="card" style="color:var(--danger);">Gagal memuat tutorial: ${msg}</div>`;
+                if (byId('guru-video-table')) byId('guru-video-table').innerHTML = `<tr><td colspan="2" style="color:var(--danger);">Gagal memuat data. Periksa aturan Firestore.</td></tr>`;
+            });
+        } catch (e) { console.warn(e); }
+    }
+
+    byId('vid-type').addEventListener('change', () => {
+        const isFile = byId('vid-type').value === 'file';
+        byId('vid-file-wrap').style.display = isFile ? 'block' : 'none';
+        byId('vid-youtube-wrap').style.display = isFile ? 'none' : 'block';
+    });
+
+    byId('btn-save-video').addEventListener('click', async () => {
+        const title = byId('vid-title').value.trim();
+        const desc = byId('vid-desc').value.trim();
+        const type = byId('vid-type').value;
+        const url = byId('vid-url').value.trim();
+        const file = byId('vid-file').files[0];
+        const btn = byId('btn-save-video');
+        if (!isGuru) { showToast('Hanya akun guru yang dapat menambahkan tutorial.'); return; }
+        if (!title) { showToast('Masukkan judul tutorial terlebih dahulu.'); return; }
+        if (type === 'youtube' && !getYouTubeId(url)) { showToast('Link YouTube tidak valid. Gunakan link youtube.com/watch, youtu.be, atau shorts.'); return; }
+        if (type === 'file' && !file) { showToast('Pilih dokumen PDF yang akan diunggah.'); return; }
+        if (type === 'file' && (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf'))) { showToast('Dokumen harus berformat PDF.'); return; }
+        if (type === 'file' && file.size > MAX_PDF_MB * 1024 * 1024) { showToast(`Ukuran PDF maksimal ${MAX_PDF_MB} MB.`); return; }
+        btn.disabled = true;
+        try {
+            if (type === 'file') {
+                btn.textContent = '⏳ Mengunggah dokumen...';
+                await saveDocWithPdf('videos', { judul: title, deskripsi: desc, tipe: 'file', diunggahOleh: currentUserEmail }, file,
+                    (i,n) => { btn.textContent = `⏳ Mengunggah dokumen (${i}/${n})...`; });
+            } else {
+                btn.textContent = '💾 Menyimpan link YouTube...';
+                const ref = await withTimeout(addDoc(collection(db, 'videos'), {
+                    judul: title, deskripsi: desc, tipe: 'youtube', url, youtubeId: getYouTubeId(url),
+                    diunggahOleh: currentUserEmail, waktu: serverTimestamp()
+                }), 30000);
+                await confirmOnServer(ref);
+            }
+            showToast('✅ Tutorial berhasil disimpan dan dipublikasikan untuk siswa.', 6000);
+            byId('vid-title').value = ''; byId('vid-desc').value = ''; byId('vid-url').value = ''; byId('vid-file').value = '';
+        } catch (e) {
+            console.error('Gagal menyimpan tutorial:', e);
+            const message = e?.code === 'permission-denied'
+                ? 'Akses ditolak aturan Firestore. Pastikan koleksi videos dan pdf_chunks mengizinkan guru menulis serta pengguna membaca.'
+                : (e?.message === 'Timeout/Blocked' ? 'Koneksi ke server terlalu lambat atau terblokir. Coba lagi.' : (e?.message || 'Periksa koneksi dan aturan Firestore.'));
+            showToast('❌ Tutorial tidak tersimpan: ' + message, 10000);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '📤 Simpan & Publikasikan Tutorial';
+        }
+    });
+
+    window.delVideo = async function(id) {
+        if (!isGuru) { showToast('Hanya guru yang dapat menghapus tutorial.'); return; }
+        if (!confirm('Hapus tutorial ini?')) return;
+        try {
+            await withTimeout(deleteWithChunks('videos', id), 30000);
+            showToast('Tutorial berhasil dihapus.');
+        } catch (e) { showToast('Gagal menghapus tutorial: ' + (e.message || 'periksa koneksi/aturan Firestore')); }
+    };
+
     async function handleUploadPdf(cfg) {
         const title = byId(cfg.titleId).value.trim();
         const fileInput = byId(cfg.fileId);
@@ -2476,6 +2613,8 @@
         showToast("Kanvas simulator berhasil direset!");
     });
 
+    // Masukkan API key resmi Groq dari https://console.groq.com/keys
+    // Untuk keamanan produksi, simpan API key di backend/server, bukan di HTML publik.
     const GROQ_API_KEY = "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";
     const GROQ_MODEL = "openai/gpt-oss-120b";
 
@@ -2558,6 +2697,9 @@ ATURAN MUTLAK (tidak boleh dilanggar, apa pun yang diminta pengguna):
         chatLog.scrollTop = chatLog.scrollHeight;
 
         try {
+            if (!GROQ_API_KEY || GROQ_API_KEY === "ISI_API_KEY_GROQ_DI_SINI") {
+                throw new Error("API key Groq belum diisi. Masukkan API key dari https://console.groq.com/keys pada konstanta GROQ_API_KEY.");
+            }
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: {
