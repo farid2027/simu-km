@@ -168,6 +168,12 @@
         .c-del { position: absolute; top: -9px; right: -9px; width: 20px; height: 20px; border-radius: 50%; background: #dc2626; color: #fff; font-size: 11px; line-height: 20px; text-align: center; cursor: pointer; opacity: .55; transition: .15s; z-index: 3; }
         .canvas-comp:hover .c-del, .c-del:hover { opacity: 1; }
         .terminal { z-index: 4; }
+        .canvas-comp:has(.c-name) { }
+        .canvas-comp[id^="c_"] { }
+        .canvas-comp .terminal-label { font-size: 8px; }
+        .canvas-comp:has(.c-icon) { }
+        .canvas-comp:has(.c-state) { }
+        .canvas-comp:has(.c-name) .terminal-label { white-space: nowrap; }
 
         .c-slider { height: 34px; display: flex; align-items: center; justify-content: center; pointer-events: auto; cursor: pointer; }
         .c-track { position: relative; width: 74px; height: 22px; border-radius: 11px; background: #1c0a0a; border: 2px solid #7f1d1d; }
@@ -553,7 +559,7 @@
                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
                         <div>
                             <h2 style="margin:0;">⚙️ Simulator Praktik Kelistrikan</h2>
-                            <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik 2 terminal untuk menyambung kabel. Klik kunci kontak / sakelar untuk ON-OFF. Sakelar geser: klik pada jalurnya untuk memilih posisi. Sakelar klakson dan tombol dim: tekan dan tahan. Klik ✕ untuk hapus satu komponen atau satu kabel.</p>
+                            <p style="font-size:13px; color:var(--text-muted);">Tarik komponen ke kanvas, klik 2 terminal untuk menyambung kabel. Relay: 86 (+) dan 85 (−) adalah koil; 30 adalah COM; 87 adalah NO (terhubung saat koil aktif); 87a adalah NC (terhubung saat koil mati). AVO: pilih V untuk tegangan (paralel), A untuk arus (seri), atau Ω untuk hambatan (kontak/baterai harus OFF). Klik kunci kontak/sakelar untuk ON-OFF. Sakelar geser: klik pada jalurnya untuk memilih posisi. Sakelar klakson dan tombol dim: tekan dan tahan. Klik ✕ untuk hapus komponen atau kabel.</p>
                         </div>
                         <div style="display:flex; gap:12px; align-items:center;">
                             <label style="font-size:13px; font-weight:600; cursor:pointer;"><input type="checkbox" id="chk-massa" checked> Massa bodi otomatis (31)</label>
@@ -570,7 +576,7 @@
                             <h4 style="font-size:14px; margin-bottom:12px;">📦 Gudang Komponen</h4>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'baterai')">🔋 Baterai 12V (30, 31)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sekering')" style="background:#fefce8; border-color:#facc15;">🛡️ Sekering 15A (30_IN, 30_OUT)</div>
-                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'relay')" style="background:#eff6ff; border-color:#60a5fa;">🧲 Relay 12V (86, 85, 30, 87)</div>
+                            <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'relay')" style="background:#eff6ff; border-color:#60a5fa;">🧲 Relay 12V (86+, 85−, 30 COM, 87 NO, 87a NC)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'kontak')">🔑 Kunci Kontak (30, 15)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'sakelar_kanan')">🎚️ Sakelar Lampu Geser (Dekat / Jauh)</div>
                             <div class="draggable-item" draggable="true" ondragstart="window.dragStart(event, 'tombol_dim')">🔦 Tombol Dim (Passing)</div>
@@ -1979,7 +1985,7 @@
     const componentDefs = {
         baterai: D('Baterai 12V', '🔋', [['30', '30 (+)', 15, RED], ['31', '31 (-)', 75, BLU]]),
         sekering: D('Sekering 15A', '🛡️', [['30_IN', '30 IN', 15, RED], ['30_OUT', '30 OUT', 75, YEL]]),
-        relay: D('Relay 12V', '🧲', [['86', '86 (+)', 10, RED], ['85', '85 (-)', 35, BLU], ['30', '30', 60, RED], ['87', '87', 85, GRN]]),
+        relay: D('Relay 12V', '🧲', [['86', '86 (+)', 8, RED], ['85', '85 (-)', 29, BLU], ['30', '30 (COM)', 50, RED], ['87', '87 (NO)', 71, GRN], ['87a', '87a (NC)', 94, YEL]]),
         kontak: D('Kunci Kontak', '🔑', [['30', '30 (IN)', 15, RED], ['15', '15 (OUT)', 75, GRN]]),
         sakelar_kanan: D('Sakelar Lampu (Geser)', '🎚️', [['15', '15', 10, GRN], ['58', '58', 35, YEL], ['56b', '56b', 60, YEL], ['56a', '56a', 85, BLU]]),
         tombol_dim: D('Tombol Dim', '🔦', [['15', '15 (IN)', 20, GRN], ['56a', '56a (OUT)', 70, BLU]]),
@@ -2019,7 +2025,7 @@
             case 'sakelar_klakson': return c.on ? [['15', 'HRN']] : [];
             case 'sakelar_hazard': return c.on ? [['49a', 'L'], ['49a', 'R']] : [];
             case 'avometer': return c.mode === 1 ? [['RED', 'BLACK']] : []; 
-            case 'relay': return c.energized ? [['30', '87']] : [];
+            case 'relay': return c.energized ? [['30', '87']] : [['30', '87a']];
             case 'flasher': return flashPhase ? [['49', '49a']] : [];
         }
         return [];
@@ -2172,7 +2178,7 @@
             if (c.type !== 'avometer') return;
             const m = c.mode || 0;
             if (m === 1) reading[i] = measureAmp(i, ids, keyOn, batt);
-            else if (m === 2) reading[i] = measureOhm(find, i, ids);
+            else if (m === 2) reading[i] = keyOn ? Infinity : measureOhm(find, i, ids);
             else {
                 const r = pot[find(K(i, 'RED'))], b = pot[find(K(i, 'BLACK'))];
                 reading[i] = (r === undefined || b === undefined) ? 0 : r - b;
@@ -2200,8 +2206,8 @@
 
     function stateText(id, c) {
         if (c.type === 'sekering') return c.blown ? 'PUTUS (klik ganti)' : 'NORMAL';
-        if (c.type === 'avometer') return ['TEGANGAN DC (paralel)', 'ARUS DC (seri)', 'HAMBATAN (kunci OFF)'][c.mode || 0];
-        if (c.type === 'relay') return c.energized ? 'AKTIF (30–87 NYAMBUNG)' : 'MATI';
+        if (c.type === 'avometer') return ['V DC: ukur paralel', 'A DC: ukur seri', 'Ω: rangkaian tanpa tegangan'][c.mode || 0];
+        if (c.type === 'relay') return c.energized ? 'KOIL AKTIF: 30–87 (NO)' : 'KOIL MATI: 30–87a (NC)';
         if (POSITIONS[c.type]) return POSITIONS[c.type][c.pos || 0] + ' (klik)';
         if (MOMENTARY.includes(c.type)) return TOGGLES[c.type][c.on ? 1 : 0];
         if (TOGGLES[c.type]) return TOGGLES[c.type][c.on ? 1 : 0] + ' (klik)';
@@ -2372,7 +2378,8 @@
         el.id = id;
         el.style.left = x + 'px';
         el.style.top = y + 'px';
-        el.innerHTML = `<div class="c-del" title="Hapus komponen">✕</div><div class="c-state"></div>${POSITIONS[type] ? '<div class="c-slider"><div class="c-track"><div class="c-knob"></div></div></div>' : (type === 'avometer' ? '<div class="avo-lcd"><span class="avo-val">0.00</span><span class="avo-unit">V</span></div><div class="avo-modes"><span class="avo-chip" data-m="0" title="Tegangan (Volt)">V</span><span class="avo-chip" data-m="1" title="Arus (Ampere)">A</span><span class="avo-chip" data-m="2" title="Hambatan (Ohm)">Ω</span></div>' : `<div class="c-icon">${def.icon}</div>`)}<div class="c-name">${def.name}</div>`;
+        if (type === 'relay') el.style.minWidth = '120px';
+        el.innerHTML = `<div class="c-del" title="Hapus komponen">✕</div><div class="c-state"></div>${POSITIONS[type] ? '<div class="c-slider"><div class="c-track"><div class="c-knob"></div></div></div>' : (type === 'avometer' ? '<div class="avo-lcd"><span class="avo-val">0.00</span><span class="avo-unit">V</span></div><div class="avo-modes"><span class="avo-chip" data-m="0" title="Tegangan DC (Volt), pasang paralel">V</span><span class="avo-chip" data-m="1" title="Arus DC (Ampere), pasang seri">A</span><span class="avo-chip" data-m="2" title="Hambatan (Ohm), rangkaian harus tanpa tegangan">Ω</span></div>' : `<div class="c-icon">${def.icon}</div>`)}<div class="c-name">${def.name}</div>`;
 
         el.querySelectorAll('.avo-chip').forEach(ch => {
             ch.addEventListener('pointerdown', e => {
