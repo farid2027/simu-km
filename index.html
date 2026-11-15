@@ -22,6 +22,15 @@
         .btn-danger { background: var(--danger); } .btn-warning { background: var(--warning); }
         .btn-full { width: 100%; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pw-wrap { position: relative; margin-bottom: 12px; }
+        .pw-wrap .form-input { margin-bottom: 0; padding-right: 46px; }
+        .pw-toggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: none; border: none; border-radius: 8px; cursor: pointer; color: #6b7280; padding: 0; }
+        .pw-toggle:hover { color: #dc2626; background: #fef2f2; }
+        .pw-toggle:focus-visible { outline: 2px solid #dc2626; }
+        .pw-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .pw-toggle .ico-off { display: none; }
+        .pw-toggle.showing .ico-on { display: none; }
+        .pw-toggle.showing .ico-off { display: block; }
         .form-input { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 12px; font-size: 14px; outline: none; }
         .form-input:focus { border-color: var(--primary); }
         .card { background: var(--surface); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; }
@@ -216,7 +225,13 @@
             </div>
             
             <input type="email" id="email-input" class="form-input" placeholder="Email Belajar.id (@smk.belajar.id atau @guru.smk.belajar.id)">
-            <input type="password" id="password-input" class="form-input" placeholder="Kata Sandi">
+            <div class="pw-wrap">
+                <input type="password" id="password-input" class="form-input" placeholder="Kata Sandi" autocomplete="current-password">
+                <button type="button" id="btn-toggle-pw" class="pw-toggle" aria-label="Tampilkan kata sandi" title="Tampilkan kata sandi">
+                    <svg class="ico-on" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="ico-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.9 10.9 0 0 1 12 19c-7 0-11-7-11-7a19.8 19.8 0 0 1 5.06-5.94M9.9 4.24A10.9 10.9 0 0 1 12 5c7 0 11 7 11 7a19.8 19.8 0 0 1-3.17 4.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
             
             <button class="btn btn-primary btn-full" id="btn-login" style="margin-bottom: 8px;">Masuk ke Aplikasi</button>
             <button class="btn btn-full" id="btn-register" style="background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-bottom: 12px;">Daftar Akun Baru</button>
@@ -1055,10 +1070,13 @@
         } else {
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('app-layout').classList.add('hidden');
+            setPwVisible(false);
         }
     });
 
     document.getElementById('btn-login').addEventListener('click', async () => {
+        const loginBtn = document.getElementById('btn-login');
+        if (loginBtn.disabled) return;
         const email = document.getElementById('email-input').value.trim();
         const pass = document.getElementById('password-input').value.trim();
 
@@ -1067,6 +1085,7 @@
             return;
         }
 
+        loginBtn.disabled = true;
         try {
             await signInWithEmailAndPassword(auth, email, pass);
             const roleUser = detectRole(email);
@@ -1079,16 +1098,35 @@
             } else {
                 showToast("Gagal Login: " + e.message);
             }
+        } finally {
+            loginBtn.disabled = false;
         }
     });
 
+    // Tekan Enter di kolom email/kata sandi = klik "Masuk ke Aplikasi"
     const triggerLoginOnEnter = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !e.isComposing) {
+            e.preventDefault();
             document.getElementById('btn-login').click();
         }
     };
-    document.getElementById('email-input').addEventListener('keypress', triggerLoginOnEnter);
-    document.getElementById('password-input').addEventListener('keypress', triggerLoginOnEnter);
+    document.getElementById('email-input').addEventListener('keydown', triggerLoginOnEnter);
+    document.getElementById('password-input').addEventListener('keydown', triggerLoginOnEnter);
+
+    // Tombol mata: tampilkan / sembunyikan kata sandi
+    function setPwVisible(show) {
+        const inp = document.getElementById('password-input');
+        const btn = document.getElementById('btn-toggle-pw');
+        inp.type = show ? 'text' : 'password';
+        btn.classList.toggle('showing', show);
+        const label = show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi';
+        btn.setAttribute('aria-label', label);
+        btn.title = label;
+    }
+    const pwInput = document.getElementById('password-input');
+    const pwToggle = document.getElementById('btn-toggle-pw');
+    pwToggle.addEventListener('mousedown', (e) => e.preventDefault()); // fokus tetap di kolom sandi
+    pwToggle.addEventListener('click', () => { setPwVisible(pwInput.type === 'password'); pwInput.focus(); });
 
     document.getElementById('btn-register').addEventListener('click', async () => {
         const email = document.getElementById('email-input').value.trim();
