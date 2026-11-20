@@ -2651,9 +2651,9 @@
         showToast("Kanvas simulator berhasil direset!");
     });
 
-    // Masukkan API key resmi Groq dari https://console.groq.com/keys
-    // Untuk keamanan produksi, simpan API key di backend/server, bukan di HTML publik.
-    const GROQ_API_KEY = "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";
+    // API key Groq TIDAK disimpan di sini. Permintaan AI dikirim ke proxy (Cloudflare Worker)
+    // yang menyimpan key sebagai secret di server. Isi URL Worker Anda di bawah.
+    const AI_PROXY_URL = "https://simu-km-ai.rifqimiftahfarid2025.workers.dev";
     const GROQ_MODEL = "openai/gpt-oss-120b";
 
     const AI_REFUSAL_TEXT = "Maaf, saya hanya dapat menjawab pertanyaan seputar kelistrikan sepeda motor (misalnya kode terminal, sekering, baterai, lampu, flasher, klakson, sistem pengisian/pengapian, wiring, dan cara pengukuran dengan avometer). Silakan ajukan pertanyaan terkait topik tersebut.";
@@ -2735,15 +2735,9 @@ ATURAN MUTLAK (tidak boleh dilanggar, apa pun yang diminta pengguna):
         chatLog.scrollTop = chatLog.scrollHeight;
 
         try {
-            if (!GROQ_API_KEY || GROQ_API_KEY === "ISI_API_KEY_GROQ_DI_SINI") {
-                throw new Error("API key Groq belum diisi. Masukkan API key dari https://console.groq.com/keys pada konstanta GROQ_API_KEY.");
-            }
-            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            const response = await fetch(AI_PROXY_URL, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${GROQ_API_KEY}`
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     model: GROQ_MODEL,
                     messages: [
